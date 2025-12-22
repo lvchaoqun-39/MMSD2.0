@@ -1,0 +1,23 @@
+2025-12-22 21:48:59,582 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Configure stats pid to 28488
+2025-12-22 21:48:59,582 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Loading settings from C:\Users\lvcha\.config\wandb\settings
+2025-12-22 21:48:59,582 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Loading settings from D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\settings
+2025-12-22 21:48:59,582 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2025-12-22 21:48:59,582 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'src\\main.py', 'program': 'src/main.py'}
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_setup.py:_flush():68] Applying login settings: {'mode': 'offline'}
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:_log_setup():476] Logging user logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\offline-run-20251222_214859-dv0op73z\logs\debug.log
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:_log_setup():477] Logging internal logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\offline-run-20251222_214859-dv0op73z\logs\debug-internal.log
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:init():516] calling init triggers
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:init():520] wandb.init called with sweep_config: {}
+config: {'device': '1', 'model': 'MV_CLIP', 'text_name': 'text_json_final', 'simple_linear': False, 'num_train_epochs': 10, 'train_batch_size': 32, 'dev_batch_size': 32, 'label_number': 2, 'text_size': 512, 'image_size': 768, 'adam_epsilon': 1e-08, 'optimizer_name': 'adam', 'learning_rate': 0.0005, 'clip_learning_rate': 1e-06, 'max_len': 77, 'layers': 3, 'max_grad_norm': 5.0, 'weight_decay': 0.05, 'warmup_proportion': 0.2, 'dropout_rate': 0.1, 'output_dir': '../output_dir/', 'limit': None, 'seed': 42}
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:init():569] starting backend
+2025-12-22 21:48:59,583 INFO    MainThread:28488 [wandb_init.py:init():573] setting up manager
+2025-12-22 21:48:59,586 INFO    MainThread:28488 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=spawn, using: spawn
+2025-12-22 21:48:59,589 INFO    MainThread:28488 [wandb_init.py:init():580] backend started and connected
+2025-12-22 21:48:59,590 INFO    MainThread:28488 [wandb_init.py:init():658] updated telemetry
+2025-12-22 21:48:59,634 INFO    MainThread:28488 [wandb_init.py:init():727] starting run threads in backend
+2025-12-22 21:49:02,838 INFO    MainThread:28488 [wandb_run.py:_console_start():1954] atexit reg
+2025-12-22 21:49:02,838 INFO    MainThread:28488 [wandb_run.py:_redirect():1812] redirect: SettingsConsole.WRAP_RAW
+2025-12-22 21:49:02,839 INFO    MainThread:28488 [wandb_run.py:_redirect():1877] Wrapping output streams.
+2025-12-22 21:49:02,839 INFO    MainThread:28488 [wandb_run.py:_redirect():1899] Redirects installed.
+2025-12-22 21:49:02,839 INFO    MainThread:28488 [wandb_init.py:init():764] run started, returning control to user process
+2025-12-22 21:49:33,332 WARNING MsgRouterThr:28488 [router.py:message_loop():77] message_loop has been closed

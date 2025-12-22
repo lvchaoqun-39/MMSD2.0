@@ -1,5 +1,11 @@
 import os
+
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7897'
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7897'
 # os.environ["CUDA_VISIBLE_DEVICES"] = '2'
+
+
+
 from model import MV_CLIP
 from train import train
 from data_set import MyDataset

@@ -2,7 +2,7 @@ absl-py==1.1.0
 aiohttp==3.8.1
 aiosignal==1.2.0
 antlr4-python3-runtime==4.8
-apex==0.1
+# apex==0.1  # 需要从源代码安装
 async-timeout==4.0.2
 asynctest==0.13.0
 attrs==21.4.0
@@ -13,7 +13,7 @@ boto3==1.26.20
 botocore==1.29.20
 cachetools==5.2.0
 catalogue==2.0.8
-certifi @ file:///opt/conda/conda-bld/certifi_1655968806487/work/certifi
+certifi
 cffi==1.15.1
 chardet==5.0.0
 charset-normalizer==2.1.0
@@ -30,8 +30,7 @@ decorator==5.1.1
 dill==0.3.5.1
 docker-pycreds==0.4.0
 einops==0.4.1
-en-core-web-sm @ file:///data10T/huangshijue/CMGCN-main/en_core_web_sm-3.4.1.tar.gz
-en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.4.1/en_core_web_trf-3.4.1-py3-none-any.whl
+# en-core-web-sm and en-core-web-trf will be installed via spacy commands
 entrypoints==0.4
 filelock==3.7.1
 fonttools==4.33.3

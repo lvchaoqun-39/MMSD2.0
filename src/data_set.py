@@ -5,7 +5,7 @@ from PIL import Image
 import json
 
 logger = logging.getLogger(__name__)
-WORKING_PATH="../data"
+WORKING_PATH="data"
 
 class MyDataset(Dataset):
     def __init__(self, mode, text_name, limit=None):
