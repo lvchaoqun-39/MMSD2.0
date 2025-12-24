@@ -19,13 +19,13 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         os.mkdir(args.output_dir)
 
     train_loader = DataLoader(dataset=train_data,
-                              batch_size=args.train_batch_size,
-                              collate_fn=MyDataset.collate_func,
-                              shuffle=True)
+                              batch_size=args.train_batch_size, # 分批
+                              collate_fn=MyDataset.collate_func, # 将单个数据点处理成模型输入的格式
+                              shuffle=True) # 每个epoch开始前随机打乱数据顺序
     total_steps = int(len(train_loader) * args.num_train_epochs)
     model.to(device)
 
-    if args.optimizer_name == 'adafactor':
+    if args.optimizer_name == 'adafactor': # 优化器和学习率调度器
         from transformers.optimization import Adafactor, AdafactorSchedule
 
         print('Use Adafactor Optimizer for Training.')
@@ -109,6 +109,11 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                      'macro_test_precision': test_precision,'macro_test_recall': test_recall, 'micro_test_f1': test_f1_,
                      'micro_test_precision': test_precision_,'micro_test_recall': test_recall_})
             logging.info("i_epoch is {}, test_acc is {}, macro_test_f1 is {}, macro_test_precision is {}, macro_test_recall is {}, micro_test_f1 is {}, micro_test_precision is {}, micro_test_recall is {}".format(i_epoch, test_acc, test_f1, test_precision, test_recall, test_f1_, test_precision_, test_recall_))
+            # test_loss : 测试损失（衡量测试结果和真实答案之间的差距） 。
+            # test_acc : 测试集准确率（无论是否讽刺，判断正确的比例） 。这是衡量模型最终泛化能力的核心指标。
+            # macro_test_f1 / micro_test_f1 : 测试集 F1-Score (宏平均和微平均)（f1是precision和recall的调和平均值）。
+            # macro_test_precision / micro_test_precision : 测试集精确率（找出来是讽刺的找的准不准） 。
+            # macro_test_recall / micro_test_recall : 测试集召回率（找的全不全） 。
 
         torch.cuda.empty_cache()
     logger.info('Train done')
