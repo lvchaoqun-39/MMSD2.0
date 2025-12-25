@@ -116,19 +116,32 @@ class MV_CLIP(nn.Module):
 
 
 class ResNetImageEncoder(nn.Module):
-    def __init__(self, model_name="resnet50"):
+    def __init__(self, model_name="resnet50", freeze_backbone=False):
         super().__init__()
-        if model_name != "resnet50":
-            raise ValueError("Only resnet50 is supported")
-        try:
-            weights = models.ResNet50_Weights.DEFAULT
-            resnet = models.resnet50(weights=weights)
-        except Exception:
-            resnet = models.resnet50(pretrained=True)
+        if model_name == "resnet18":
+            try:
+                weights = models.ResNet18_Weights.DEFAULT
+                resnet = models.resnet18(weights=weights)
+            except Exception:
+                resnet = models.resnet18(pretrained=True)
+            self.output_dim = 512  # ResNet18的输出维度
+        elif model_name == "resnet50":
+            try:
+                weights = models.ResNet50_Weights.DEFAULT
+                resnet = models.resnet50(weights=weights)
+            except Exception:
+                resnet = models.resnet50(pretrained=True)
+            self.output_dim = 2048  # ResNet50的输出维度
+        else:
+            raise ValueError(f"Unsupported model: {model_name}. Only resnet18 and resnet50 are supported.")
 
         self.backbone = nn.Sequential(*list(resnet.children())[:-2])
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.output_dim = 2048
+        
+        # 冻结backbone参数（如果需要）
+        if freeze_backbone:
+            for param in self.backbone.parameters():
+                param.requires_grad = False
 
     def forward(self, images):
         feature_map = self.backbone(images)
@@ -141,7 +154,8 @@ class MV_BERT_RESNET(nn.Module):
     def __init__(self, args):
         super(MV_BERT_RESNET, self).__init__()
         self.text_encoder = BertModel.from_pretrained("bert-base-uncased")
-        self.image_encoder = ResNetImageEncoder(model_name="resnet50")
+        # 修改为使用ResNet18并冻结backbone
+        self.image_encoder = ResNetImageEncoder(model_name="resnet18", freeze_backbone=True)
 
         hidden_size = self.text_encoder.config.hidden_size
         self.hidden_size = hidden_size
@@ -241,3 +255,17 @@ class MV_BERT_RESNET(nn.Module):
         return outputs
 
 
+
+        # 冻结BERT的部分层（保留最后几层进行微调）
+        self._freeze_bert_layers(num_layers_to_freeze=10)
+        
+    def _freeze_bert_layers(self, num_layers_to_freeze):
+        """冻结BERT模型的前num_layers_to_freeze层"""
+        # 冻结嵌入层
+        for param in self.text_encoder.embeddings.parameters():
+            param.requires_grad = False
+        
+        # 冻结指定数量的编码器层
+        for layer in self.text_encoder.encoder.layer[:num_layers_to_freeze]:
+            for param in layer.parameters():
+                param.requires_grad = False

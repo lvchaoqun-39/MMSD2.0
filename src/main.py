@@ -48,6 +48,11 @@ def set_args():
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=42, help='random seed') # 随机种子
+    # 添加性能优化参数
+    parser.add_argument('--num_workers', default=4, type=int, help='number of data loading workers')
+    parser.add_argument('--pin_memory', default=True, type=bool, help='whether to pin memory in DataLoader')
+    parser.add_argument('--prefetch_factor', default=2, type=int, help='number of batches to prefetch')
+    parser.add_argument('--gradient_accumulation_steps', default=1, type=int, help='number of steps for gradient accumulation')
     return parser.parse_args()
 
 
@@ -59,6 +64,8 @@ def seed_everything(seed=42):
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
+    # 启用cudnn.benchmark以提高卷积性能
+    torch.backends.cudnn.benchmark = True
 
 
 def main():
@@ -78,9 +85,9 @@ def main():
     )
     wandb.watch_called = False  
 
-    train_data = MyDataset(mode='train', text_name=args.text_name, limit=None)
-    dev_data = MyDataset(mode='valid', text_name=args.text_name, limit=None)
-    test_data = MyDataset(mode='test', text_name=args.text_name, limit=None)
+    train_data = MyDataset(mode='train', text_name=args.text_name, limit=args.limit)
+    dev_data = MyDataset(mode='valid', text_name=args.text_name, limit=args.limit)
+    test_data = MyDataset(mode='test', text_name=args.text_name, limit=args.limit)
 
     if args.model == 'MV_CLIP':
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
@@ -109,3 +116,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

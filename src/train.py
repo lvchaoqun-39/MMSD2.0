@@ -41,8 +41,13 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
     train_loader = DataLoader(dataset=train_data,
                               batch_size=args.train_batch_size, # 分批
                               collate_fn=MyDataset.collate_func, # 将单个数据点处理成模型输入的格式
-                              shuffle=True) # 每个epoch开始前随机打乱数据顺序
-    total_steps = int(len(train_loader) * args.num_train_epochs)
+                              shuffle=True,
+                              # 添加性能优化参数
+                              num_workers=args.num_workers,
+                              pin_memory=args.pin_memory,
+                              prefetch_factor=args.prefetch_factor if args.num_workers > 0 else None)
+                              # 注意：prefetch_factor只在num_workers > 0时有效
+    total_steps = int(len(train_loader) * args.num_train_epochs / args.gradient_accumulation_steps)
     model.to(device)
 
     if args.optimizer_name == 'adafactor': # 优化器和学习率调度器
@@ -91,7 +96,7 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 num_training_steps=total_steps,
             )
         else:
-            optimizer = optimizer = AdamW(model.parameters(), lr=args.learning_rate, eps=args.adam_epsilon, weight_decay=args.weight_decay)
+            optimizer = AdamW(model.parameters(), lr=args.learning_rate, eps=args.adam_epsilon, weight_decay=args.weight_decay)
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
                                                 num_training_steps=total_steps)
     else:
@@ -116,15 +121,20 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 labels = torch.tensor(label_list).to(device)
 
             loss, score = model(inputs,labels=labels)
-            sum_loss += loss.item()
+            # 梯度累积：将损失除以累积步数
+            loss = loss / args.gradient_accumulation_steps
+            sum_loss += loss.item() * args.gradient_accumulation_steps  # 还原为实际损失
             sum_step += 1
 
-            iter_bar.set_description("Iter (loss=%5.3f)" % loss.item())
+            iter_bar.set_description("Iter (loss=%5.3f)" % (loss.item() * args.gradient_accumulation_steps))
             loss.backward()
-            optimizer.step()
-            if args.optimizer_name == 'adam':
-                scheduler.step() 
-            optimizer.zero_grad()
+            
+            # 只有当累积了足够的梯度后才更新参数
+            if (step + 1) % args.gradient_accumulation_steps == 0 or (step + 1) == len(train_loader):
+                optimizer.step()
+                if args.optimizer_name == 'adam':
+                    scheduler.step() 
+                optimizer.zero_grad()
 
         wandb.log({'train_loss': sum_loss/sum_step})
         dev_acc, dev_f1 ,dev_precision,dev_recall = evaluate_acc_f1(args, model, device, dev_data, processor, mode='dev')
@@ -157,7 +167,13 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
 
 def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None, mode='test'):
-        data_loader = DataLoader(data, batch_size=args.dev_batch_size, collate_fn=MyDataset.collate_func,shuffle=False)
+        data_loader = DataLoader(data, 
+                                batch_size=args.dev_batch_size, 
+                                collate_fn=MyDataset.collate_func,
+                                shuffle=False,
+                                # 添加评估时的性能优化参数
+                                num_workers=args.num_workers,
+                                pin_memory=args.pin_memory)
         n_correct, n_total = 0, 0
         t_targets_all, t_outputs_all = None, None
 
