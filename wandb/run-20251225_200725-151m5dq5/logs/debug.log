@@ -1,0 +1,27 @@
+2025-12-25 20:07:25,531 INFO    MainThread:25336 [wandb_setup.py:_flush():68] Configure stats pid to 25336
+2025-12-25 20:07:25,531 INFO    MainThread:25336 [wandb_setup.py:_flush():68] Loading settings from C:\Users\lvcha\.config\wandb\settings
+2025-12-25 20:07:25,531 INFO    MainThread:25336 [wandb_setup.py:_flush():68] Loading settings from D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\settings
+2025-12-25 20:07:25,531 INFO    MainThread:25336 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'src\\main.py', 'program': 'src/main.py'}
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:_log_setup():476] Logging user logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251225_200725-151m5dq5\logs\debug.log
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:_log_setup():477] Logging internal logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251225_200725-151m5dq5\logs\debug-internal.log
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:init():516] calling init triggers
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:init():520] wandb.init called with sweep_config: {}
+config: {'device': '0', 'model': 'MV_BERT_RESNET', 'text_name': 'text_json_final', 'simple_linear': False, 'num_train_epochs': 10, 'train_batch_size': 32, 'dev_batch_size': 32, 'label_number': 2, 'text_size': 512, 'image_size': 768, 'adam_epsilon': 1e-08, 'optimizer_name': 'adam', 'learning_rate': 0.0005, 'clip_learning_rate': 1e-06, 'max_len': 128, 'layers': 3, 'max_grad_norm': 5.0, 'weight_decay': 0.05, 'warmup_proportion': 0.2, 'dropout_rate': 0.1, 'output_dir': '../output_dir/', 'limit': None, 'seed': 42, 'num_workers': 4, 'pin_memory': True, 'prefetch_factor': 2, 'gradient_accumulation_steps': 1}
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:init():569] starting backend
+2025-12-25 20:07:25,532 INFO    MainThread:25336 [wandb_init.py:init():573] setting up manager
+2025-12-25 20:07:25,534 INFO    MainThread:25336 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=spawn, using: spawn
+2025-12-25 20:07:25,536 INFO    MainThread:25336 [wandb_init.py:init():580] backend started and connected
+2025-12-25 20:07:25,537 INFO    MainThread:25336 [wandb_init.py:init():658] updated telemetry
+2025-12-25 20:07:25,577 INFO    MainThread:25336 [wandb_init.py:init():693] communicating run to backend with 30 second timeout
+2025-12-25 20:07:26,844 INFO    MainThread:25336 [wandb_run.py:_on_init():1974] communicating current version
+2025-12-25 20:07:28,209 INFO    MainThread:25336 [wandb_run.py:_on_init():1978] got version response upgrade_message: "wandb version 0.23.1 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2025-12-25 20:07:28,209 INFO    MainThread:25336 [wandb_init.py:init():727] starting run threads in backend
+2025-12-25 20:07:31,339 INFO    MainThread:25336 [wandb_run.py:_console_start():1954] atexit reg
+2025-12-25 20:07:31,340 INFO    MainThread:25336 [wandb_run.py:_redirect():1812] redirect: SettingsConsole.WRAP_RAW
+2025-12-25 20:07:31,340 INFO    MainThread:25336 [wandb_run.py:_redirect():1877] Wrapping output streams.
+2025-12-25 20:07:31,340 INFO    MainThread:25336 [wandb_run.py:_redirect():1899] Redirects installed.
+2025-12-25 20:07:31,340 INFO    MainThread:25336 [wandb_init.py:init():764] run started, returning control to user process
+2025-12-25 20:07:34,824 INFO    MainThread:25336 [wandb_watch.py:watch():51] Watching
+2025-12-25 21:21:07,723 WARNING MsgRouterThr:25336 [router.py:message_loop():77] message_loop has been closed
