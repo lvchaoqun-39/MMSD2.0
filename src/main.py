@@ -7,14 +7,15 @@ os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7897'
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --model MV_CLIP --text_name text_json_final --weight_decay 0.05 --train_batch_size 32 --dev_batch_size 32 --learning_rate 5e-4 --clip_learning_rate 1e-6 --num_train_epochs 10 --layers 3 --max_grad_norm 5 --dropout_rate 0.1 --optimizer_name adam --text_size 512 --image_size 768 --warmup_proportion 0.2 --device -1 --limit 100
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --device 0 
 
-from model import MV_CLIP
+from model import MV_CLIP, MV_BERT_RESNET
 from train import train
 from data_set import MyDataset
 import torch
 import argparse
 import random
 import numpy as np
-from transformers import CLIPProcessor
+from transformers import CLIPProcessor, BertTokenizerFast
+from torchvision import transforms
 import wandb
 import pickle
 from PIL import ImageFile
@@ -23,7 +24,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 def set_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', default='1', type=str, help='device number')
-    parser.add_argument('--model', default='MV_CLIP', type=str, help='the model name', choices=['MV_CLIP']) # 使用的模型
+    parser.add_argument('--model', default='MV_BERT_RESNET', type=str, help='the model name', choices=['MV_CLIP', 'MV_BERT_RESNET']) # 使用的模型
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name') # 文本数据文件夹名
     parser.add_argument('--simple_linear', default=False, type=bool, help='linear implementation choice')
     parser.add_argument('--num_train_epochs', default=10, type=int, help='number of train epoched') # 训练轮数
@@ -37,7 +38,7 @@ def set_args():
                         help="use which optimizer to train the model.") # 使用的优化器
     parser.add_argument('--learning_rate', default=5e-4, type=float, help='learning rate for modules expect CLIP') # 学习率
     parser.add_argument('--clip_learning_rate', default=1e-6, type=float, help='learning rate for CLIP') # CLIP的学习率
-    parser.add_argument('--max_len', default=77, type=int, help='max len of text based on CLIP') # 模型能处理的输入文本序列的最大长度
+    parser.add_argument('--max_len', default=128, type=int, help='max len of text') # 模型能处理的输入文本序列的最大长度
     parser.add_argument('--layers', default=3, type=int, help='number of transform layers') # transform层数量
     parser.add_argument('--max_grad_norm', default=5.0, type=float, help='grad clip norm') # 梯度裁剪范数（梯度裁剪阈值，用于防止梯度爆炸）
     parser.add_argument('--weight_decay', default=0.05, type=float, help='weight decay') # 权重衰减（防止过拟合）
@@ -83,6 +84,18 @@ def main():
     if args.model == 'MV_CLIP':
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         model = MV_CLIP(args)
+    elif args.model == 'MV_BERT_RESNET':
+        tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+        image_transform = transforms.Compose(
+            [
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ]
+        )
+        processor = {"tokenizer": tokenizer, "image_transform": image_transform}
+        model = MV_BERT_RESNET(args)
     else:
         raise RuntimeError('Error model name!')
 

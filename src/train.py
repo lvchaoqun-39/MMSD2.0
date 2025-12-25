@@ -14,6 +14,26 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logger = logging.getLogger(__name__)
 
 
+def build_bert_resnet_inputs(processor, text_list, image_list, max_len, device):
+    tokenizer = processor["tokenizer"]
+    image_transform = processor["image_transform"]
+
+    encoded = tokenizer(
+        text_list,
+        padding=True,
+        truncation=True,
+        max_length=max_len,
+        return_tensors="pt",
+    )
+    images = []
+    for img in image_list:
+        images.append(image_transform(img.convert("RGB")))
+    encoded["images"] = torch.stack(images, dim=0)
+    for k, v in encoded.items():
+        encoded[k] = v.to(device)
+    return encoded
+
+
 def train(args, model, device, train_data, dev_data, test_data, processor):
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
@@ -56,6 +76,20 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
                                                     num_training_steps=total_steps)
+        elif args.model == 'MV_BERT_RESNET':
+            encoder_params = list(map(id, list(model.text_encoder.parameters()) + list(model.image_encoder.parameters())))
+            base_params = filter(lambda p: id(p) not in encoder_params, model.parameters())
+            optimizer = AdamW([
+                    {"params": base_params},
+                    {"params": model.text_encoder.parameters(), "lr": args.clip_learning_rate},
+                    {"params": model.image_encoder.parameters(), "lr": args.clip_learning_rate},
+                    ], lr=args.learning_rate, weight_decay=args.weight_decay)
+
+            scheduler = get_linear_schedule_with_warmup(
+                optimizer,
+                num_warmup_steps=int(args.warmup_proportion * total_steps),
+                num_training_steps=total_steps,
+            )
         else:
             optimizer = optimizer = AdamW(model.parameters(), lr=args.learning_rate, eps=args.adam_epsilon, weight_decay=args.weight_decay)
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
@@ -76,6 +110,9 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             text_list, image_list, label_list, id_list = batch
             if args.model == 'MV_CLIP':
                 inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                labels = torch.tensor(label_list).to(device)
+            elif args.model == 'MV_BERT_RESNET':
+                inputs = build_bert_resnet_inputs(processor, text_list, image_list, args.max_len, device)
                 labels = torch.tensor(label_list).to(device)
 
             loss, score = model(inputs,labels=labels)
@@ -132,6 +169,9 @@ def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None
                 text_list, image_list, label_list, id_list = t_batch
                 if args.model == 'MV_CLIP':
                     inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                    labels = torch.tensor(label_list).to(device)
+                elif args.model == 'MV_BERT_RESNET':
+                    inputs = build_bert_resnet_inputs(processor, text_list, image_list, args.max_len, device)
                     labels = torch.tensor(label_list).to(device)
                 
                 t_targets = labels

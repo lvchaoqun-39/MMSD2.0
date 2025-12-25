@@ -1,6 +1,7 @@
 import os
-from model import CLIPClassificationModel_transformer
-from transformers import CLIPProcessor
+from model import MV_CLIP, MV_BERT_RESNET
+from transformers import CLIPProcessor, BertTokenizerFast
+from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch
 from data_set import MyDataset
@@ -9,6 +10,7 @@ from tqdm import tqdm
 import json
 import numpy as np
 from sklearn import metrics
+from train import build_bert_resnet_inputs
 
 
 def predict(args, model, device, data, processor, pre = None):
@@ -28,7 +30,12 @@ def predict(args, model, device, data, processor, pre = None):
                 text_list, image_list, label_list, id_list = t_batch
                 image.extend(id_list)
                 text.extend(text_list)
-                inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                if args.model == 'MV_CLIP':
+                    inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                elif args.model == 'MV_BERT_RESNET':
+                    inputs = build_bert_resnet_inputs(processor, text_list, image_list, args.max_len, device)
+                else:
+                    raise RuntimeError('Error model name!')
                 labels = torch.tensor(label_list).to(device)
 
                 t_targets = labels
@@ -65,13 +72,14 @@ def predict(args, model, device, data, processor, pre = None):
 def set_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', default='0', type=str, help='device number')
-    parser.add_argument('--max_len', type=int, default=77, help='max length of text')
+    parser.add_argument('--model', default='MV_BERT_RESNET', type=str, help='the model name', choices=['MV_CLIP', 'MV_BERT_RESNET'])
+    parser.add_argument('--max_len', type=int, default=128, help='max length of text')
     parser.add_argument('--text_size', default=512, type=int, help='text hidden size')
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size')
     parser.add_argument('--dropout_rate', default=0.5, type=float, help='dropout rate')
     parser.add_argument('--label_number', type=int, default=2, help='number of classification labels')
     parser.add_argument('--test_batch_size', type=int, default=8, help='batch size for text phase')
-    parser.add_argument('--model_path', type=str, default="../output_dir/MV_CLIP", help='save model dpath')
+    parser.add_argument('--model_path', type=str, default="../output_dir/MV_BERT_RESNET", help='save model dpath')
     parser.add_argument('--save_file', type=str, default="result.json", help='save result path')
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name')
     parser.add_argument('--layers', default=3, type=int, help='number of layers of transformers')
@@ -85,8 +93,23 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
     device = torch.device("cuda" if torch.cuda.is_available() and int(args.device) >= 0 else "cpu")
 
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-    model = CLIPClassificationModel_transformer(args)
+    if args.model == 'MV_CLIP':
+        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        model = MV_CLIP(args)
+    elif args.model == 'MV_BERT_RESNET':
+        tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+        image_transform = transforms.Compose(
+            [
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ]
+        )
+        processor = {"tokenizer": tokenizer, "image_transform": image_transform}
+        model = MV_BERT_RESNET(args)
+    else:
+        raise RuntimeError('Error model name!')
 
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None)
 
