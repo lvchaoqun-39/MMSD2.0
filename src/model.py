@@ -1,3 +1,11 @@
+import sys
+import collections
+# 解决Python版本兼容性问题：在Python 3.7及更早版本中，OrderedDict在collections模块中
+if sys.version_info < (3, 8):
+    import typing
+    # 将collections.OrderedDict添加到typing模块中
+    typing.OrderedDict = collections.OrderedDict
+
 from transformers import CLIPModel, BertConfig, BertModel
 from transformers.models.bert.modeling_bert import BertLayer
 import torch.nn as nn
@@ -231,4 +239,5 @@ class MV_BERT_RESNET(nn.Module):
 
             outputs = (loss,) + outputs
         return outputs
+
 

@@ -1,0 +1,107 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.13.3
+    framework: huggingface
+    huggingface_version: 4.23.1
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.1
+    start_time: 1766576265.61816
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 49
+      - 53
+      - 55
+      2:
+      - 1
+      - 5
+      - 11
+      - 49
+      - 53
+      - 55
+      3:
+      - 1
+      - 15
+      - 16
+      - 23
+      4: 3.7.1
+      5: 0.13.3
+      6: 4.23.1
+      8:
+      - 3
+      - 5
+adam_epsilon:
+  desc: null
+  value: 1.0e-08
+clip_learning_rate:
+  desc: null
+  value: 1.0e-06
+dev_batch_size:
+  desc: null
+  value: 32
+device:
+  desc: null
+  value: '0'
+dropout_rate:
+  desc: null
+  value: 0.1
+image_size:
+  desc: null
+  value: 768
+label_number:
+  desc: null
+  value: 2
+layers:
+  desc: null
+  value: 3
+learning_rate:
+  desc: null
+  value: 0.0005
+limit:
+  desc: null
+  value: null
+max_grad_norm:
+  desc: null
+  value: 5.0
+max_len:
+  desc: null
+  value: 77
+model:
+  desc: null
+  value: MV_CLIP
+num_train_epochs:
+  desc: null
+  value: 10
+optimizer_name:
+  desc: null
+  value: adam
+output_dir:
+  desc: null
+  value: ../output_dir/
+seed:
+  desc: null
+  value: 42
+simple_linear:
+  desc: null
+  value: false
+text_name:
+  desc: null
+  value: text_json_final
+text_size:
+  desc: null
+  value: 512
+train_batch_size:
+  desc: null
+  value: 32
+warmup_proportion:
+  desc: null
+  value: 0.2
+weight_decay:
+  desc: null
+  value: 0.05
