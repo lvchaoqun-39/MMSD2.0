@@ -1,108 +1,180 @@
-from transformers import CLIPModel,BertConfig
-from transformers.models.bert.modeling_bert import BertLayer
-import torch.nn as nn
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
-import copy
+import math
+from transformers import AutoConfig, CLIPProcessor, CLIPModel, CLIPTextModel, CLIPVisionModel
+
+class CrossAttention(nn.Module):
+    def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0.):
+        super().__init__()
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        # NOTE scale factor was wrong in my original version, can set manually to be compat with prev weights
+        self.scale = qk_scale or head_dim ** -0.5
+
+        # 为query单独创建投影层
+        self.q_proj = nn.Linear(dim, dim, bias=qkv_bias)
+        # 为context的key和value创建投影层
+        self.kv_proj = nn.Linear(dim, dim * 2, bias=qkv_bias)
+        
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+    def forward(self, x, context=None):
+        B, N, C = x.shape
+        if context is None:
+            context = x
+        
+        # 确保context的通道数与x相同
+        if context.shape[-1] != C:
+            # 如果维度不同，进行投影
+            proj = nn.Linear(context.shape[-1], C).to(context.device)
+            context = proj(context)
+        
+        # 计算查询
+        q = self.q_proj(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
+        
+        # 使用context计算键和值
+        kv = self.kv_proj(context).reshape(B, context.shape[1], 2, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        k, v = kv[0], kv[1]
+        
+        attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = attn.softmax(dim=-1)
+        attn = self.attn_drop(attn)
+
+        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        return x
 
 class MultimodalEncoder(nn.Module):
-    def __init__(self, config, layer_number):
-        super(MultimodalEncoder, self).__init__()
-        layer = BertLayer(config)
-        self.layer = nn.ModuleList([copy.deepcopy(layer) for _ in range(layer_number)])
-
-    def forward(self, hidden_states, attention_mask, output_all_encoded_layers=True):
-        all_encoder_layers = []
-        all_encoder_attentions = []
-        for layer_module in self.layer:
-            hidden_states, attention = layer_module(hidden_states, attention_mask, output_attentions=True)
-            all_encoder_attentions.append(attention)
-            if output_all_encoded_layers:
-                all_encoder_layers.append(hidden_states)
-        if not output_all_encoded_layers:
-            all_encoder_layers.append(hidden_states)
-        return all_encoder_layers, all_encoder_attentions
-
+    def __init__(self, args):
+        super().__init__()
+        self.args = args
+        self.dim = args.text_size + args.image_size
+        
+        # 加载预训练的CLIP模型
+        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+        
+        # 交叉注意力层
+        self.text_attention = CrossAttention(args.text_size, num_heads=args.heads)
+        self.image_attention = CrossAttention(args.image_size, num_heads=args.heads)
+        
+        # 投影层
+        self.text_proj = nn.Linear(args.text_size, args.text_size)
+        self.image_proj = nn.Linear(args.image_size, args.image_size)
+        
+        # 融合层
+        self.fusion_proj = nn.Linear(self.dim, args.fusion_dim)
+        self.dropout = nn.Dropout(args.dropout_rate)
+        
+        # 分类头
+        self.classifier = nn.Linear(args.fusion_dim, args.label_number)
+        
+    def forward(self, input_ids=None, attention_mask=None, pixel_values=None, labels=None):
+        # 获取文本特征
+        text_outputs = self.clip_model.text_model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True
+        )
+        text_features = text_outputs.last_hidden_state[:, 0]
+        
+        # 获取视觉特征
+        image_outputs = self.clip_model.vision_model(
+            pixel_values=pixel_values,
+            output_hidden_states=True
+        )
+        image_features = image_outputs.last_hidden_state[:, 0]
+        
+        # 残差连接的交叉注意力
+        # 注意：当将image_features传给text_attention时，需要确保维度匹配
+        # 同样，当将text_features传给image_attention时，也需要确保维度匹配
+        text_features_attn = self.text_attention(
+            text_features.unsqueeze(1), 
+            image_features.unsqueeze(1)
+        ).squeeze(1)
+        text_features = F.gelu(self.text_proj(text_features)) + text_features_attn
+        
+        image_features_attn = self.image_attention(
+            image_features.unsqueeze(1), 
+            text_features.unsqueeze(1)
+        ).squeeze(1)
+        image_features = F.gelu(self.image_proj(image_features)) + image_features_attn
+        
+        # 融合特征
+        combined_features = torch.cat([text_features, image_features], dim=-1)
+        fusion_features = F.gelu(self.fusion_proj(combined_features))
+        fusion_features = self.dropout(fusion_features)
+        
+        # 分类
+        logits = self.classifier(fusion_features)
+        
+        # 计算对比损失
+        if hasattr(self.args, 'use_contrastive_loss') and self.args.use_contrastive_loss:
+            # 确保文本特征和图像特征具有相同的维度
+            if text_features.shape[-1] != image_features.shape[-1]:
+                # 创建投影层使维度匹配
+                if text_features.shape[-1] > image_features.shape[-1]:
+                    proj = nn.Linear(image_features.shape[-1], text_features.shape[-1]).to(image_features.device)
+                    image_features_proj = proj(image_features)
+                    text_embeds = F.normalize(text_features, dim=-1)
+                    image_embeds = F.normalize(image_features_proj, dim=-1)
+                else:
+                    proj = nn.Linear(text_features.shape[-1], image_features.shape[-1]).to(text_features.device)
+                    text_features_proj = proj(text_features)
+                    text_embeds = F.normalize(text_features_proj, dim=-1)
+                    image_embeds = F.normalize(image_features, dim=-1)
+            else:
+                text_embeds = F.normalize(text_features, dim=-1)
+                image_embeds = F.normalize(image_features, dim=-1)
+            
+            # 计算文本和图像之间的相似度矩阵
+            logits_per_text = torch.matmul(text_embeds, image_embeds.t()) * math.exp(self.args.temperature)
+            logits_per_image = logits_per_text.t()
+            
+            # 创建标签（对角线）
+            batch_size = text_embeds.shape[0]
+            labels_contrastive = torch.arange(batch_size, device=text_embeds.device)
+            
+            # 计算对比损失
+            contrastive_loss = (
+                F.cross_entropy(logits_per_text, labels_contrastive) +
+                F.cross_entropy(logits_per_image, labels_contrastive)
+            ) / 2
+        else:
+            contrastive_loss = 0.0
+        
+        # 计算分类损失
+        if labels is not None:
+            # 使用Focal Loss
+            if hasattr(self.args, 'use_focal_loss') and self.args.use_focal_loss:
+                ce_loss = F.cross_entropy(logits, labels, reduction='none')
+                pt = torch.exp(-ce_loss)
+                class_loss = (1 - pt) ** self.args.focal_gamma * ce_loss
+                class_loss = class_loss.mean()
+            else:
+                class_loss = F.cross_entropy(logits, labels)
+            
+            # 组合损失
+            contrastive_weight = getattr(self.args, 'contrastive_weight', 0.1)
+            loss = class_loss + contrastive_weight * contrastive_loss
+            return loss, logits
+        
+        return logits
 
 class MV_CLIP(nn.Module):
     def __init__(self, args):
-        super(MV_CLIP, self).__init__()
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.config = BertConfig.from_pretrained("bert-base-uncased")
-        self.config.hidden_size = 512
-        self.config.num_attention_heads = 8
-        self.trans = MultimodalEncoder(self.config, layer_number=args.layers)
-        if args.simple_linear:
-            self.text_linear =  nn.Linear(args.text_size, args.text_size)
-            self.image_linear =  nn.Linear(args.image_size, args.image_size)
-        else:
-            self.text_linear =  nn.Sequential(
-                nn.Linear(args.text_size, args.text_size),
-                nn.Dropout(args.dropout_rate),
-                nn.GELU()
-            )
-            self.image_linear =  nn.Sequential(
-                nn.Linear(args.image_size, args.image_size),
-                nn.Dropout(args.dropout_rate),
-                nn.GELU()
-            )
-
-        self.classifier_fuse = nn.Linear(args.text_size , args.label_number)
-        self.classifier_text = nn.Linear(args.text_size, args.label_number)
-        self.classifier_image = nn.Linear(args.image_size, args.label_number)
-
-        self.loss_fct = nn.CrossEntropyLoss()
-        self.att = nn.Linear(args.text_size, 1, bias=False)
-
-    def forward(self, inputs, labels):
-        output = self.model(**inputs,output_attentions=True)
-        text_features = output['text_model_output']['last_hidden_state']
-        image_features = output['vision_model_output']['last_hidden_state']
-        text_feature = output['text_model_output']['pooler_output']
-        image_feature = output['vision_model_output']['pooler_output']
-        text_feature = self.text_linear(text_feature)
-        image_feature = self.image_linear(image_feature)
-
-        text_embeds = self.model.text_projection(text_features)
-        image_embeds = self.model.visual_projection(image_features)
-        input_embeds = torch.cat((image_embeds, text_embeds), dim=1)
-        attention_mask = torch.cat((torch.ones(text_features.shape[0], 50).to(text_features.device), inputs['attention_mask']), dim=-1)
-        extended_attention_mask = attention_mask.unsqueeze(1).unsqueeze(2)
-        extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype)
-        extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0
-        fuse_hiddens, all_attentions = self.trans(input_embeds, extended_attention_mask, output_all_encoded_layers=False)
-        fuse_hiddens = fuse_hiddens[-1]
-        new_text_features = fuse_hiddens[:, 50:, :]
-        new_text_feature = new_text_features[
-            torch.arange(new_text_features.shape[0], device=inputs['input_ids'].device), inputs['input_ids'].to(torch.int).argmax(dim=-1)
-        ]
-
-        new_image_feature = fuse_hiddens[:, 0, :].squeeze(1)
-
-        text_weight = self.att(new_text_feature)
-        image_weight = self.att(new_image_feature)    
-        att = nn.functional.softmax(torch.stack((text_weight, image_weight), dim=-1),dim=-1)
-        tw, iw = att.split([1,1], dim=-1)
-        fuse_feature = tw.squeeze(1) * new_text_feature + iw.squeeze(1) * new_image_feature
-
-        logits_fuse = self.classifier_fuse(fuse_feature)
-        logits_text = self.classifier_text(text_feature)
-        logits_image = self.classifier_image(image_feature)
-   
-        fuse_score = nn.functional.softmax(logits_fuse, dim=-1)
-        text_score = nn.functional.softmax(logits_text, dim=-1)
-        image_score = nn.functional.softmax(logits_image, dim=-1)
-
-        score = fuse_score + text_score + image_score
-
-        outputs = (score,)
-        if labels is not None:
-            loss_fuse = self.loss_fct(logits_fuse, labels)
-            loss_text = self.loss_fct(logits_text, labels)
-            loss_image = self.loss_fct(logits_image, labels)
-            loss = loss_fuse + loss_text + loss_image
-
-            outputs = (loss,) + outputs
-        return outputs
-
-
+        super().__init__()
+        self.args = args
+        self.model = MultimodalEncoder(args)
+        
+    def forward(self, input_ids=None, attention_mask=None, pixel_values=None, labels=None):
+        # 直接传递所有参数给内部模型
+        return self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            pixel_values=pixel_values,
+            labels=labels
+        )
