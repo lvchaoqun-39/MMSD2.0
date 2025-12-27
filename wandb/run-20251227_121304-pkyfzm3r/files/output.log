@@ -1,0 +1,82 @@
+
+Epoch 1/20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Training:  15%|████▉                            | 185/1239 [02:18<13:10,  1.33it/s]
+Traceback (most recent call last):
+  File "src/main.py", line 213, in <module>
+    main()
+  File "src/main.py", line 198, in main
+    best_f1 = train(args, model, device, train_data, valid_data, test_data, optimizer, scheduler)
+  File "D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\src\train.py", line 105, in train
+    torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\nn\utils\clip_grad.py", line 43, in clip_grad_norm_
+    total_norm = torch.norm(torch.stack([torch.norm(g.detach(), norm_type).to(device) for g in grads]), norm_type)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\nn\utils\clip_grad.py", line 43, in <listcomp>
+    total_norm = torch.norm(torch.stack([torch.norm(g.detach(), norm_type).to(device) for g in grads]), norm_type)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\functional.py", line 1485, in norm
+    return _VF.norm(input, p, dim=_dim, keepdim=keepdim)  # type: ignore[attr-defined]
+KeyboardInterrupt

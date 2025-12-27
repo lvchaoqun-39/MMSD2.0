@@ -1,0 +1,183 @@
+
+Epoch 1/20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Training:   5%|██                                        | 59/1239 [00:56<17:19,  1.14it/s]12/25/2025 23:31:08 - WARNING - urllib3.connectionpool -   Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', OSError(0, 'Error'))': /api/5288891/envelope/
+
+Training:   5%|██▏                                       | 63/1239 [01:00<17:32,  1.12it/s]12/25/2025 23:31:11 - WARNING - urllib3.connectionpool -   Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', OSError(0, 'Error'))': /api/5288891/envelope/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Training:  31%|████████████▌                            | 381/1239 [05:28<12:20,  1.16it/s]
+Traceback (most recent call last):
+  File "src/main.py", line 213, in <module>
+    main()
+  File "src/main.py", line 198, in main
+    best_f1 = train(args, model, device, train_data, valid_data, test_data, optimizer, scheduler)
+  File "D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\src\train.py", line 72, in train
+    for step, batch in enumerate(tqdm(train_dataloader, desc="Training")):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\tqdm\std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\utils\data\dataloader.py", line 628, in __next__
+    data = self._next_data()
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\utils\data\dataloader.py", line 671, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\utils\data\_utils\fetch.py", line 58, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\utils\data\_utils\fetch.py", line 58, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\src\data_set.py", line 70, in __getitem__
+    image = Image.open(img_path).convert('RGB')
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\PIL\Image.py", line 933, in convert
+    self.load()
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\PIL\ImageFile.py", line 266, in load
+    raise OSError(msg)
+OSError: image file is truncated (2 bytes not processed)

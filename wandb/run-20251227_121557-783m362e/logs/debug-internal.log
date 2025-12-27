@@ -1,0 +1,669 @@
+2025-12-27 12:15:57,031 INFO    StreamThr :28816 [internal.py:wandb_internal():91] W&B internal server running at pid: 28816, started at: 2025-12-27 12:15:57.029276
+2025-12-27 12:15:57,032 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: status
+2025-12-27 12:15:57,033 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: status
+2025-12-27 12:15:57,035 INFO    WriterThread:28816 [datastore.py:open_for_write():75] open: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\run-783m362e.wandb
+2025-12-27 12:15:57,035 DEBUG   SenderThread:28816 [sender.py:send():301] send: header
+2025-12-27 12:15:57,090 DEBUG   SenderThread:28816 [sender.py:send():301] send: run
+2025-12-27 12:16:03,660 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: check_version
+2025-12-27 12:16:03,668 INFO    SenderThread:28816 [dir_watcher.py:__init__():216] watching files in: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files
+2025-12-27 12:16:03,668 INFO    SenderThread:28816 [sender.py:_start_run_threads():915] run started: 783m362e with start time 1766808957.027227
+2025-12-27 12:16:03,668 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:16:03,669 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:16:03,669 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: check_version
+2025-12-27 12:16:04,672 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_created():275] file/dir created: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:16:06,522 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: run_start
+2025-12-27 12:16:06,548 DEBUG   HandlerThread:28816 [meta.py:__init__():34] meta init
+2025-12-27 12:16:06,548 DEBUG   HandlerThread:28816 [meta.py:__init__():49] meta init done
+2025-12-27 12:16:06,548 DEBUG   HandlerThread:28816 [meta.py:probe():215] probe
+2025-12-27 12:16:06,568 DEBUG   HandlerThread:28816 [meta.py:_setup_git():205] setup git
+2025-12-27 12:16:06,674 DEBUG   HandlerThread:28816 [meta.py:_setup_git():212] setup git done
+2025-12-27 12:16:06,674 DEBUG   HandlerThread:28816 [meta.py:_save_pip():53] save pip
+2025-12-27 12:16:06,674 DEBUG   HandlerThread:28816 [meta.py:_save_pip():67] save pip done
+2025-12-27 12:16:06,675 DEBUG   HandlerThread:28816 [meta.py:_save_conda():74] save conda
+2025-12-27 12:16:06,678 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_created():275] file/dir created: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\conda-environment.yaml
+2025-12-27 12:16:06,678 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_created():275] file/dir created: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\requirements.txt
+2025-12-27 12:16:09,930 DEBUG   HandlerThread:28816 [meta.py:_save_conda():84] save conda done
+2025-12-27 12:16:09,931 DEBUG   HandlerThread:28816 [meta.py:probe():253] probe done
+2025-12-27 12:16:10,027 DEBUG   SenderThread:28816 [sender.py:send():301] send: files
+2025-12-27 12:16:10,027 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-metadata.json with policy now
+2025-12-27 12:16:10,028 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:16:10,029 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:16:10,718 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\conda-environment.yaml
+2025-12-27 12:16:10,718 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_created():275] file/dir created: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-metadata.json
+2025-12-27 12:16:10,901 DEBUG   SenderThread:28816 [sender.py:send():301] send: telemetry
+2025-12-27 12:16:11,719 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_created():275] file/dir created: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:11,783 INFO    Thread-22 :28816 [upload_job.py:push():139] Uploaded file C:\Users\lvcha\AppData\Local\Temp\tmp63y7ozhgwandb\hwzadr8p-wandb-metadata.json
+2025-12-27 12:16:13,727 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:15,738 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:17,753 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:19,761 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:21,776 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:23,789 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:25,802 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:25,933 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:16:25,933 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:16:27,815 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:28,816 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\config.yaml
+2025-12-27 12:16:29,832 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:31,849 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:33,865 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:35,889 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:36,856 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:16:37,903 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:39,912 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:41,648 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:16:41,648 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:16:41,926 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:43,945 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:45,956 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:47,968 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:49,977 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:51,999 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:54,017 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:56,036 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:16:57,979 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:16:57,979 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:16:58,058 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:00,072 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:02,079 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:04,100 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:06,112 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:08,120 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:09,126 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:09,329 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:17:11,140 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:13,163 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:13,801 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:17:13,801 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:17:15,176 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:17,190 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:19,198 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:21,209 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:23,213 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:25,222 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:27,237 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:29,242 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:30,926 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:17:30,926 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:17:31,251 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:33,263 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:35,273 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:35,656 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:17:35,657 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:17:35,657 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:17:35,657 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:17:36,277 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:17:37,282 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:39,290 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:41,297 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:41,891 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:17:43,315 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:45,321 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:46,696 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:17:46,696 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:17:47,330 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:49,346 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:51,358 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:53,377 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:55,386 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:57,389 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:17:59,396 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:01,400 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:02,357 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:18:02,357 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:18:03,405 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:07,417 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:09,428 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:11,439 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:13,445 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:14,096 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:18:15,458 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:17,468 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:19,474 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:19,895 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:18:19,895 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:18:21,491 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:23,497 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:25,509 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:27,524 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:29,535 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:31,541 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:33,551 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:35,558 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:35,613 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:18:35,613 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:18:37,570 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:39,591 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:41,603 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:43,618 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:45,637 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:46,080 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:18:47,650 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:49,661 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:50,097 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:18:50,098 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:18:50,098 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:18:50,098 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:18:50,663 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:18:51,665 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:52,126 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:18:52,127 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:18:53,681 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:55,689 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:57,693 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:18:59,701 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:01,713 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:03,721 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:05,731 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:07,748 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:08,164 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:19:08,164 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:19:09,763 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:11,767 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:13,774 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:15,784 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:17,793 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:18,190 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:19:19,799 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:21,808 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:23,816 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:24,139 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:19:24,139 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:19:25,827 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:27,832 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:29,846 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:31,860 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:33,862 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:35,878 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:37,896 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:39,904 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:39,935 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:19:39,935 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:19:41,912 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:43,923 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:45,933 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:47,947 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:49,948 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:50,260 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:19:51,966 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:53,970 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:55,661 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:19:55,661 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:19:55,986 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:19:58,000 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:00,012 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:02,032 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:02,396 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:20:02,396 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:20:02,396 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:20:02,397 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:20:03,047 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:20:04,056 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:06,062 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:08,069 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:10,080 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:11,457 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:20:11,457 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:20:12,084 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:14,098 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:16,117 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:18,128 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:20,145 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:22,161 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:22,253 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:20:24,177 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:26,185 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:27,348 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:20:27,348 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:20:28,195 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:30,202 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:32,217 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:34,230 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:36,244 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:38,256 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:40,277 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:42,282 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:43,294 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:20:43,294 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:20:44,287 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:46,303 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:48,316 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:50,333 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:52,349 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:54,361 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:54,433 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:20:56,368 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:58,379 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:20:59,060 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:20:59,060 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:21:00,396 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:02,405 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:04,417 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:06,431 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:08,453 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:10,468 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:12,485 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:14,438 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:21:14,438 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:21:14,438 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:21:14,439 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:21:14,504 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:14,504 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:21:15,259 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:21:15,259 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:21:16,516 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:26,522 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:21:26,576 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:28,589 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:30,594 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:32,604 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:34,617 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:35,276 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:21:35,276 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:21:36,626 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:38,639 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:40,645 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:42,659 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:44,676 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:46,701 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:48,716 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:50,736 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:52,273 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:21:52,273 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:21:52,750 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:54,762 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:56,776 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:58,798 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:21:58,813 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:22:00,804 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:02,814 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:04,825 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:06,840 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:08,089 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:22:08,089 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:22:08,856 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:10,885 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:12,910 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:14,925 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:16,929 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:18,951 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:20,972 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:22,993 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:23,859 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:22:23,859 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:22:25,007 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:27,016 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:27,161 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:22:27,163 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:22:27,163 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:22:27,164 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:22:28,025 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:22:29,030 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:30,967 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:22:31,037 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:33,061 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:35,070 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:37,080 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:39,097 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:39,635 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:22:39,636 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:22:41,100 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:43,117 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:45,128 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:47,139 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:49,158 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:51,170 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:53,173 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:55,180 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:55,319 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:22:55,319 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:22:57,183 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:22:59,207 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:01,218 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:03,139 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:23:03,226 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:05,243 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:07,259 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:09,273 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:10,278 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:11,136 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:23:11,136 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:23:12,296 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:14,313 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:16,341 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:18,348 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:20,361 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:22,374 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:24,393 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:26,411 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:26,891 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:23:26,891 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:23:28,425 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:30,443 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:32,453 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:34,466 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:35,531 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:23:36,475 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:38,486 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:40,022 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:23:40,022 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:23:40,023 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:23:40,023 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:23:40,506 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:40,506 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:23:42,517 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:42,811 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:23:42,811 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:23:44,526 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:46,533 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:48,546 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:50,584 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:52,594 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:54,617 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:56,633 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:58,661 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:23:58,870 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:23:58,870 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:24:00,686 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:02,700 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:04,718 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:06,723 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:07,944 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:24:08,735 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:10,749 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:12,762 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:14,774 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:15,063 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:24:15,063 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:24:16,790 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:18,801 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:20,818 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:22,827 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:24,853 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:26,868 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:28,884 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:30,906 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:31,305 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:24:31,305 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:24:32,928 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:34,950 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:36,968 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:38,980 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:40,448 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:24:40,988 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:42,996 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:45,006 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:47,023 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:48,217 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:24:48,217 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:24:49,038 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:51,060 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:53,071 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:53,703 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:24:53,703 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:24:53,703 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:24:53,703 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:24:54,073 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:24:55,074 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:57,082 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:24:59,087 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:01,102 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:03,119 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:03,930 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:25:03,930 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:25:05,123 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:07,140 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:09,154 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:11,165 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:12,696 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:25:13,178 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:15,191 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:17,200 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:19,204 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:19,901 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:25:19,901 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:25:21,213 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:23,227 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:25,237 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:27,245 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:29,254 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:31,269 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:33,278 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:35,301 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:35,682 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:25:35,682 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:25:37,321 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:39,332 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:41,349 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:43,362 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:44,831 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:25:45,375 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:47,392 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:49,406 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:51,341 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:25:51,341 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:25:51,421 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:53,427 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:55,460 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:57,471 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:25:59,482 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:01,500 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:03,507 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:05,522 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:06,300 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:26:06,300 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:26:06,300 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:26:06,300 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:26:06,527 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:26:07,121 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:26:07,121 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:26:07,531 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:09,535 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:11,537 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:13,565 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:15,582 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:16,827 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:26:17,597 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:19,615 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:21,621 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:23,409 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:26:23,409 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:26:23,626 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:25,638 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:27,655 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:29,680 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:31,709 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:33,737 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:35,751 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:37,757 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:39,432 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:26:39,432 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:26:39,775 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:41,795 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:43,808 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:45,841 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:47,859 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:49,223 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:26:49,873 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:51,875 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:53,878 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:55,839 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:26:55,839 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:26:55,902 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:57,913 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:26:59,917 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:01,932 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:03,936 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:05,951 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:07,969 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:09,984 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:11,554 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: stop_status
+2025-12-27 12:27:11,555 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: stop_status
+2025-12-27 12:27:11,990 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:14,006 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:18,022 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:20,029 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:21,494 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:27:22,039 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:24,047 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:24,279 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: partial_history
+2025-12-27 12:27:24,279 DEBUG   SenderThread:28816 [sender.py:send():301] send: history
+2025-12-27 12:27:24,279 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:27:24,280 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:27:25,058 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:27:26,063 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:28,091 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:28,877 DEBUG   SenderThread:28816 [sender.py:send():301] send: exit
+2025-12-27 12:27:28,877 INFO    SenderThread:28816 [sender.py:send_exit():437] handling exit code: 255
+2025-12-27 12:27:28,877 INFO    SenderThread:28816 [sender.py:send_exit():439] handling runtime: 682
+2025-12-27 12:27:28,878 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:27:28,878 INFO    SenderThread:28816 [sender.py:send_exit():445] send defer
+2025-12-27 12:27:28,879 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,879 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 0
+2025-12-27 12:27:28,879 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,879 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 0
+2025-12-27 12:27:28,879 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 1
+2025-12-27 12:27:28,879 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,879 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 1
+2025-12-27 12:27:28,912 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,912 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:28,912 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 1
+2025-12-27 12:27:28,912 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 2
+2025-12-27 12:27:28,912 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:28,913 DEBUG   SenderThread:28816 [sender.py:send():301] send: stats
+2025-12-27 12:27:28,913 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,913 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 2
+2025-12-27 12:27:28,913 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,913 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 2
+2025-12-27 12:27:28,913 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 3
+2025-12-27 12:27:28,913 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,913 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 3
+2025-12-27 12:27:28,913 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,914 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 3
+2025-12-27 12:27:28,914 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 4
+2025-12-27 12:27:28,914 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,914 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 4
+2025-12-27 12:27:28,914 DEBUG   SenderThread:28816 [sender.py:send():301] send: summary
+2025-12-27 12:27:28,914 INFO    SenderThread:28816 [sender.py:_save_file():1155] saving file wandb-summary.json with policy end
+2025-12-27 12:27:28,915 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,915 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 4
+2025-12-27 12:27:28,915 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 5
+2025-12-27 12:27:28,915 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,915 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 5
+2025-12-27 12:27:28,915 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,915 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 5
+2025-12-27 12:27:28,915 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 6
+2025-12-27 12:27:28,915 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:28,915 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 6
+2025-12-27 12:27:28,915 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:28,915 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 6
+2025-12-27 12:27:29,014 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:29,093 INFO    Thread-16 :28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:27:29,434 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 7
+2025-12-27 12:27:29,434 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:29,434 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:29,434 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 7
+2025-12-27 12:27:29,435 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:29,435 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 7
+2025-12-27 12:27:29,435 INFO    SenderThread:28816 [dir_watcher.py:finish():362] shutting down directory watcher
+2025-12-27 12:27:29,547 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,108 INFO    SenderThread:28816 [dir_watcher.py:_on_file_modified():292] file/dir modified: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:30,108 INFO    SenderThread:28816 [dir_watcher.py:finish():392] scan: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files
+2025-12-27 12:27:30,108 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\conda-environment.yaml conda-environment.yaml
+2025-12-27 12:27:30,108 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\config.yaml config.yaml
+2025-12-27 12:27:30,109 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log output.log
+2025-12-27 12:27:30,110 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\requirements.txt requirements.txt
+2025-12-27 12:27:30,113 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-metadata.json wandb-metadata.json
+2025-12-27 12:27:30,116 INFO    SenderThread:28816 [dir_watcher.py:finish():406] scan save: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json wandb-summary.json
+2025-12-27 12:27:30,118 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 8
+2025-12-27 12:27:30,118 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,119 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:30,119 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 8
+2025-12-27 12:27:30,121 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:30,122 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 8
+2025-12-27 12:27:30,122 INFO    SenderThread:28816 [file_pusher.py:finish():168] shutting down file pusher
+2025-12-27 12:27:30,230 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,230 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,342 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,342 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,451 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,451 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,557 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,558 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,668 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,668 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,774 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,774 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,883 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,883 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:30,988 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:30,989 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,093 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,093 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,198 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,198 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,300 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,300 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,402 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,402 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,507 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,507 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,581 INFO    Thread-26 :28816 [upload_job.py:push():139] Uploaded file D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\requirements.txt
+2025-12-27 12:27:31,582 INFO    Thread-24 :28816 [upload_job.py:push():139] Uploaded file D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\config.yaml
+2025-12-27 12:27:31,611 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,611 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,715 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,715 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,814 INFO    Thread-25 :28816 [upload_job.py:push():139] Uploaded file D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\output.log
+2025-12-27 12:27:31,820 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,820 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:31,924 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:31,924 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,030 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,030 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,132 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,132 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,246 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,246 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,292 INFO    Thread-23 :28816 [upload_job.py:push():139] Uploaded file D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\conda-environment.yaml
+2025-12-27 12:27:32,353 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,353 INFO    Thread-27 :28816 [upload_job.py:push():139] Uploaded file D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\files\wandb-summary.json
+2025-12-27 12:27:32,353 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,456 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,456 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,566 INFO    Thread-15 :28816 [sender.py:transition_state():458] send defer: 9
+2025-12-27 12:27:32,566 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:32,566 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:32,567 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:32,567 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 9
+2025-12-27 12:27:32,567 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:32,567 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 9
+2025-12-27 12:27:32,681 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:33,969 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 10
+2025-12-27 12:27:33,969 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:33,969 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:33,969 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 10
+2025-12-27 12:27:33,970 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:33,970 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 10
+2025-12-27 12:27:33,970 INFO    SenderThread:28816 [sender.py:transition_state():458] send defer: 11
+2025-12-27 12:27:33,970 DEBUG   SenderThread:28816 [sender.py:send():301] send: final
+2025-12-27 12:27:33,970 DEBUG   SenderThread:28816 [sender.py:send():301] send: footer
+2025-12-27 12:27:33,970 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: defer
+2025-12-27 12:27:33,971 INFO    HandlerThread:28816 [handler.py:handle_request_defer():161] handle defer: 11
+2025-12-27 12:27:33,971 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: defer
+2025-12-27 12:27:33,971 INFO    SenderThread:28816 [sender.py:send_request_defer():454] handle sender defer: 11
+2025-12-27 12:27:34,075 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: poll_exit
+2025-12-27 12:27:34,076 DEBUG   SenderThread:28816 [sender.py:send_request():315] send_request: poll_exit
+2025-12-27 12:27:34,076 INFO    SenderThread:28816 [file_pusher.py:join():173] waiting for file pusher
+2025-12-27 12:27:36,340 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: sampled_history
+2025-12-27 12:27:36,343 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: get_summary
+2025-12-27 12:27:36,343 INFO    MainThread:28816 [wandb_run.py:_footer_history_summary_info():3321] rendering history
+2025-12-27 12:27:36,343 INFO    MainThread:28816 [wandb_run.py:_footer_history_summary_info():3353] rendering summary
+2025-12-27 12:27:36,344 INFO    MainThread:28816 [wandb_run.py:_footer_sync_info():3277] logging synced files
+2025-12-27 12:27:36,344 DEBUG   HandlerThread:28816 [handler.py:handle_request():138] handle_request: shutdown
+2025-12-27 12:27:36,344 INFO    HandlerThread:28816 [handler.py:finish():807] shutting down handler
+2025-12-27 12:27:36,993 INFO    WriterThread:28816 [datastore.py:close():279] close: D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_121557-783m362e\run-783m362e.wandb
+2025-12-27 12:27:37,243 INFO    SenderThread:28816 [sender.py:finish():1315] shutting down sender
+2025-12-27 12:27:37,243 INFO    SenderThread:28816 [file_pusher.py:finish():168] shutting down file pusher
+2025-12-27 12:27:37,244 INFO    SenderThread:28816 [file_pusher.py:join():173] waiting for file pusher
+2025-12-27 12:27:37,348 INFO    MainThread:28816 [internal.py:handle_exit():78] Internal process exited

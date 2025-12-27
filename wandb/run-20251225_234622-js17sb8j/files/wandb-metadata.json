@@ -1,0 +1,27 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.7.1",
+    "heartbeatAt": "2025-12-25T15:46:25.033684",
+    "startedAt": "2025-12-25T15:46:22.561511",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_count": 1,
+    "cpu_count": 16,
+    "cuda": null,
+    "args": [
+        "--device",
+        "0"
+    ],
+    "state": "running",
+    "program": "src/main.py",
+    "codePath": "src\\main.py",
+    "git": {
+        "remote": "https://github.com/lvchaoqun-39/MMSD2.0.git",
+        "commit": "91fdb32875482a180d57d3c96cf3c72ee5187fb7"
+    },
+    "email": "lvchaoqun25@gmail.com",
+    "root": "D:/users/lvcha/Documents/\u4e07\u6076\u4e4b\u6e90\u7814\u7a76\u751f\u7248/\u6bd5\u4e1a\u76f8\u5173/\u591a\u6a21\u5757/MMSD2.0",
+    "host": "LAPTOP-OMIMI9LH",
+    "username": "lvcha",
+    "executable": "C:\\Users\\lvcha\\miniconda3\\envs\\mmsd2\\python.exe"
+}

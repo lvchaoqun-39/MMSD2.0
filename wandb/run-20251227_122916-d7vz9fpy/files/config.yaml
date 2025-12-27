@@ -1,0 +1,129 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.13.3
+    framework: huggingface
+    huggingface_version: 4.23.1
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.1
+    start_time: 1766809756.43129
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      2:
+      - 1
+      - 5
+      - 11
+      - 41
+      - 49
+      - 53
+      - 55
+      3:
+      - 13
+      - 16
+      - 23
+      4: 3.7.1
+      5: 0.13.3
+      6: 4.23.1
+      8:
+      - 3
+      - 5
+batch_size:
+  desc: null
+  value: 16
+data_dir:
+  desc: null
+  value: data/text_json_final
+dataset:
+  desc: null
+  value: MMSD2.0
+device:
+  desc: null
+  value: '0'
+dropout_rate:
+  desc: null
+  value: 0.1
+fusion_layers:
+  desc: null
+  value: 2
+hidden_size:
+  desc: null
+  value: 768
+image_dir:
+  desc: null
+  value: data/dataset_image
+image_size:
+  desc: null
+  value: 768
+label_number:
+  desc: null
+  value: 2
+layers:
+  desc: null
+  value: 2
+learning_rate:
+  desc: null
+  value: 2.0e-05
+log_step:
+  desc: null
+  value: 100
+max_grad_norm:
+  desc: null
+  value: 1.0
+max_seq_length:
+  desc: null
+  value: 64
+model_name:
+  desc: null
+  value: RCLMFN
+num_epochs:
+  desc: null
+  value: 10
+num_heads:
+  desc: null
+  value: 4
+optimizer:
+  desc: null
+  value: AdamW
+save_dir:
+  desc: null
+  value: checkpoints
+save_epoch:
+  desc: null
+  value: 5
+schedule:
+  desc: null
+  value: linear
+seed:
+  desc: null
+  value: 42
+simple_linear:
+  desc: null
+  value: false
+test_model_path:
+  desc: null
+  value: ''
+test_only:
+  desc: null
+  value: false
+text_size:
+  desc: null
+  value: 512
+use_wandb:
+  desc: null
+  value: true
+warmup_ratio:
+  desc: null
+  value: 0.1
+weight_decay:
+  desc: null
+  value: 0.01

@@ -1,0 +1,86 @@
+2025-12-27 11:55:28,684 INFO    MainThread:1208 [wandb_setup.py:_flush():68] Configure stats pid to 1208
+2025-12-27 11:55:28,685 INFO    MainThread:1208 [wandb_setup.py:_flush():68] Loading settings from C:\Users\lvcha\.config\wandb\settings
+2025-12-27 11:55:28,685 INFO    MainThread:1208 [wandb_setup.py:_flush():68] Loading settings from D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\settings
+2025-12-27 11:55:28,685 INFO    MainThread:1208 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2025-12-27 11:55:28,685 INFO    MainThread:1208 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'src\\main.py', 'program': 'src/main.py'}
+2025-12-27 11:55:28,685 INFO    MainThread:1208 [wandb_init.py:_log_setup():476] Logging user logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_115528-okcig30l\logs\debug.log
+2025-12-27 11:55:28,686 INFO    MainThread:1208 [wandb_init.py:_log_setup():477] Logging internal logs to D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\wandb\run-20251227_115528-okcig30l\logs\debug-internal.log
+2025-12-27 11:55:28,686 INFO    MainThread:1208 [wandb_init.py:init():516] calling init triggers
+2025-12-27 11:55:28,686 INFO    MainThread:1208 [wandb_init.py:init():520] wandb.init called with sweep_config: {}
+config: {'model_name': 'RCLMFN', 'dataset': 'MMSD2.0', 'data_dir': 'data/text_json_final', 'image_dir': 'data/dataset_image', 'save_dir': 'checkpoints', 'num_epochs': 20, 'batch_size': 16, 'learning_rate': 2e-05, 'weight_decay': 0.01, 'warmup_ratio': 0.1, 'max_grad_norm': 1.0, 'dropout_rate': 0.1, 'save_epoch': 5, 'log_step': 100, 'use_wandb': True, 'label_number': 2, 'text_size': 512, 'image_size': 768, 'layers': 2, 'simple_linear': False, 'hidden_size': 768, 'num_heads': 4, 'fusion_layers': 2, 'max_seq_length': 64, 'optimizer': 'AdamW', 'schedule': 'linear', 'device': '0', 'seed': 42, 'test_only': False, 'test_model_path': ''}
+2025-12-27 11:55:28,686 INFO    MainThread:1208 [wandb_init.py:init():569] starting backend
+2025-12-27 11:55:28,686 INFO    MainThread:1208 [wandb_init.py:init():573] setting up manager
+2025-12-27 11:55:28,690 INFO    MainThread:1208 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=spawn, using: spawn
+2025-12-27 11:55:28,694 INFO    MainThread:1208 [wandb_init.py:init():580] backend started and connected
+2025-12-27 11:55:28,694 INFO    MainThread:1208 [wandb_init.py:init():658] updated telemetry
+2025-12-27 11:55:28,745 INFO    MainThread:1208 [wandb_init.py:init():693] communicating run to backend with 30 second timeout
+2025-12-27 11:55:50,162 ERROR   Thread-7  :1208 [retry.py:__call__():154] Retry attempt failed:
+Traceback (most recent call last):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\connectionpool.py", line 711, in urlopen
+    self._prepare_proxy(conn)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\connectionpool.py", line 1007, in _prepare_proxy
+    conn.connect()
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\connection.py", line 429, in connect
+    tls_in_tls=tls_in_tls,
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\util\ssl_.py", line 450, in ssl_wrap_socket
+    sock, context, tls_in_tls, server_hostname=server_hostname
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\util\ssl_.py", line 493, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\ssl.py", line 412, in wrap_socket
+    session=session
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\ssl.py", line 853, in _create
+    self.do_handshake()
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\ssl.py", line 1117, in do_handshake
+    self._sslobj.do_handshake()
+OSError: [Errno 0] Error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\adapters.py", line 497, in send
+    chunked=chunked,
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\connectionpool.py", line 799, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\urllib3\util\retry.py", line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.wandb.ai', port=443): Max retries exceeded with url: /graphql (Caused by ProxyError('Cannot connect to proxy.', OSError(0, 'Error')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\lib\retry.py", line 113, in __call__
+    result = self._call_fn(*args, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\internal\internal_api.py", line 199, in execute
+    return self.client.execute(*args, **kwargs)  # type: ignore
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\vendor\gql-0.2.0\wandb_gql\client.py", line 52, in execute
+    result = self._get_result(document, *args, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\vendor\gql-0.2.0\wandb_gql\client.py", line 60, in _get_result
+    return self.transport.execute(document, *args, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\vendor\gql-0.2.0\wandb_gql\transport\requests.py", line 38, in execute
+    request = requests.post(self.url, **post_args)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\requests\adapters.py", line 513, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPSConnectionPool(host='api.wandb.ai', port=443): Max retries exceeded with url: /graphql (Caused by ProxyError('Cannot connect to proxy.', OSError(0, 'Error')))
+2025-12-27 11:55:57,000 WARNING MainThread:1208 [wandb_init.py:init():1097] interrupted
+Traceback (most recent call last):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\wandb_init.py", line 1076, in init
+    run = wi.init()
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\wandb_init.py", line 697, in init
+    timeout=self.settings.init_timeout, on_progress=self._on_init_progress
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\lib\mailbox.py", line 76, in wait
+    found = self._slot._get_and_clear(timeout=1)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\wandb\sdk\lib\mailbox.py", line 35, in _get_and_clear
+    if self._event.wait(timeout=timeout):
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\threading.py", line 552, in wait
+    signaled = self._cond.wait(timeout)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\threading.py", line 300, in wait
+    gotit = waiter.acquire(True, timeout)
+KeyboardInterrupt

@@ -1,0 +1,478 @@
+
+Training:   0%|                                               | 0/1239 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Training:  31%|███████████▎                         | 379/1239 [04:59<11:36,  1.23it/s]
+
+
+
+
+
+
+
+
+
+
+Training:  33%|████████████                         | 406/1239 [05:19<10:06,  1.37it/s]
+警告: 无法加载图像 data/dataset_image\820057323334995968.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820057323334995968.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\936992190881939456.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\936992190881939456.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820055346861449217.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820055346861449217.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\719382525613879297.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\719382525613879297.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\840471224799055872.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\840471224799055872.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820049630448775168.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820049630448775168.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\825037402876035072.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\825037402876035072.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818240366394556416.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818240366394556416.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819327980505796609.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819327980505796609.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819331068142743552.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819331068142743552.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822953967453933568.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822953967453933568.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818241071843016705.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818241071843016705.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822592326618988546.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822592326618988546.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819324769954828290.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819324769954828290.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822953208939057154.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822953208939057154.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819692971989889025.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819692971989889025.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818603951805186048.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818603951805186048.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\730498012003348486.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\730498012003348486.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820055596837675008.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820055596837675008.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823313033376108545.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823313033376108545.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\843499395937189889.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\843499395937189889.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\913770074393149445.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\913770074393149445.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\877034595400548352.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\877034595400548352.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\854263569793396737.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\854263569793396737.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\856185648843247617.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\856185648843247617.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819693543895678976.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819693543895678976.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822232070638469120.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822232070638469120.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820418253700923392.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820418253700923392.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\849901545441427456.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\849901545441427456.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\913161021623111680.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\913161021623111680.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\701134888972460032.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\701134888972460032.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\910327757460185088.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\910327757460185088.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\892936354224418816.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\892936354224418816.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\722477129196269568.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\722477129196269568.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819331205317492736.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819331205317492736.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816795639795384321.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816795639795384321.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822229275818491904.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822229275818491904.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822223714758619137.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822223714758619137.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\908866280874164224.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\908866280874164224.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822226353676320768.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226353676320768.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822222349256822784.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822222349256822784.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818241103585538052.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818241103585538052.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820050459343945729.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820050459343945729.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818239003325595648.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818239003325595648.jpg'. 使用空白图像代替。
+
+Training:  33%|████████████▏                        | 410/1239 [05:21<08:32,  1.62it/s]
+警告: 无法加载图像 data/dataset_image\820410830445543425.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820410830445543425.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\715947738416816130.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\715947738416816130.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\826362365037903872.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\826362365037903872.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\930163177362546690.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\930163177362546690.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818245569621749760.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818245569621749760.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822230454719905793.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822230454719905793.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\910691706705768449.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\910691706705768449.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823317446618677249.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823317446618677249.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\897656552034889728.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\897656552034889728.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\856215036968050688.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\856215036968050688.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822224305748443137.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822224305748443137.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819326408686178305.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819326408686178305.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\899660123211223040.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\899660123211223040.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822590379329515522.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822590379329515522.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821504246680080384.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821504246680080384.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819689482555392000.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819689482555392000.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823314839082795011.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823314839082795011.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820055340326625280.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820055340326625280.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\911043637680787456.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\911043637680787456.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\715493260005924864.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\715493260005924864.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\877355024703250432.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\877355024703250432.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821868091856551940.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821868091856551940.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818240127805825024.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818240127805825024.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\878595534889603073.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\878595534889603073.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\734128707388866560.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\734128707388866560.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820410631128043520.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820410631128043520.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822226964211638272.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226964211638272.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822591789156679680.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822591789156679680.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819330706753064963.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819330706753064963.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\864234000268873728.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\864234000268873728.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821504642127368192.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821504642127368192.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819686272281309184.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819686272281309184.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822589322440404992.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822589322440404992.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820053562851889152.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820053562851889152.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818239533946900481.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818239533946900481.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\717581620325326848.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\717581620325326848.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\697161140607000576.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\697161140607000576.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\916850104941862912.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\916850104941862912.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822949172454141952.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822949172454141952.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\928244586928939008.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\928244586928939008.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820055679079686144.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820055679079686144.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816978676143116289.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816978676143116289.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822229598444408832.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822229598444408832.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\841281191374385152.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\841281191374385152.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\810235979558699008.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\810235979558699008.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\828213493971185664.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\828213493971185664.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822591868366102528.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822591868366102528.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822229629683531776.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822229629683531776.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822222196395282432.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822222196395282432.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\903680447036710913.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\903680447036710913.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819688074670211073.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819688074670211073.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816795640223191040.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816795640223191040.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819691871727394816.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819691871727394816.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823315005701582849.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823315005701582849.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818607903959453696.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818607903959453696.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\844117799974838272.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\844117799974838272.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\848900206594850818.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\848900206594850818.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820054938600488960.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820054938600488960.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\929206770626576384.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\929206770626576384.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\923391591632355328.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\923391591632355328.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\847004394612776965.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\847004394612776965.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\713788730922786816.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\713788730922786816.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820415118727151621.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820415118727151621.jpg'. 使用空白图像代替。
+
+Training:  33%|████████████▎                        | 413/1239 [05:23<07:59,  1.72it/s]
+警告: 无法加载图像 data/dataset_image\822949616987545607.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822949616987545607.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820417707992432640.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820417707992432640.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819692621232619520.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819692621232619520.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\936028050336051201.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\936028050336051201.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\842838641663598592.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\842838641663598592.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819687934114856960.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819687934114856960.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820413441571782656.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820413441571782656.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\897622922352881665.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\897622922352881665.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819692609417441280.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819692609417441280.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\768462701647523840.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\768462701647523840.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817517460467421184.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817517460467421184.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823316566372741127.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823316566372741127.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817883415399858176.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817883415399858176.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819689078891245568.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819689078891245568.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\917558821475758080.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\917558821475758080.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822222149742166017.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822222149742166017.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818607230832570368.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818607230832570368.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\842963606513754112.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\842963606513754112.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820410564602118147.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820410564602118147.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819327330418118662.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819327330418118662.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822222570942590977.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822222570942590977.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820050942703833088.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820050942703833088.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820049095242944512.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820049095242944512.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817520990083235840.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817520990083235840.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822933636781576193.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822933636781576193.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822225982534782977.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822225982534782977.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819332792534368256.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819332792534368256.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820418871215722498.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820418871215722498.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\831905365159768064.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\831905365159768064.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819331911348842496.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819331911348842496.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820419828251062274.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820419828251062274.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\852193638641741828.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\852193638641741828.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822588685543763970.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822588685543763970.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823313305062277120.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823313305062277120.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822590478088601600.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822590478088601600.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819686588808654849.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819686588808654849.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820049660970762244.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820049660970762244.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\892816903038742538.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\892816903038742538.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818240407171637248.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818240407171637248.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822587401809825793.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822587401809825793.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818606037729165312.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818606037729165312.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\713032187264806913.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\713032187264806913.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819324779077468162.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819324779077468162.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\829580204251238401.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\829580204251238401.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\689691065503326208.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\689691065503326208.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818241599499104256.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818241599499104256.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\824038965397299200.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\824038965397299200.jpg'. 使用空白图像代替。
+
+Training:  34%|████████████▍                        | 416/1239 [05:24<07:41,  1.78it/s]
+警告: 无法加载图像 data/dataset_image\822226981358026753.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226981358026753.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\837868133214011392.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\837868133214011392.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\832226655699628032.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\832226655699628032.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\894361441154871297.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\894361441154871297.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\731969812755288065.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\731969812755288065.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\833577079719460864.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\833577079719460864.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\849685740963475457.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\849685740963475457.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\768348236838998016.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\768348236838998016.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\892359022866825216.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\892359022866825216.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822588780708241408.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822588780708241408.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819685555713806337.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819685555713806337.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\684920023475994626.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\684920023475994626.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\916649225559166978.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\916649225559166978.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\685164083117608960.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\685164083117608960.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822947201659928576.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822947201659928576.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\852269378905272320.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\852269378905272320.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\689751315505926144.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\689751315505926144.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823316710669303808.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823316710669303808.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821868896374300672.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821868896374300672.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\926347123951591424.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\926347123951591424.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818605443798876160.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818605443798876160.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822951089469325314.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822951089469325314.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\850185738717155328.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\850185738717155328.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820781898016362496.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820781898016362496.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818239908699480064.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818239908699480064.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\761075708881870848.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\761075708881870848.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819690836417921025.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819690836417921025.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817519713064456193.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817519713064456193.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\784534223273267200.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\784534223273267200.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821505679231893505.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821505679231893505.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820781452082216961.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820781452082216961.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820056390081409024.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820056390081409024.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819324390475202560.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819324390475202560.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822951130745438209.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822951130745438209.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816071552831631360.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816071552831631360.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817158692168577024.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817158692168577024.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822955228358148097.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822955228358148097.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\871345105784930304.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\871345105784930304.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\687837109395288064.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\687837109395288064.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\873095575478063104.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\873095575478063104.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821506990182694913.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821506990182694913.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822226158473400320.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226158473400320.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823310802404999170.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823310802404999170.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822224398371454976.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822224398371454976.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\895008392820994048.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\895008392820994048.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822228589600907264.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822228589600907264.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\713467688966815744.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\713467688966815744.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\906351998789808128.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\906351998789808128.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819685355808899072.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819685355808899072.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822585534191206405.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822585534191206405.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\916814347728429056.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\916814347728429056.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820054046081949696.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820054046081949696.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818245055609733121.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818245055609733121.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\875084529937133568.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\875084529937133568.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819686807444930561.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819686807444930561.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822223561083367424.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822223561083367424.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\827036948397068288.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\827036948397068288.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822225483852976128.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822225483852976128.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\904594132106141696.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\904594132106141696.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\847242901000040448.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\847242901000040448.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822588965916180481.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822588965916180481.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\689681644987551744.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\689681644987551744.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\710447946144161792.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\710447946144161792.jpg'. 使用空白图像代替。
+
+Training:  34%|████████████▌                        | 420/1239 [05:27<07:30,  1.82it/s]
+警告: 无法加载图像 data/dataset_image\819691614415290368.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819691614415290368.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816796305838120960.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816796305838120960.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820050422413094912.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820050422413094912.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\928087301149921280.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\928087301149921280.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\929909591122546688.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\929909591122546688.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822224521948266496.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822224521948266496.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820365303980953600.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820365303980953600.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\873915558911234049.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\873915558911234049.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822226344855609344.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226344855609344.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816796274875715585.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816796274875715585.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822226082682327040.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822226082682327040.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818607147411869696.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818607147411869696.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821508692302503936.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821508692302503936.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820420110762573824.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820420110762573824.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818245809510739968.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818245809510739968.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822956322056531969.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822956322056531969.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\694548759049535488.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\694548759049535488.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\704551334284898304.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\704551334284898304.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819325659814109184.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819325659814109184.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820416384278626306.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820416384278626306.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\899687111992893440.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\899687111992893440.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\912912205712171008.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\912912205712171008.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820412365112020992.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820412365112020992.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\887749769413574657.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\887749769413574657.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818244508802371585.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818244508802371585.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819325262227734528.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819325262227734528.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819689370974384128.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819689370974384128.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818242663241629698.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818242663241629698.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\815709115213344768.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\815709115213344768.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\918821839509557248.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\918821839509557248.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818242448228913152.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818242448228913152.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\816071490588250112.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\816071490588250112.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819332279579377664.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819332279579377664.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822587367970238464.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822587367970238464.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\882426723073118208.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\882426723073118208.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\888234038703423488.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\888234038703423488.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820409578676482048.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820409578676482048.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820057159119474688.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820057159119474688.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822956244562481152.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822956244562481152.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820053400851255298.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820053400851255298.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822228086129205248.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822228086129205248.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822228366321389568.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822228366321389568.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819332189695381506.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819332189695381506.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822225929082703872.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822225929082703872.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821506576498364416.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821506576498364416.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\821868104116412416.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\821868104116412416.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822593421735038977.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822593421735038977.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820048122726510593.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820048122726510593.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822953176005509120.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822953176005509120.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\919289960276156416.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\919289960276156416.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820050907350134786.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820050907350134786.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\838864907596595201.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\838864907596595201.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\905050644356235266.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\905050644356235266.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\697515822487621634.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\697515822487621634.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822592667217526785.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822592667217526785.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\829492134327693313.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\829492134327693313.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\850045399108911105.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\850045399108911105.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819685709195771904.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819685709195771904.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817519231130537984.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817519231130537984.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823316321937031169.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823316321937031169.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818607132018872320.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818607132018872320.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823309339519811588.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823309339519811588.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\851774723772080128.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\851774723772080128.jpg'. 使用空白图像代替。
+
+Training:  34%|████████████▋                        | 424/1239 [05:29<07:27,  1.82it/s]
+警告: 无法加载图像 data/dataset_image\820056165220388864.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820056165220388864.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822584584730714112.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822584584730714112.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\848545726128959488.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\848545726128959488.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\820056661322776576.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\820056661322776576.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\919062726982463488.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\919062726982463488.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\822224701925818370.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\822224701925818370.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\817516506368118784.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\817516506368118784.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818519374277459968.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818519374277459968.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\819689123321552896.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\819689123321552896.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\829215036275118081.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\829215036275118081.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\724172183958884352.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\724172183958884352.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823316994053140480.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823316994053140480.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\818238734793523200.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\818238734793523200.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\823309649063583744.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\823309649063583744.jpg'. 使用空白图像代替。
+警告: 无法加载图像 data/dataset_image\717467843105787904.jpg, 错误: [Errno 2] No such file or directory: 'data/dataset_image\\717467843105787904.jpg'. 使用空白图像代替。
+Training:  34%|████████████▋                        | 425/1239 [05:30<10:32,  1.29it/s]
+Traceback (most recent call last):
+  File "src/main.py", line 213, in <module>
+    main()
+  File "src/main.py", line 198, in main
+    best_f1 = train(args, model, device, train_data, valid_data, test_data, optimizer, scheduler)
+  File "D:\users\lvcha\Documents\万恶之源研究生版\毕业相关\多模块\MMSD2.0\src\train.py", line 105, in train
+    torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
+  File "C:\Users\lvcha\miniconda3\envs\mmsd2\lib\site-packages\torch\nn\utils\clip_grad.py", line 56, in clip_grad_norm_
+    g.detach().mul_(clip_coef_clamped.to(g.device))
+KeyboardInterrupt
