@@ -1,1 +1,4 @@
 .idea
+data/dataset_image/
+src/__pycache__/
+wandb
