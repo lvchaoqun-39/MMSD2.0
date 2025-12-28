@@ -79,11 +79,11 @@ class MV_CLIP(nn.Module):
 
         new_image_feature = fuse_hiddens[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
 
-        text_weight = self.att(new_text_feature)
-        image_weight = self.att(new_image_feature)    
-        att = nn.functional.softmax(torch.stack((text_weight, image_weight), dim=-1),dim=-1)
-        tw, iw = att.split([1,1], dim=-1)
-        fuse_feature = tw.squeeze(1) * new_text_feature + iw.squeeze(1) * new_image_feature
+        text_weight = self.att(new_text_feature) # 计算文本特征的注意力权重
+        image_weight = self.att(new_image_feature) # 计算图像特征的注意力权重
+        att = nn.functional.softmax(torch.stack((text_weight, image_weight), dim=-1),dim=-1) # 将文本和图像的原始注意力分数转换为 归一化的权重分布
+        tw, iw = att.split([1,1], dim=-1) # 将归一化的权重张量分割为 独立的文本权重 和 独立的图像权重
+        fuse_feature = tw.squeeze(1) * new_text_feature + iw.squeeze(1) * new_image_feature # 加权融合文本和图像特征：(文本权重 × 文本特征) + (图像权重 × 图像特征)
 
         logits_fuse = self.classifier_fuse(fuse_feature)
         logits_text = self.classifier_text(text_feature)
