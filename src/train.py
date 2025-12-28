@@ -47,10 +47,18 @@ def train(args, model, device, train_dataset, valid_dataset, test_dataset, token
         os.mkdir(args.output_dir)  # 如果输出目录不存在，就创建它
 
     # train_loader 是一个可迭代对象；遍历它时（ for step, batch in enumerate(iter_bar): ），每次得到的 batch 就是 collate_func 组装好的一个 batch： (text_list, image_list, label_list, id_list)
+    # 修改前：使用了未定义的MyDataset类
+    # train_loader = DataLoader(dataset=train_dataset,
+    #                           batch_size=args.train_batch_size, 
+    #                           collate_fn=MyDataset.collate_func, 
+    #                           shuffle=True)
+    
+    # 修改后：使用dataset实例的collate_func方法
     train_loader = DataLoader(dataset=train_dataset,
-                              batch_size=args.train_batch_size, # 分批
-                              collate_fn=MyDataset.collate_func, # 将单个数据点处理成模型输入的格式
-                              shuffle=True) # 每个epoch开始前随机打乱数据顺序
+                              batch_size=args.train_batch_size,
+                              collate_fn=train_dataset.collate_func,
+                              shuffle=True)
+
     total_steps = int(len(train_loader) * args.num_train_epochs) # 全程一共会跑多少个 batch
     model.to(device) # 把模型的参数和缓冲区（weights、bias、BatchNorm 的 running stats 等） 移动到指定计算设备上。
 
@@ -247,16 +255,18 @@ def evaluate_acc_f1(args, model, device, dataset, tokenizer, mode='dev'):
     
     # 记录结果到wandb
     if args.use_wandb:
-        import wandb
-        # 检查wandb是否已经初始化
+        # 确保wandb.run存在
         if wandb.run is not None:
-            wandb.log({
-                f"{mode}_loss": avg_loss,
-                f"{mode}_accuracy": accuracy,
-                f"{mode}_f1": f1_score,
-                f"{mode}_precision": precision,
-                f"{mode}_recall": recall
-            })
+            try:
+                wandb.log({
+                    f"{mode}_loss": avg_loss,
+                    f"{mode}_accuracy": accuracy,
+                    f"{mode}_f1": f1_score,
+                    f"{mode}_precision": precision,
+                    f"{mode}_recall": recall
+                })
+            except Exception as e:
+                print(f"Wandb log error in evaluate: {e}")
     
     # 打印评估结果
     print(f"{mode} Loss: {avg_loss:.4f}")
@@ -269,10 +279,10 @@ def evaluate_acc_f1(args, model, device, dataset, tokenizer, mode='dev'):
 
 
 def train(args, model, device, train_dataset, dev_dataset, optimizer, scheduler, tokenizer):
-    # 创建数据加载器
+    # 创建数据加载器，使用batch_size参数而不是train_batch_size
     train_loader = DataLoader(
         train_dataset,
-        batch_size=args.train_batch_size,
+        batch_size=args.batch_size,  # 修改为使用batch_size
         shuffle=True,
         collate_fn=train_dataset.collate_func
     )
@@ -315,10 +325,17 @@ def train(args, model, device, train_dataset, dev_dataset, optimizer, scheduler,
             
             # 记录到wandb
             if args.use_wandb and hasattr(args, 'logging_steps') and step % args.logging_steps == 0:
-                wandb.log({
-                    "train_loss": loss.item(),
-                    "learning_rate": optimizer.param_groups[0]['lr']
-                })
+                # 确保wandb.run存在
+                if wandb.run is not None:
+                    try:
+                        wandb.log({
+                            "train_loss": loss.item(),
+                            "learning_rate": optimizer.param_groups[0]['lr'],
+                            "epoch": epoch,
+                            "step": step
+                        })
+                    except Exception as e:
+                        logger.error(f"Wandb log error: {e}")
         
         # 计算平均训练损失
         avg_train_loss = total_loss / len(train_loader)
@@ -333,14 +350,20 @@ def train(args, model, device, train_dataset, dev_dataset, optimizer, scheduler,
         if dev_f1 > best_f1:
             best_f1 = dev_f1
             patience = 0
-            # 保存最好的模型
-            if hasattr(args, 'save_model') and args.save_model:
-                torch.save(model.state_dict(), os.path.join(args.output_dir, 'best_model.bin'))
-            logger.info(f"New best F1: {best_f1:.4f} - Model saved!")
+            
+            # 保存最佳模型
+            if not os.path.exists(args.output_dir):
+                os.makedirs(args.output_dir)
+            
+            model_path = os.path.join(args.output_dir, f'best_model_epoch_{epoch+1}.pth')
+            torch.save(model.state_dict(), model_path)
+            print(f"保存最佳模型到: {model_path}")
         else:
             patience += 1
+            print(f"早停计数器: {patience}/{args.early_stop}")
+            
             if patience >= args.early_stop:
-                logger.info(f"Early stopping triggered after {patience} epochs without improvement")
+                print("触发早停机制，停止训练")
                 break
     
     return best_f1
