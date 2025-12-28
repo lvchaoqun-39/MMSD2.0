@@ -5,10 +5,10 @@ import torch
 import torch.nn.functional as F
 import copy
 
-class MultimodalEncoder(nn.Module):
+class MultimodalEncoder(nn.Module): # 本质上是“把 BERT 的 Transformer Encoder Layer 叠 N 层”，并在前向时可选地返回每一层的输出以及注意力矩阵
     def __init__(self, config, layer_number):
         super(MultimodalEncoder, self).__init__()
-        layer = BertLayer(config)
+        layer = BertLayer(config) # 用 Hugging Face 的 BertLayer 创建一个标准的 Transformer encoder layer（包含自注意力 + 前馈网络 + 残差 + LayerNorm），其维度/头数等由 config 决定。
         self.layer = nn.ModuleList([copy.deepcopy(layer) for _ in range(layer_number)])
 
     def forward(self, hidden_states, attention_mask, output_all_encoded_layers=True):
@@ -27,11 +27,11 @@ class MultimodalEncoder(nn.Module):
 class MV_CLIP(nn.Module):
     def __init__(self, args):
         super(MV_CLIP, self).__init__()
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.config = BertConfig.from_pretrained("bert-base-uncased")
-        self.config.hidden_size = 512
-        self.config.num_attention_heads = 8
-        self.trans = MultimodalEncoder(self.config, layer_number=args.layers)
+        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32") # 从 Hugging Face 加载预训练的 CLIP 模型（ViT-B/32）。它负责把图像/文本编码成向量特征
+        self.config = BertConfig.from_pretrained("bert-base-uncased") # 读取一份 BERT 的配置对象 BertConfig ，这里主要是“借用 BERT 的 Transformer 配置结构”
+        self.config.hidden_size = 512 # 把 Transformer 的隐藏层维度改成 512，用来对齐 CLIP 的特征维度（CLIP ViT-B/32 的 embedding 通常是 512）。
+        self.config.num_attention_heads = 8 # 设置多头注意力的头数为 8。要求 hidden_size 能被头数整除（512/8=64），这样每个 head 的维度是 64
+        self.trans = MultimodalEncoder(self.config, layer_number=args.layers) # 用上面这份配置创建一个自定义的多模态 Transformer 编码器
         if args.simple_linear:
             self.text_linear =  nn.Linear(args.text_size, args.text_size)
             self.image_linear =  nn.Linear(args.image_size, args.image_size)
