@@ -85,10 +85,12 @@ class MV_CLIP(nn.Module):
         tw, iw = att.split([1,1], dim=-1) # 将归一化的权重张量分割为 独立的文本权重 和 独立的图像权重
         fuse_feature = tw.squeeze(1) * new_text_feature + iw.squeeze(1) * new_image_feature # 加权融合文本和图像特征：(文本权重 × 文本特征) + (图像权重 × 图像特征)
 
+        # 通过三个分类头得到未归一化的分类分数
         logits_fuse = self.classifier_fuse(fuse_feature)
         logits_text = self.classifier_text(text_feature)
         logits_image = self.classifier_image(image_feature)
    
+        # 用 softmax 把 logits 变成每个类别的概率
         fuse_score = nn.functional.softmax(logits_fuse, dim=-1)
         text_score = nn.functional.softmax(logits_text, dim=-1)
         image_score = nn.functional.softmax(logits_image, dim=-1)

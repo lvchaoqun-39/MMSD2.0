@@ -15,9 +15,10 @@ class MyDataset(Dataset):
         for id in self.data.keys():
             self.data[id]["image_path"] = os.path.join(WORKING_PATH,"dataset_image",str(id)+".jpg")
     
+    # 读取训练数据的 json 文件，把“有对应图片文件”的样本整理成一个字典 data_set ，并支持用 limit 限制最多加载多少条
     def load_data(self, mode, limit):
-        cnt = 0
-        data_set=dict()
+        cnt = 0 # 计数已加入的数据条数
+        data_set=dict() # 用来存最终数据
         if mode in ["train"]:
             f1= open(os.path.join(WORKING_PATH, self.text_name ,mode+".json"),'r',encoding='utf-8')
             datas = json.load(f1)
@@ -64,8 +65,8 @@ class MyDataset(Dataset):
     def __len__(self):
         return len(self.image_ids)
     @staticmethod
-    def collate_func(batch_data):
-        batch_size = len(batch_data)
+    def collate_func(batch_data): # 把 Dataset.__getitem__ 返回的一条条样本整理成一个 batch 形式的多列表输出
+        batch_size = len(batch_data) # 当前 batch 里样本数量
  
         if batch_size == 0:
             return {}
