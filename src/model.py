@@ -51,6 +51,15 @@ class MV_CLIP(nn.Module):
         self.classifier_text = nn.Linear(args.text_size, args.label_number)
         self.classifier_image = nn.Linear(args.image_size, args.label_number)
 
+        # 可学习权重
+        self.cim_text_proj = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.cim_image_proj = nn.Linear(args.text_size, args.text_size, bias=False)
+
+        # 交互矩阵？
+        self.cim_text_ln = nn.LayerNorm(args.text_size)
+        self.cim_image_ln = nn.LayerNorm(args.text_size)
+        self.cim_logit_scale = nn.Parameter(torch.tensor(0.0)) # 可学习温度
+
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
 
@@ -63,23 +72,36 @@ class MV_CLIP(nn.Module):
         text_feature = self.text_linear(text_feature) # 文本特征线性变换
         image_feature = self.image_linear(image_feature) # 图像特征线性变换
 
-        text_embeds = self.model.text_projection(text_features) # 文本特征投影
-        image_embeds = self.model.visual_projection(image_features) # 图像特征投影
-        image_token_len = image_embeds.shape[1]
-        input_embeds = torch.cat((image_embeds, text_embeds), dim=1) # 合并文本特征和图像特征成为多模态嵌入特征
-        attention_mask = torch.cat(
-            (
-                torch.ones(text_features.shape[0], image_token_len, device=text_features.device),
-                inputs['attention_mask'],
-            ),
-            dim=-1,
-        ) # 合并文本特征和图像特征的注意力掩码
-        extended_attention_mask = attention_mask.unsqueeze(1).unsqueeze(2) # 扩展掩码维度，适配Transformer注意力计算
-        extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype) # 将注意力掩码转换为与模型参数 相同的数据类型
-        extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0 # 将注意力掩码转换为 注意力分数屏蔽值
-        fuse_hiddens, all_attentions = self.trans(input_embeds, extended_attention_mask, output_all_encoded_layers=False) # 多模态特征融合的核心步骤 ，通过自定义的Transformer编码器将图像和文本特征进行深度交互融合，输出融合后的隐藏状态和所有层的注意力矩阵。
-        fuse_hiddens = fuse_hiddens[-1] # 取 Transformer 编码器的最后一层输出作为融合后的隐藏状态
-        new_text_features = fuse_hiddens[:, image_token_len:, :] # 提取文本部分的融合特征
+        text_embeds = self.model.text_projection(text_features) # 文本特征投影 (B, m, d) = T
+        image_embeds = self.model.visual_projection(image_features) # 图像特征投影 (B, n, d) = V
+        
+        # image_token_len = image_embeds.shape[1]
+        # input_embeds = torch.cat((image_embeds, text_embeds), dim=1) # 合并文本特征和图像特征成为多模态嵌入特征
+        # attention_mask = torch.cat(
+        #     (
+        #         torch.ones(text_features.shape[0], image_token_len, device=text_features.device),
+        #         inputs['attention_mask'],
+        #     ),
+        #     dim=-1,
+        # ) # 合并文本特征和图像特征的注意力掩码
+        # extended_attention_mask = attention_mask.unsqueeze(1).unsqueeze(2) # 扩展掩码维度，适配Transformer注意力计算
+        # extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype) # 将注意力掩码转换为与模型参数 相同的数据类型
+        # extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0 # 将注意力掩码转换为 注意力分数屏蔽值
+        # fuse_hiddens, all_attentions = self.trans(input_embeds, extended_attention_mask, output_all_encoded_layers=False) # 多模态特征融合的核心步骤 ，通过自定义的Transformer编码器将图像和文本特征进行深度交互融合，输出融合后的隐藏状态和所有层的注意力矩阵。
+        # fuse_hiddens = fuse_hiddens[-1] # 取 Transformer 编码器的最后一层输出作为融合后的隐藏状态
+        # new_text_features = fuse_hiddens[:, image_token_len:, :] # 提取文本部分的融合特征
+
+        # 公式2 张量形状（B=batch, m=文本长度, n=图像patch数, d=512）
+        text_proj = self.cim_text_ln(F.normalize(self.cim_text_proj(text_embeds), p=2, dim=-1)) # (B, m, d) = (LN(TW_t))
+        image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1)) # (B, n, d) = (LN(VW_v))
+        interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp() # (B, m, n) = 交互矩阵 (E)，已经乘上了温度 exp(cim_logit_scale)
+
+        text_att = F.softmax(interaction, dim=-1) # (B, m, n)
+        image_att = F.softmax(interaction.transpose(1, 2), dim=-1) # (B, n, m)
+        text_c = torch.matmul(text_att, image_embeds) # (B, m, d) 对应论文里的 (T^c)：每个文本 token 看向所有图像patch 的注意力加权和。
+        image_c = torch.matmul(image_att, text_embeds) # (B, n, d) 对应 (V^c)：每个图像 patch 看向所有文本 token 的注意力加权和
+
+        new_text_features = text_c
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
         new_text_feature = new_text_features[
@@ -87,7 +109,7 @@ class MV_CLIP(nn.Module):
             last_token_index,
         ] # 提取文本序列的全局特征，使用最后一个有效 token 的特征作为文本融合表示
 
-        new_image_feature = fuse_hiddens[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
+        new_image_feature = image_c[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
 
         text_weight = self.att(new_text_feature) # 计算文本特征的注意力权重
         image_weight = self.att(new_image_feature) # 计算图像特征的注意力权重
@@ -116,4 +138,3 @@ class MV_CLIP(nn.Module):
 
             outputs = (loss,) + outputs
         return outputs
-
