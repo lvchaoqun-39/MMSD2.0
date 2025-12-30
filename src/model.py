@@ -58,7 +58,8 @@ class MV_CLIP(nn.Module):
         # 交互矩阵？
         self.cim_text_ln = nn.LayerNorm(args.text_size)
         self.cim_image_ln = nn.LayerNorm(args.text_size)
-        self.cim_logit_scale = nn.Parameter(torch.tensor(0.0)) # 可学习温度
+        self.cim_logit_scale = nn.Parameter(torch.tensor(0.0))
+        self.fim_top_k = getattr(args, "fim_top_k", 5)
 
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
@@ -101,15 +102,43 @@ class MV_CLIP(nn.Module):
         text_c = torch.matmul(text_att, image_embeds) # (B, m, d) 对应论文里的 (T^c)：每个文本 token 看向所有图像patch 的注意力加权和。
         image_c = torch.matmul(image_att, text_embeds) # (B, n, d) 对应 (V^c)：每个图像 patch 看向所有文本 token 的注意力加权和
 
-        new_text_features = text_c
+        # FIM 的 mask
+        # 对每个文本 token i ，在 E[i, :] 上选 top‑k 的图像 patch
+        k_img = min(int(self.fim_top_k), interaction.shape[-1])
+        if k_img < 1:
+            k_img = 1
+        topk_img = interaction.topk(k_img, dim=-1).indices # (B, m, k)
+        mask_t2v = torch.zeros_like(interaction, dtype=torch.bool) # (B, m, n)
+        mask_t2v.scatter_(-1, topk_img, True)
+        masked_interaction_t2v = interaction.masked_fill(~mask_t2v, -1e4) # (B, m, n)
+        text_att_masked = F.softmax(masked_interaction_t2v, dim=-1)
+        text_c_masked = torch.matmul(text_att_masked, image_embeds) # FIM 的 masked cross-attention (B, m, d)
+
+        # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
+        interaction_t = interaction.transpose(1, 2) # (B, n, m)
+        k_txt = min(int(self.fim_top_k), interaction_t.shape[-1])
+        if k_txt < 1:
+            k_txt = 1
+        topk_txt = interaction_t.topk(k_txt, dim=-1).indices # (B, n, k)
+        mask_v2t = torch.zeros_like(interaction_t, dtype=torch.bool) # (B, n, m)
+        mask_v2t.scatter_(-1, topk_txt, True)
+        masked_interaction_v2t = interaction_t.masked_fill(~mask_v2t, -1e4) # (B, n, m)
+        image_att_masked = F.softmax(masked_interaction_v2t, dim=-1)
+        image_c_masked = torch.matmul(image_att_masked, text_embeds) # FIM 的 masked cross-attention (B, n, d)
+
+        # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”作为事实不一致信号
+        text_fim = text_c - text_c_masked # (B, m, d)
+        image_fim = image_c - image_c_masked # (B, n, d)
+
+        new_text_features = text_fim # (B, m, d)
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
         new_text_feature = new_text_features[
             torch.arange(new_text_features.shape[0], device=new_text_features.device),
             last_token_index,
-        ] # 提取文本序列的全局特征，使用最后一个有效 token 的特征作为文本融合表示
+        ] # 按 attention_mask 取最后有效 token： (B, d)，提取文本序列的全局特征，使用最后一个有效 token 的特征作为文本融合表示
 
-        new_image_feature = image_c[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
+        new_image_feature = image_fim[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
 
         text_weight = self.att(new_text_feature) # 计算文本特征的注意力权重
         image_weight = self.att(new_image_feature) # 计算图像特征的注意力权重
