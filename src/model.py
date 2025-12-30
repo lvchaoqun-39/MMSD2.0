@@ -54,12 +54,24 @@ class MV_CLIP(nn.Module):
         # 可学习权重
         self.cim_text_proj = nn.Linear(args.text_size, args.text_size, bias=False)
         self.cim_image_proj = nn.Linear(args.text_size, args.text_size, bias=False)
-
-        # 交互矩阵？
         self.cim_text_ln = nn.LayerNorm(args.text_size)
         self.cim_image_ln = nn.LayerNorm(args.text_size)
         self.cim_logit_scale = nn.Parameter(torch.tensor(0.0))
         self.fim_top_k = getattr(args, "fim_top_k", 5)
+
+        # 两层 MLP（ d -> 4d -> d ，GELU）
+        self.fim_text_ffn = nn.Sequential(
+            nn.Linear(args.text_size, args.text_size * 4), # 扩展层
+            nn.GELU(), # 激活函数
+            nn.Linear(args.text_size * 4, args.text_size), # 压缩层
+        )
+        self.fim_image_ffn = nn.Sequential(
+            nn.Linear(args.text_size, args.text_size * 4),
+            nn.GELU(),
+            nn.Linear(args.text_size * 4, args.text_size),
+        )
+        self.fim_text_ln = nn.LayerNorm(args.text_size)
+        self.fim_image_ln = nn.LayerNorm(args.text_size)
 
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
@@ -97,11 +109,6 @@ class MV_CLIP(nn.Module):
         image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1)) # (B, n, d) = (LN(VW_v))
         interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp() # (B, m, n) = 交互矩阵 (E)，已经乘上了温度 exp(cim_logit_scale)
 
-        text_att = F.softmax(interaction, dim=-1) # (B, m, n)
-        image_att = F.softmax(interaction.transpose(1, 2), dim=-1) # (B, n, m)
-        text_c = torch.matmul(text_att, image_embeds) # (B, m, d) 对应论文里的 (T^c)：每个文本 token 看向所有图像patch 的注意力加权和。
-        image_c = torch.matmul(image_att, text_embeds) # (B, n, d) 对应 (V^c)：每个图像 patch 看向所有文本 token 的注意力加权和
-
         # FIM 的 mask
         # 对每个文本 token i ，在 E[i, :] 上选 top‑k 的图像 patch
         k_img = min(int(self.fim_top_k), interaction.shape[-1])
@@ -126,9 +133,13 @@ class MV_CLIP(nn.Module):
         image_att_masked = F.softmax(masked_interaction_v2t, dim=-1)
         image_c_masked = torch.matmul(image_att_masked, text_embeds) # FIM 的 masked cross-attention (B, n, d)
 
-        # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”作为事实不一致信号
-        text_fim = text_c - text_c_masked # (B, m, d)
-        image_fim = image_c - image_c_masked # (B, n, d)
+         # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”（残差）作为事实不一致信号
+        # text_fim = text_c - text_c_masked # (B, m, d)
+        # image_fim = image_c - image_c_masked # (B, n, d)
+
+        # 用 “FFN + 残差 + LN” 得到 FIM 输出
+        text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_c_masked))
+        image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_c_masked))
 
         new_text_features = text_fim # (B, m, d)
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
