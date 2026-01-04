@@ -73,8 +73,31 @@ class MV_CLIP(nn.Module):
         self.fim_text_ln = nn.LayerNorm(args.text_size)
         self.fim_image_ln = nn.LayerNorm(args.text_size)
 
+        self.fim_dynrt_iters = getattr(args, "fim_dynrt_iters", 3)
+        self.fim_dynrt_image_value = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.fim_dynrt_text_value = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size)
+
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
+
+    def _dynrt_squash(self, x):
+        squared_norm = (x * x).sum(dim=-1, keepdim=True)
+        scale = squared_norm / (1.0 + squared_norm)
+        x_norm = torch.sqrt(squared_norm + 1e-8)
+        return scale * (x / x_norm)
+
+    def _dynrt_route(self, u, b, iters):
+        iters = int(iters)
+        if iters < 1:
+            iters = 1
+        for i in range(iters):
+            c = F.softmax(b, dim=-1)
+            s = (c.unsqueeze(-1) * u).sum(dim=-2)
+            v = self._dynrt_squash(s)
+            if i < iters - 1:
+                b = b + (u * v.unsqueeze(-2)).sum(dim=-1)
+        return v
 
     def forward(self, inputs, labels):
         output = self.model(**inputs,output_attentions=True)
@@ -109,17 +132,22 @@ class MV_CLIP(nn.Module):
         image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1)) # (B, n, d) = (LN(VW_v))
         interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp() # (B, m, n) = 交互矩阵 (E)，已经乘上了温度 exp(cim_logit_scale)
 
+        text_att_full = F.softmax(interaction, dim=-1)
+        image_att_full = F.softmax(interaction.transpose(1, 2), dim=-1)
+        text_c_full = torch.matmul(text_att_full, image_embeds)
+        image_c_full = torch.matmul(image_att_full, text_embeds)
+
         # FIM 的 mask
         # 对每个文本 token i ，在 E[i, :] 上选 top‑k 的图像 patch
         k_img = min(int(self.fim_top_k), interaction.shape[-1])
         if k_img < 1:
             k_img = 1
         topk_img = interaction.topk(k_img, dim=-1).indices # (B, m, k)
-        mask_t2v = torch.zeros_like(interaction, dtype=torch.bool) # (B, m, n)
-        mask_t2v.scatter_(-1, topk_img, True)
-        masked_interaction_t2v = interaction.masked_fill(~mask_t2v, -1e4) # (B, m, n)
-        text_att_masked = F.softmax(masked_interaction_t2v, dim=-1)
-        text_c_masked = torch.matmul(text_att_masked, image_embeds) # FIM 的 masked cross-attention (B, m, d)
+        b_t2v = interaction.gather(dim=-1, index=topk_img)
+        image_values = self.fim_dynrt_image_value(image_embeds)
+        batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
+        u_t2v = image_values[batch_index, topk_img]
+        text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
 
         # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
         interaction_t = interaction.transpose(1, 2) # (B, n, m)
@@ -127,35 +155,47 @@ class MV_CLIP(nn.Module):
         if k_txt < 1:
             k_txt = 1
         topk_txt = interaction_t.topk(k_txt, dim=-1).indices # (B, n, k)
-        mask_v2t = torch.zeros_like(interaction_t, dtype=torch.bool) # (B, n, m)
-        mask_v2t.scatter_(-1, topk_txt, True)
-        masked_interaction_v2t = interaction_t.masked_fill(~mask_v2t, -1e4) # (B, n, m)
-        image_att_masked = F.softmax(masked_interaction_v2t, dim=-1)
-        image_c_masked = torch.matmul(image_att_masked, text_embeds) # FIM 的 masked cross-attention (B, n, d)
+        b_v2t = interaction_t.gather(dim=-1, index=topk_txt)
+        text_values = self.fim_dynrt_text_value(text_embeds)
+        u_v2t = text_values[batch_index, topk_txt]
+        image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
 
          # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”（残差）作为事实不一致信号
         # text_fim = text_c - text_c_masked # (B, m, d)
         # image_fim = image_c - image_c_masked # (B, n, d)
 
         # 用 “FFN + 残差 + LN” 得到 FIM 输出
-        text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_c_masked))
-        image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_c_masked))
+        text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
+        image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
 
-        new_text_features = text_fim # (B, m, d)
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
-        new_text_feature = new_text_features[
-            torch.arange(new_text_features.shape[0], device=new_text_features.device),
+
+        base_text_features = text_c_full
+        base_text_feature = base_text_features[
+            torch.arange(base_text_features.shape[0], device=base_text_features.device),
             last_token_index,
-        ] # 按 attention_mask 取最后有效 token： (B, d)，提取文本序列的全局特征，使用最后一个有效 token 的特征作为文本融合表示
+        ]
+        base_image_feature = image_c_full[:, 0, :].squeeze(1)
+        base_text_weight = self.att(base_text_feature)
+        base_image_weight = self.att(base_image_feature)
+        base_att = nn.functional.softmax(torch.stack((base_text_weight, base_image_weight), dim=-1),dim=-1)
+        base_tw, base_iw = base_att.split([1,1], dim=-1)
+        base_fuse_feature = base_tw.squeeze(1) * base_text_feature + base_iw.squeeze(1) * base_image_feature
 
-        new_image_feature = image_fim[:, 0, :].squeeze(1) # 提取图像部分的融合特征，取第 0 个 token 的特征（CLS 令牌）
+        fim_text_features = text_fim
+        fim_text_feature = fim_text_features[
+            torch.arange(fim_text_features.shape[0], device=fim_text_features.device),
+            last_token_index,
+        ]
+        fim_image_feature = image_fim[:, 0, :].squeeze(1)
+        fim_text_weight = self.att(fim_text_feature)
+        fim_image_weight = self.att(fim_image_feature)
+        fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1),dim=-1)
+        fim_tw, fim_iw = fim_att.split([1,1], dim=-1)
+        fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
 
-        text_weight = self.att(new_text_feature) # 计算文本特征的注意力权重
-        image_weight = self.att(new_image_feature) # 计算图像特征的注意力权重
-        att = nn.functional.softmax(torch.stack((text_weight, image_weight), dim=-1),dim=-1) # 将文本和图像的原始注意力分数转换为 归一化的权重分布
-        tw, iw = att.split([1,1], dim=-1) # 将归一化的权重张量分割为 独立的文本权重 和 独立的图像权重
-        fuse_feature = tw.squeeze(1) * new_text_feature + iw.squeeze(1) * new_image_feature # 加权融合文本和图像特征：(文本权重 × 文本特征) + (图像权重 × 图像特征)
+        fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
 
         # 通过三个分类头得到未归一化的分类分数
         logits_fuse = self.classifier_fuse(fuse_feature)
