@@ -66,8 +66,7 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         raise Exception('Wrong Optimizer Name!!!')
 
 
-    best_dev_f1 = -1.0
-    best_dev_acc = 0.0
+    max_acc = 0.
     for i_epoch in trange(0, int(args.num_train_epochs), desc="Epoch", disable=False):
         sum_loss = 0.
         sum_step = 0
@@ -97,9 +96,8 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         wandb.log({'dev_acc': dev_acc, 'dev_f1': dev_f1, 'dev_precision': dev_precision, 'dev_recall': dev_recall})
         logging.info("i_epoch is {}, dev_acc is {}, dev_f1 is {}, dev_precision is {}, dev_recall is {}".format(i_epoch, dev_acc, dev_f1, dev_precision, dev_recall))
 
-        if dev_f1 > best_dev_f1 or (dev_f1 == best_dev_f1 and dev_acc > best_dev_acc):
-            best_dev_f1 = dev_f1
-            best_dev_acc = dev_acc
+        if dev_acc > max_acc:
+            max_acc = dev_acc
 
             path_to_save = os.path.join(args.output_dir, args.model)
             if not os.path.exists(path_to_save):
