@@ -35,7 +35,7 @@ def set_args():
     parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="Epsilon for Adam optimizer.") # Adam优化器的epsilon参数
     parser.add_argument("--optimizer_name", type=str, default='adam',
                         help="use which optimizer to train the model.") # 使用的优化器
-    parser.add_argument('--learning_rate', default=5e-4, type=float, help='learning rate for modules expect CLIP') # 学习率
+    parser.add_argument('--learning_rate', default=2e-4, type=float, help='learning rate for modules expect CLIP') # 学习率
     parser.add_argument('--clip_learning_rate', default=1e-6, type=float, help='learning rate for CLIP') # CLIP的学习率
     parser.add_argument('--max_len', default=77, type=int, help='max len of text based on CLIP') # 模型能处理的输入文本序列的最大长度
     parser.add_argument('--layers', default=3, type=int, help='number of transform layers') # transform层数量
@@ -43,7 +43,7 @@ def set_args():
     parser.add_argument('--weight_decay', default=0.05, type=float, help='weight decay') # 权重衰减（防止过拟合）
     parser.add_argument('--warmup_proportion', default=0.2, type=float, help='warm up proportion') # 预热比例
     parser.add_argument('--dropout_rate', default=0.1, type=float, help='dropout rate') # 丢弃率（随机丢弃神经元）
-    parser.add_argument('--fim_top_k', default=5, type=int, help='top k for FIM') # FIM的top k参数
+    parser.add_argument('--fim_top_k', default=12, type=int, help='top k for FIM') # FIM的top k参数
     parser.add_argument('--fim_dynrt_iters', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
