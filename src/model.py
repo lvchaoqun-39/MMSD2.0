@@ -78,6 +78,23 @@ class MV_CLIP(nn.Module):
         self.fim_dynrt_text_value = nn.Linear(args.text_size, args.text_size, bias=False)
         self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size)
 
+        self.sim_top_k = getattr(args, "sim_top_k", getattr(args, "fim_top_k", 5))
+        self.sim_q = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.sim_k = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.sim_v = nn.Linear(args.text_size, args.text_size, bias=False)
+        self.sim_att_ln = nn.LayerNorm(args.text_size)
+        self.sim_ffn = nn.Sequential(
+            nn.Linear(args.text_size, args.text_size * 4),
+            nn.GELU(),
+            nn.Linear(args.text_size * 4, args.text_size),
+        )
+        self.sim_ffn_ln = nn.LayerNorm(args.text_size)
+        self.sim_out = nn.Sequential(
+            nn.Linear(args.text_size * 3, args.text_size),
+            nn.GELU(),
+        )
+        self.sim_extra_fuse = nn.Linear(args.text_size * 3, args.text_size)
+
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
 
@@ -98,6 +115,60 @@ class MV_CLIP(nn.Module):
             if i < iters - 1:
                 b = b + (u * v.unsqueeze(-2)).sum(dim=-1)
         return v
+
+    def _build_sim_graph_mask(self, text_attention_mask, interaction, m, n): # 图构建
+        device = interaction.device
+        bsz = interaction.shape[0]
+        k_img = min(int(self.sim_top_k), n)
+        if k_img < 1:
+            k_img = 1
+        topk_img = interaction.topk(k_img, dim=-1).indices
+        interaction_t = interaction.transpose(1, 2)
+        k_txt = min(int(self.sim_top_k), m)
+        if k_txt < 1:
+            k_txt = 1
+        topk_txt = interaction_t.topk(k_txt, dim=-1).indices
+
+        l_total = m + n
+        graph_mask = torch.zeros((bsz, l_total, l_total), dtype=torch.bool, device=device)
+
+        idx = torch.arange(m, device=device)
+        idx_prev = idx - 1
+        valid_prev = idx_prev >= 0
+        graph_mask[:, idx[valid_prev], idx_prev[valid_prev]] = True
+        graph_mask[:, idx, idx] = True
+        idx_next = idx + 1
+        valid_next = idx_next < m
+        graph_mask[:, idx[valid_next], idx_next[valid_next]] = True
+
+        graph_mask[:, m:, m:] = True
+
+        t2v = torch.zeros((bsz, m, n), dtype=torch.bool, device=device)
+        t2v.scatter_(-1, topk_img, True)
+        graph_mask[:, :m, m:] |= t2v
+
+        v2t = torch.zeros((bsz, n, m), dtype=torch.bool, device=device)
+        v2t.scatter_(-1, topk_txt, True)
+        graph_mask[:, m:, :m] |= v2t
+
+        node_valid = torch.cat(
+            (text_attention_mask.to(torch.bool), torch.ones((bsz, n), dtype=torch.bool, device=device)),
+            dim=1,
+        )
+        graph_mask = graph_mask & node_valid.unsqueeze(1) & node_valid.unsqueeze(2)
+        return graph_mask
+
+    def _sim_graph_propagate(self, x, graph_mask): # 图传播 (B, m+n, d)
+        q = self.sim_q(x)
+        k = self.sim_k(x)
+        v = self.sim_v(x)
+        attn_scores = torch.matmul(q, k.transpose(1, 2)) * (x.shape[-1] ** -0.5)
+        attn_scores = attn_scores.masked_fill(~graph_mask, -1e4)
+        attn_probs = F.softmax(attn_scores, dim=-1)
+        attn_out = torch.matmul(attn_probs, v)
+        h = self.sim_att_ln(x + attn_out)
+        h = self.sim_ffn_ln(h + self.sim_ffn(h))
+        return h
 
     def forward(self, inputs, labels):
         output = self.model(**inputs,output_attentions=True)
@@ -195,7 +266,23 @@ class MV_CLIP(nn.Module):
         fim_tw, fim_iw = fim_att.split([1,1], dim=-1)
         fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
 
-        fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
+        m = text_embeds.shape[1]
+        n = image_embeds.shape[1]
+        graph_mask = self._build_sim_graph_mask(inputs['attention_mask'], interaction, m, n)
+        sim_nodes = torch.cat((text_fim, image_fim), dim=1) # 图节点，(B, m+n, d)
+        sim_nodes = self._sim_graph_propagate(sim_nodes, graph_mask)
+        sim_text = sim_nodes[:, :m, :]
+        sim_image = sim_nodes[:, m:, :]
+        sim_text_feature = sim_text[
+            torch.arange(sim_text.shape[0], device=sim_text.device),
+            last_token_index,
+        ]
+        sim_image_feature = sim_image[:, 0, :].squeeze(1)
+        sim_fuse_feature = self.sim_out(
+            torch.cat((sim_text_feature, sim_image_feature, (sim_text_feature - sim_image_feature).abs()), dim=-1)
+        )
+
+        fuse_feature = self.sim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature, sim_fuse_feature), dim=-1))
 
         # 通过三个分类头得到未归一化的分类分数
         logits_fuse = self.classifier_fuse(fuse_feature)
