@@ -47,7 +47,7 @@ def set_args():
     parser.add_argument('--fim_dynrt_iters', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
-    parser.add_argument('--seed', type=int, default=42, help='random seed') # 随机种子
+    parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
     return parser.parse_args()
 
 
