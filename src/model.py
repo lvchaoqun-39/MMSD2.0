@@ -75,31 +75,38 @@ class MV_CLIP(nn.Module):
         self.fim_text_ln = nn.LayerNorm(args.text_size)
         self.fim_image_ln = nn.LayerNorm(args.text_size)
 
-        self.fim_dynrt_iters = getattr(args, "fim_dynrt_iters", 3) # 动态路由迭代次数的超参数，默认是 3 次。
+        self.fim_dynrt_iters = getattr(args, "fim_dynrt_iters", 3)
 
-        # 给 动态路由过程 使用的线性投影，用来生成文本/图像侧的 “value” 表示
         self.fim_dynrt_image_value = nn.Linear(args.text_size, args.text_size, bias=False)
         self.fim_dynrt_text_value = nn.Linear(args.text_size, args.text_size, bias=False)
 
-        self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size) # 把拼接的二维特征融合回一个 text_size 维的向量，用于最终的文本-图像融合输出
+        self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size)
 
-        self.sim_top_k = getattr(args, "sim_top_k", getattr(args, "fim_top_k", 5)) # 读取超参 sim_top_k ，如果没有就退回读 fim_top_k ，再没有就默认 5
-        # 三个线性层分别生成 Q/K/V，用法和自注意力/交叉注意力一致：把输入的 hidden 向量投影到 query/key/value 空间。 bias=False 表示不加偏置
+        self.sim_top_k = getattr(args, "sim_top_k", getattr(args, "fim_top_k", 5))
+        self.sim_num_layers = getattr(args, "sim_num_layers", 1)
+        self.sim_num_heads = getattr(args, "sim_num_heads", 4)
+        if self.sim_num_heads < 1:
+            self.sim_num_heads = 1
+        if args.text_size % self.sim_num_heads != 0:
+            self.sim_num_heads = 1
+        self.sim_head_dim = args.text_size // self.sim_num_heads
         self.sim_q = nn.Linear(args.text_size, args.text_size, bias=False)
         self.sim_k = nn.Linear(args.text_size, args.text_size, bias=False)
         self.sim_v = nn.Linear(args.text_size, args.text_size, bias=False)
-        self.sim_att_ln = nn.LayerNorm(args.text_size) # 注意力子层的 LayerNorm，一般用于稳定训练
+        self.sim_att_ln = nn.LayerNorm(args.text_size)
         self.sim_ffn = nn.Sequential(
             nn.Linear(args.text_size, args.text_size * 4),
             nn.GELU(),
-            nn.Linear(args.text_size * 4, args.text_size), # 一个前馈网络（FFN）：先把维度从 d 扩到 4d ，经 GELU 激活，再投影回 d
+            nn.Linear(args.text_size * 4, args.text_size),
         )
-        self.sim_ffn_ln = nn.LayerNorm(args.text_size) # 前馈网络子层的 LayerNorm，一般用于稳定训练
+        self.sim_ffn_ln = nn.LayerNorm(args.text_size)
         self.sim_out = nn.Sequential(
             nn.Linear(args.text_size * 3, args.text_size),
             nn.GELU(),
-        ) # 将“三路特征拼接后的向量”（维度 3 * text_size ）融合压回 text_size ，再过 GELU 激活
-        self.sim_extra_fuse = nn.Linear(args.text_size * 3, args.text_size) # 也是把 3d -> d 的融合线性层，但不带激活/不包在 Sequential
+        )
+        self.sim_extra_fuse = nn.Linear(args.text_size * 3, args.text_size)
+        self.sim_text_pool = nn.Linear(args.text_size, 1, bias=False)
+        self.sim_image_pool = nn.Linear(args.text_size, 1, bias=False)
 
         self.loss_fct = nn.CrossEntropyLoss() # 交叉熵损失
         self.att = nn.Linear(args.text_size, 1, bias=False) # 一个线性层，把 hidden 向量映射成一个标量（logit），用于计算注意力权重
@@ -177,22 +184,24 @@ class MV_CLIP(nn.Module):
         graph_mask = graph_mask & node_valid.unsqueeze(1) & node_valid.unsqueeze(2) # - 同时屏蔽掉：从无效节点出发的边（行方向）和指向无效节点的边（列方向），最终保证 padding token 不参与图计算。
         return graph_mask
 
-    # 图传播 (B, m+n, d)
-    # 输入 x ：形状大致是 [B, m+n, d] ，前 m 个是文本节点，后 n 个是视觉节点。
-    # 输入 graph_mask ：形状 [B, m+n, m+n] 的布尔矩阵，表示“节点 i 是否可以连接到节点 j”
-    # 输出 h ：同形状 [B, m+n, d] ，是一次图注意力 + FFN 之后的新的节点表示。
     def _sim_graph_propagate(self, x, graph_mask): 
-        # 对每个节点的表示 x 做线性变换，得到 query / key / value，维度仍然是 d 。这就是标准注意力里的 Q/K/V 投影。
-        q = self.sim_q(x)
-        k = self.sim_k(x)
-        v = self.sim_v(x)
-
-        attn_scores = torch.matmul(q, k.transpose(1, 2)) * (x.shape[-1] ** -0.5) # [B, L, L] 的注意力得分矩阵，每个元素是“节点 i 对节点 j 的原始注意力得分”
-        attn_scores = attn_scores.masked_fill(~graph_mask, -1e4) # 用图的邻接 mask 限制注意力，- 取反 ~graph_mask 就是“不允许连边”的位置；对这些位置填一个很大的负数 -1e4 ，这样 softmax 后这些位置的概率几乎为 0，相当于禁止这条边的注意力。
-        attn_probs = F.softmax(attn_scores, dim=-1) # 在最后一维（对每个查询节点 i，看它对所有 j 的得分）做 softmax，得到注意力权重矩阵 [B, L, L] ，只在允许的边上有非零概率。
-        attn_out = torch.matmul(attn_probs, v) # 用注意力权重对 value 做加权和，得到每个节点聚合来的信息（来自图上邻居），形状 [B, L, d] 。
-        h = self.sim_att_ln(x + attn_out) # 把注意力输出 attn_out 与原输入 x 做残差相加，再过一个 LayerNorm，完全是 Transformer 的 Add & Norm 模式，只不过这里是在图结构上进行的注意力。
-        h = self.sim_ffn_ln(h + self.sim_ffn(h)) # 把前馈网络输出与残差相加，再过一个 LayerNorm，也是 Transformer block 里标准的 FFN 子层。
+        h = x
+        bsz, l_total, _ = h.shape
+        mask = graph_mask.unsqueeze(1)
+        for _ in range(self.sim_num_layers):
+            q = self.sim_q(h)
+            k = self.sim_k(h)
+            v = self.sim_v(h)
+            q = q.view(bsz, l_total, self.sim_num_heads, self.sim_head_dim).transpose(1, 2)
+            k = k.view(bsz, l_total, self.sim_num_heads, self.sim_head_dim).transpose(1, 2)
+            v = v.view(bsz, l_total, self.sim_num_heads, self.sim_head_dim).transpose(1, 2)
+            attn_scores = torch.matmul(q, k.transpose(-2, -1)) * (self.sim_head_dim ** -0.5)
+            attn_scores = attn_scores.masked_fill(~mask, -1e4)
+            attn_probs = F.softmax(attn_scores, dim=-1)
+            attn_out = torch.matmul(attn_probs, v)
+            attn_out = attn_out.transpose(1, 2).contiguous().view(bsz, l_total, -1)
+            h = self.sim_att_ln(h + attn_out)
+            h = self.sim_ffn_ln(h + self.sim_ffn(h))
         return h
 
     def forward(self, inputs, labels):
@@ -302,11 +311,14 @@ class MV_CLIP(nn.Module):
         sim_nodes = self._sim_graph_propagate(sim_nodes, graph_mask)
         sim_text = sim_nodes[:, :m, :]
         sim_image = sim_nodes[:, m:, :]
-        sim_text_feature = sim_text[
-            torch.arange(sim_text.shape[0], device=sim_text.device),
-            last_token_index,
-        ]
-        sim_image_feature = sim_image[:, 0, :].squeeze(1)
+        text_mask = inputs['attention_mask'].to(torch.bool)
+        text_scores = self.sim_text_pool(sim_text).squeeze(-1)
+        text_scores = text_scores.masked_fill(~text_mask, -1e4)
+        text_alpha = F.softmax(text_scores, dim=-1).unsqueeze(-1)
+        sim_text_feature = (sim_text * text_alpha).sum(dim=1)
+        image_scores = self.sim_image_pool(sim_image).squeeze(-1)
+        image_alpha = F.softmax(image_scores, dim=-1).unsqueeze(-1)
+        sim_image_feature = (sim_image * image_alpha).sum(dim=1)
         sim_fuse_feature = self.sim_out(
             torch.cat((sim_text_feature, sim_image_feature, (sim_text_feature - sim_image_feature).abs()), dim=-1)
         )

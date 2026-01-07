@@ -46,6 +46,8 @@ def set_args():
     parser.add_argument('--fim_top_k', default=12, type=int, help='top k for FIM') # FIM的top k参数
     parser.add_argument('--sim_top_k', default=12, type=int, help='top k for similarity') # similarity的top k参数
     parser.add_argument('--fim_dynrt_iters', '--fim_iter', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
+    parser.add_argument('--sim_num_layers', default=1, type=int, help='number of sim graph layers')
+    parser.add_argument('--sim_num_heads', default=4, type=int, help='number of sim attention heads')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
