@@ -60,43 +60,51 @@ class MV_CLIP(nn.Module):
         self.fim_top_k = getattr(args, "fim_top_k", 5)
 
         # 两层 MLP（ d -> 4d -> d ，GELU）
-        self.fim_text_ffn = nn.Sequential(
+        self.fim_text_ffn = nn.Sequential( # 对 文本特征 做前馈网络变换，和 Transformer 里标准的 FFN 结构一模一样（先升维、非线性、再降维），提升表达能力。
             nn.Linear(args.text_size, args.text_size * 4), # 扩展层
             nn.GELU(), # 激活函数
             nn.Linear(args.text_size * 4, args.text_size), # 压缩层
         )
-        self.fim_image_ffn = nn.Sequential(
+        self.fim_image_ffn = nn.Sequential( # 对 视觉特征 做前馈网络变换
             nn.Linear(args.text_size, args.text_size * 4),
             nn.GELU(),
             nn.Linear(args.text_size * 4, args.text_size),
         )
+
+        # 对文本 / 图像各自的特征做 LayerNorm
         self.fim_text_ln = nn.LayerNorm(args.text_size)
         self.fim_image_ln = nn.LayerNorm(args.text_size)
 
-        self.fim_dynrt_iters = getattr(args, "fim_dynrt_iters", 3)
+        self.fim_dynrt_iters = getattr(args, "fim_dynrt_iters", 3) # 动态路由迭代次数的超参数，默认是 3 次。
+
+        # 给 动态路由过程 使用的线性投影，用来生成文本/图像侧的 “value” 表示
         self.fim_dynrt_image_value = nn.Linear(args.text_size, args.text_size, bias=False)
         self.fim_dynrt_text_value = nn.Linear(args.text_size, args.text_size, bias=False)
-        self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size)
 
-        self.sim_top_k = getattr(args, "sim_top_k", getattr(args, "fim_top_k", 5))
+        self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size) # 把拼接的二维特征融合回一个 text_size 维的向量，用于最终的文本-图像融合输出
+
+        self.sim_top_k = getattr(args, "sim_top_k", getattr(args, "fim_top_k", 5)) # 读取超参 sim_top_k ，如果没有就退回读 fim_top_k ，再没有就默认 5
+        # 三个线性层分别生成 Q/K/V，用法和自注意力/交叉注意力一致：把输入的 hidden 向量投影到 query/key/value 空间。 bias=False 表示不加偏置
         self.sim_q = nn.Linear(args.text_size, args.text_size, bias=False)
         self.sim_k = nn.Linear(args.text_size, args.text_size, bias=False)
         self.sim_v = nn.Linear(args.text_size, args.text_size, bias=False)
-        self.sim_att_ln = nn.LayerNorm(args.text_size)
+        self.sim_att_ln = nn.LayerNorm(args.text_size) # 注意力子层的 LayerNorm，一般用于稳定训练
         self.sim_ffn = nn.Sequential(
             nn.Linear(args.text_size, args.text_size * 4),
             nn.GELU(),
-            nn.Linear(args.text_size * 4, args.text_size),
+            nn.Linear(args.text_size * 4, args.text_size), # 一个前馈网络（FFN）：先把维度从 d 扩到 4d ，经 GELU 激活，再投影回 d
         )
-        self.sim_ffn_ln = nn.LayerNorm(args.text_size)
+        self.sim_ffn_ln = nn.LayerNorm(args.text_size) # 前馈网络子层的 LayerNorm，一般用于稳定训练
         self.sim_out = nn.Sequential(
             nn.Linear(args.text_size * 3, args.text_size),
             nn.GELU(),
-        )
-        self.sim_extra_fuse = nn.Linear(args.text_size * 3, args.text_size)
+        ) # 将“三路特征拼接后的向量”（维度 3 * text_size ）融合压回 text_size ，再过 GELU 激活
+        self.sim_extra_fuse = nn.Linear(args.text_size * 3, args.text_size) # 也是把 3d -> d 的融合线性层，但不带激活/不包在 Sequential
 
-        self.loss_fct = nn.CrossEntropyLoss()
-        self.att = nn.Linear(args.text_size, 1, bias=False)
+        self.loss_fct = nn.CrossEntropyLoss() # 交叉熵损失
+        self.att = nn.Linear(args.text_size, 1, bias=False) # 一个线性层，把 hidden 向量映射成一个标量（logit），用于计算注意力权重
+
+
 
     def _dynrt_squash(self, x):
         squared_norm = (x * x).sum(dim=-1, keepdim=True)
@@ -116,58 +124,75 @@ class MV_CLIP(nn.Module):
                 b = b + (u * v.unsqueeze(-2)).sum(dim=-1)
         return v
 
-    def _build_sim_graph_mask(self, text_attention_mask, interaction, m, n): # 图构建
+    # 图构建，根据文本 token、图像 region（或 patch）之间的相似度 interaction ，构造一个“图的邻接矩阵 mask”（ [bsz, m+n, m+n] 的 bool 张量）
+    # m ：文本节点数（text tokens 数）
+    # n ：视觉节点数（image regions/patches 数）
+    # interaction ：形状大概率是 [bsz, m, n] ，表示每个文本 token 对每个视觉节点的相似度/匹配分数
+    # text_attention_mask ：形状 [bsz, m] ，文本哪些 token 有效（padding 为 0）
+    def _build_sim_graph_mask(self, text_attention_mask, interaction, m, n): 
         device = interaction.device
         bsz = interaction.shape[0]
+
+        # 1）选 Top-K 跨模态边，得到两类跨模态稀疏连接：每个文本连到若干视觉、每个视觉连到若干文本。
         k_img = min(int(self.sim_top_k), n)
         if k_img < 1:
             k_img = 1
-        topk_img = interaction.topk(k_img, dim=-1).indices
-        interaction_t = interaction.transpose(1, 2)
+        topk_img = interaction.topk(k_img, dim=-1).indices # 对每个文本 token（最后一维是n）选出相似度最高的 k_img 个视觉节点索引。结果形状是 [bsz, m, k_img] 。
+        interaction_t = interaction.transpose(1, 2) # 转置后，变成 [bsz, n, m] ，表示每个视觉节点对每个文本 token 的相似度
         k_txt = min(int(self.sim_top_k), m)
         if k_txt < 1:
             k_txt = 1
-        topk_txt = interaction_t.topk(k_txt, dim=-1).indices
+        topk_txt = interaction_t.topk(k_txt, dim=-1).indices # 对每个视觉节点（最后一维是m）选出相似度最高的 k_txt 个文本 token 索引。结果形状是 [bsz, n, k_txt] 。
 
+        # 2）初始化整图 mask，并加“模态内”基础连接（每个文本连到前一个/后一个文本，每个视觉连到前一个/后一个视觉）
         l_total = m + n
-        graph_mask = torch.zeros((bsz, l_total, l_total), dtype=torch.bool, device=device)
-
+        graph_mask = torch.zeros((bsz, l_total, l_total), dtype=torch.bool, device=device) 
+        
+        # 文本子图（前 m 个节点）加入“链式结构 + 自环”
         idx = torch.arange(m, device=device)
         idx_prev = idx - 1
         valid_prev = idx_prev >= 0
-        graph_mask[:, idx[valid_prev], idx_prev[valid_prev]] = True
-        graph_mask[:, idx, idx] = True
+        graph_mask[:, idx[valid_prev], idx_prev[valid_prev]] = True # 有前驱则连前驱
+        graph_mask[:, idx, idx] = True # 自环
         idx_next = idx + 1
         valid_next = idx_next < m
-        graph_mask[:, idx[valid_next], idx_next[valid_next]] = True
+        graph_mask[:, idx[valid_next], idx_next[valid_next]] = True # 有后继则连后继
 
-        graph_mask[:, m:, m:] = True
+        graph_mask[:, m:, m:] = True # 视觉子图，视觉节点之间全连接（视觉内部任意两节点都可见）
 
-        t2v = torch.zeros((bsz, m, n), dtype=torch.bool, device=device)
-        t2v.scatter_(-1, topk_img, True)
-        graph_mask[:, :m, m:] |= t2v
+        # 3) 加入跨模态 Top-K 连接
+        t2v = torch.zeros((bsz, m, n), dtype=torch.bool, device=device) # [bsz, m, n] 的 bool，初始全 False
+        t2v.scatter_(-1, topk_img, True) # 把每个文本 token 对应的 Top-K 视觉位置标 True。
+        graph_mask[:, :m, m:] |= t2v # 将这些边写入总图的“文本->视觉”块
 
-        v2t = torch.zeros((bsz, n, m), dtype=torch.bool, device=device)
-        v2t.scatter_(-1, topk_txt, True)
-        graph_mask[:, m:, :m] |= v2t
+        v2t = torch.zeros((bsz, n, m), dtype=torch.bool, device=device) # [bsz, n, m] 的 bool，初始全 False
+        v2t.scatter_(-1, topk_txt, True) # 把每个视觉节点 对应的 Top-K 文本 token 位置标 True。
+        graph_mask[:, m:, :m] |= v2t # 将这些边写入总图的“视觉->文本”块
 
+        # 4) 用有效节点 mask 清理 padding 的文本节点
         node_valid = torch.cat(
             (text_attention_mask.to(torch.bool), torch.ones((bsz, n), dtype=torch.bool, device=device)),
             dim=1,
-        )
-        graph_mask = graph_mask & node_valid.unsqueeze(1) & node_valid.unsqueeze(2)
+        ) # 文本节点按 text_attention_mask 判定是否有效；视觉节点全部认为有效
+        graph_mask = graph_mask & node_valid.unsqueeze(1) & node_valid.unsqueeze(2) # - 同时屏蔽掉：从无效节点出发的边（行方向）和指向无效节点的边（列方向），最终保证 padding token 不参与图计算。
         return graph_mask
 
-    def _sim_graph_propagate(self, x, graph_mask): # 图传播 (B, m+n, d)
+    # 图传播 (B, m+n, d)
+    # 输入 x ：形状大致是 [B, m+n, d] ，前 m 个是文本节点，后 n 个是视觉节点。
+    # 输入 graph_mask ：形状 [B, m+n, m+n] 的布尔矩阵，表示“节点 i 是否可以连接到节点 j”
+    # 输出 h ：同形状 [B, m+n, d] ，是一次图注意力 + FFN 之后的新的节点表示。
+    def _sim_graph_propagate(self, x, graph_mask): 
+        # 对每个节点的表示 x 做线性变换，得到 query / key / value，维度仍然是 d 。这就是标准注意力里的 Q/K/V 投影。
         q = self.sim_q(x)
         k = self.sim_k(x)
         v = self.sim_v(x)
-        attn_scores = torch.matmul(q, k.transpose(1, 2)) * (x.shape[-1] ** -0.5)
-        attn_scores = attn_scores.masked_fill(~graph_mask, -1e4)
-        attn_probs = F.softmax(attn_scores, dim=-1)
-        attn_out = torch.matmul(attn_probs, v)
-        h = self.sim_att_ln(x + attn_out)
-        h = self.sim_ffn_ln(h + self.sim_ffn(h))
+
+        attn_scores = torch.matmul(q, k.transpose(1, 2)) * (x.shape[-1] ** -0.5) # [B, L, L] 的注意力得分矩阵，每个元素是“节点 i 对节点 j 的原始注意力得分”
+        attn_scores = attn_scores.masked_fill(~graph_mask, -1e4) # 用图的邻接 mask 限制注意力，- 取反 ~graph_mask 就是“不允许连边”的位置；对这些位置填一个很大的负数 -1e4 ，这样 softmax 后这些位置的概率几乎为 0，相当于禁止这条边的注意力。
+        attn_probs = F.softmax(attn_scores, dim=-1) # 在最后一维（对每个查询节点 i，看它对所有 j 的得分）做 softmax，得到注意力权重矩阵 [B, L, L] ，只在允许的边上有非零概率。
+        attn_out = torch.matmul(attn_probs, v) # 用注意力权重对 value 做加权和，得到每个节点聚合来的信息（来自图上邻居），形状 [B, L, d] 。
+        h = self.sim_att_ln(x + attn_out) # 把注意力输出 attn_out 与原输入 x 做残差相加，再过一个 LayerNorm，完全是 Transformer 的 Add & Norm 模式，只不过这里是在图结构上进行的注意力。
+        h = self.sim_ffn_ln(h + self.sim_ffn(h)) # 把前馈网络输出与残差相加，再过一个 LayerNorm，也是 Transformer block 里标准的 FFN 子层。
         return h
 
     def forward(self, inputs, labels):
@@ -218,7 +243,7 @@ class MV_CLIP(nn.Module):
         image_values = self.fim_dynrt_image_value(image_embeds)
         batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
         u_t2v = image_values[batch_index, topk_img]
-        text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
+        text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters) # 每个文本 token 聚合它最相关的若干图像 patch 的动态路由结果
 
         # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
         interaction_t = interaction.transpose(1, 2) # (B, n, m)
@@ -229,16 +254,19 @@ class MV_CLIP(nn.Module):
         b_v2t = interaction_t.gather(dim=-1, index=topk_txt)
         text_values = self.fim_dynrt_text_value(text_embeds)
         u_v2t = text_values[batch_index, topk_txt]
-        image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
+        image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters) # 每个图像 patch 聚合它最相关的若干文本 token 的动态路由结果
 
          # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”（残差）作为事实不一致信号
         # text_fim = text_c - text_c_masked # (B, m, d)
         # image_fim = image_c - image_c_masked # (B, n, d)
 
         # 用 “FFN + 残差 + LN” 得到 FIM 输出
+
+        # 用 FIM 的动态路由结果更新文本 / 图像特征
         text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
         image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
 
+        # 基础分支（base）：从最后一个文本 token 和图像 CLS 抽取全局特征并融合
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
 
@@ -248,23 +276,24 @@ class MV_CLIP(nn.Module):
             last_token_index,
         ]
         base_image_feature = image_c_full[:, 0, :].squeeze(1)
-        base_text_weight = self.att(base_text_feature)
-        base_image_weight = self.att(base_image_feature)
-        base_att = nn.functional.softmax(torch.stack((base_text_weight, base_image_weight), dim=-1),dim=-1)
-        base_tw, base_iw = base_att.split([1,1], dim=-1)
-        base_fuse_feature = base_tw.squeeze(1) * base_text_feature + base_iw.squeeze(1) * base_image_feature
+        base_text_weight = self.att(base_text_feature) # 用打分器 self.att 对文本全局特征打分
+        base_image_weight = self.att(base_image_feature) # 用打分器 self.att 对图像全局特征打分
+        base_att = nn.functional.softmax(torch.stack((base_text_weight, base_image_weight), dim=-1),dim=-1) 
+        base_tw, base_iw = base_att.split([1,1], dim=-1) # 把两路分数拼在一起做 softmax，得到“文本/图像之间的权重比例”
+        base_fuse_feature = base_tw.squeeze(1) * base_text_feature + base_iw.squeeze(1) * base_image_feature # 加权融合
 
+        # FIM 分支（fim）：对经过 FIM 更新的文本 / 图像再做一次同样的加权融合
         fim_text_features = text_fim
         fim_text_feature = fim_text_features[
             torch.arange(fim_text_features.shape[0], device=fim_text_features.device),
             last_token_index,
-        ]
-        fim_image_feature = image_fim[:, 0, :].squeeze(1)
+        ] # 从 text_fim 中取“每个样本最后一个真实 token 的向量”，形状 [B, d] 。
+        fim_image_feature = image_fim[:, 0, :].squeeze(1) # 从 image_fim 取第 0 个位置作为图像全局向量 [B, d] 。
         fim_text_weight = self.att(fim_text_feature)
         fim_image_weight = self.att(fim_image_feature)
         fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1),dim=-1)
-        fim_tw, fim_iw = fim_att.split([1,1], dim=-1)
-        fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
+        fim_tw, fim_iw = fim_att.split([1,1], dim=-1) # 同样用 self.att 打分并 softma
+        fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature # 这是 “经过 FIM 交互和 FFN/LN 更新后的文本‑图像融合特征” 。
 
         m = text_embeds.shape[1]
         n = image_embeds.shape[1]
