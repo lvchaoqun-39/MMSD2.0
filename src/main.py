@@ -44,9 +44,9 @@ def set_args():
     parser.add_argument('--warmup_proportion', default=0.2, type=float, help='warm up proportion') # 预热比例
     parser.add_argument('--dropout_rate', default=0.1, type=float, help='dropout rate') # 丢弃率（随机丢弃神经元）
     parser.add_argument('--fim_top_k', default=12, type=int, help='top k for FIM') # FIM的top k参数
-    parser.add_argument('--sim_top_k', default=12, type=int, help='top k for similarity') # similarity的top k参数
+    parser.add_argument('--sim_top_k', default=8, type=int, help='top k for similarity') # similarity的top k参数
     parser.add_argument('--fim_dynrt_iters', '--fim_iter', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
-    parser.add_argument('--sim_num_layers', default=1, type=int, help='number of sim graph layers')
+    parser.add_argument('--sim_num_layers', default=2, type=int, help='number of sim graph layers')
     parser.add_argument('--sim_num_heads', default=4, type=int, help='number of sim attention heads')
     parser.add_argument('--sim_sent_w', default=0.0, type=float, help='weight for sim sentiment distillation loss')
     parser.add_argument('--sim_sent_temperature', default=1.0, type=float, help='temperature for sim sentiment distillation')
