@@ -67,9 +67,26 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
 
     max_acc = 0.
+    sim_warmup_prop = float(getattr(args, 'sim_sent_warmup_proportion', 0.0) or 0.0)
+    sim_warmup_epochs = int(sim_warmup_prop * float(args.num_train_epochs))
+    if sim_warmup_epochs < 0:
+        sim_warmup_epochs = 0
     for i_epoch in trange(0, int(args.num_train_epochs), desc="Epoch", disable=False):
         sum_loss = 0.
         sum_step = 0
+        sum_text_kld = 0.0
+        sum_image_kld = 0.0
+        sum_sent_loss = 0.0
+
+        model_core = (model.module if hasattr(model, "module") else model)
+        if float(getattr(args, 'sim_sent_w', 0.0) or 0.0) > 0:
+            if sim_warmup_epochs > 0:
+                ramp = min(1.0, float(i_epoch + 1) / float(sim_warmup_epochs))
+            else:
+                ramp = 1.0
+            model_core.sim_sent_w_current = float(getattr(args, 'sim_sent_w', 0.0) or 0.0) * ramp
+        else:
+            model_core.sim_sent_w_current = 0.0
 
         iter_bar = tqdm(train_loader, desc="Iter (loss=X.XXX)", disable=False) # 对 batch 循环加进度条
         model.train()
@@ -83,6 +100,9 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             loss, score = model(inputs,labels=labels) # 前向计算：把 inputs 和 labels 喂给模型，返回损失 loss 和输出 score （通常是 logits/预测分数）。
             sum_loss += loss.item()
             sum_step += 1
+            sum_text_kld += float(getattr(model_core, 'sim_last_text_kld', 0.0) or 0.0)
+            sum_image_kld += float(getattr(model_core, 'sim_last_image_kld', 0.0) or 0.0)
+            sum_sent_loss += float(getattr(model_core, 'sim_last_sent_loss', 0.0) or 0.0)
 
             iter_bar.set_description("Iter (loss=%5.3f)" % loss.item()) # 更新进度条显示，把当前 batch 的 loss 动态写到进度条标题里。
             loss.backward() # 反向传播
@@ -91,7 +111,13 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 scheduler.step() # 仅当使用 Adam 分支时推进学习率调度器，让学习率按 warmup/衰减策略变化。
             optimizer.zero_grad() # 清空梯度，为下一个 batch 做准备
 
-        wandb.log({'train_loss': sum_loss/sum_step})
+        wandb.log({
+            'train_loss': sum_loss/sum_step,
+            'train_sim_text_kld': sum_text_kld/max(sum_step, 1),
+            'train_sim_image_kld': sum_image_kld/max(sum_step, 1),
+            'train_sim_sent_loss': sum_sent_loss/max(sum_step, 1),
+            'sim_sent_w_eff': float(getattr(model_core, 'sim_sent_w_current', 0.0) or 0.0),
+        })
         dev_acc, dev_f1 ,dev_precision,dev_recall = evaluate_acc_f1(args, model, device, dev_data, processor, mode='dev')
         wandb.log({'dev_acc': dev_acc, 'dev_f1': dev_f1, 'dev_precision': dev_precision, 'dev_recall': dev_recall})
         logging.info("i_epoch is {}, dev_acc is {}, dev_f1 is {}, dev_precision is {}, dev_recall is {}".format(i_epoch, dev_acc, dev_f1, dev_precision, dev_recall))

@@ -109,34 +109,43 @@ class MV_CLIP(nn.Module):
         self.sim_image_pool = nn.Linear(args.text_size, 1, bias=False)
 
         self.sim_sent_w = float(getattr(args, "sim_sent_w", 0.0))
+        self.sim_sent_w_current = None
         self.sim_sent_temperature = float(getattr(args, "sim_sent_temperature", 1.0))
         self.sim_text_teacher_name = getattr(args, "sim_text_teacher", "distilbert-base-uncased-finetuned-sst-2-english")
+        self.sim_use_text_teacher = bool(int(getattr(args, "sim_use_text_teacher", 1)))
+        self.sim_use_image_teacher = bool(int(getattr(args, "sim_use_image_teacher", 1)))
         self.sim_sent_num_classes = 2
         self.sim_text_sent_head = nn.Linear(args.text_size, self.sim_sent_num_classes)
         self.sim_image_sent_head = nn.Linear(args.text_size, self.sim_sent_num_classes)
         self._sim_text_sent_cache = {}
+        self.sim_last_text_kld = 0.0
+        self.sim_last_image_kld = 0.0
+        self.sim_last_sent_loss = 0.0
 
         self.sim_clip_tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
         self.sim_text_teacher_tokenizer = None
         self.sim_text_teacher_model = None
-        if self.sim_sent_w > 0:
+        if self.sim_sent_w > 0 and self.sim_use_text_teacher:
             self.sim_text_teacher_tokenizer = AutoTokenizer.from_pretrained(self.sim_text_teacher_name)
             self.sim_text_teacher_model = AutoModelForSequenceClassification.from_pretrained(self.sim_text_teacher_name)
             self.sim_text_teacher_model.eval()
             for p in self.sim_text_teacher_model.parameters():
                 p.requires_grad_(False)
 
-        pos_prompt = "a positive photo"
-        neg_prompt = "a negative photo"
-        prompt_inputs = self.sim_clip_tokenizer([pos_prompt, neg_prompt], padding=True, truncation=True, return_tensors="pt")
-        with torch.no_grad():
-            if hasattr(self.model, "get_text_features"):
-                prompt_embeds = self.model.get_text_features(**prompt_inputs)
-            else:
-                prompt_text_out = self.model.text_model(**prompt_inputs)
-                prompt_embeds = self.model.text_projection(prompt_text_out.pooler_output)
-            prompt_embeds = F.normalize(prompt_embeds, dim=-1)
-        self.register_buffer("sim_image_prompt_embeds", prompt_embeds)
+        if self.sim_use_image_teacher:
+            pos_prompt = "a positive photo"
+            neg_prompt = "a negative photo"
+            prompt_inputs = self.sim_clip_tokenizer([pos_prompt, neg_prompt], padding=True, truncation=True, return_tensors="pt")
+            with torch.no_grad():
+                if hasattr(self.model, "get_text_features"):
+                    prompt_embeds = self.model.get_text_features(**prompt_inputs)
+                else:
+                    prompt_text_out = self.model.text_model(**prompt_inputs)
+                    prompt_embeds = self.model.text_projection(prompt_text_out.pooler_output)
+                prompt_embeds = F.normalize(prompt_embeds, dim=-1)
+            self.register_buffer("sim_image_prompt_embeds", prompt_embeds)
+        else:
+            self.register_buffer("sim_image_prompt_embeds", torch.zeros((2, args.text_size)))
 
         self.loss_fct = nn.CrossEntropyLoss() # 交叉熵损失
         self.att = nn.Linear(args.text_size, 1, bias=False) # 一个线性层，把 hidden 向量映射成一个标量（logit），用于计算注意力权重
@@ -237,6 +246,8 @@ class MV_CLIP(nn.Module):
     def _sim_text_teacher_probs(self, input_ids, device):
         if self.sim_text_teacher_model is None:
             return None
+        if next(self.sim_text_teacher_model.parameters()).device != device:
+            self.sim_text_teacher_model.to(device)
         texts = self.sim_clip_tokenizer.batch_decode(input_ids, skip_special_tokens=True)
         need_texts = []
         for t in texts:
@@ -398,25 +409,38 @@ class MV_CLIP(nn.Module):
             loss_text = self.loss_fct(logits_text, labels)
             loss_image = self.loss_fct(logits_image, labels)
             loss = loss_fuse + loss_text + loss_image
-            if self.training and self.sim_sent_w > 0:
+            eff_w = self.sim_sent_w if self.sim_sent_w_current is None else float(self.sim_sent_w_current)
+            self.sim_last_text_kld = 0.0
+            self.sim_last_image_kld = 0.0
+            self.sim_last_sent_loss = 0.0
+            if self.training and eff_w > 0:
                 tau = max(self.sim_sent_temperature, 1e-6)
-                teacher_text_probs = self._sim_text_teacher_probs(inputs['input_ids'], device=text_embeds.device)
-                if teacher_text_probs is not None:
-                    student_text_logits = self.sim_text_sent_head(sim_text_feature)
-                    student_text_log_probs = F.log_softmax(student_text_logits / tau, dim=-1)
-                    text_kld = F.kl_div(student_text_log_probs, teacher_text_probs, reduction='batchmean') * (tau * tau)
-                else:
-                    text_kld = 0.0
+                text_kld = 0.0
+                image_kld = 0.0
+                if self.sim_use_text_teacher:
+                    teacher_text_probs = self._sim_text_teacher_probs(inputs['input_ids'], device=text_embeds.device)
+                    if teacher_text_probs is not None:
+                        student_text_logits = self.sim_text_sent_head(sim_text_feature)
+                        student_text_log_probs = F.log_softmax(student_text_logits / tau, dim=-1)
+                        text_kld = F.kl_div(student_text_log_probs, teacher_text_probs, reduction='batchmean') * (tau * tau)
 
-                image_teacher_logits = torch.matmul(
-                    F.normalize(output['image_embeds'], dim=-1),
-                    F.normalize(self.sim_image_prompt_embeds, dim=-1).t(),
-                )
-                image_teacher_probs = F.softmax(image_teacher_logits / tau, dim=-1)
-                student_image_logits = self.sim_image_sent_head(sim_image_feature)
-                student_image_log_probs = F.log_softmax(student_image_logits / tau, dim=-1)
-                image_kld = F.kl_div(student_image_log_probs, image_teacher_probs, reduction='batchmean') * (tau * tau)
-                loss = loss + self.sim_sent_w * (text_kld + image_kld)
+                if self.sim_use_image_teacher:
+                    image_teacher_logits = torch.matmul(
+                        F.normalize(output['image_embeds'], dim=-1),
+                        F.normalize(self.sim_image_prompt_embeds, dim=-1).t(),
+                    )
+                    image_teacher_probs = F.softmax(image_teacher_logits / tau, dim=-1)
+                    student_image_logits = self.sim_image_sent_head(sim_image_feature)
+                    student_image_log_probs = F.log_softmax(student_image_logits / tau, dim=-1)
+                    image_kld = F.kl_div(student_image_log_probs, image_teacher_probs, reduction='batchmean') * (tau * tau)
+
+                sent_loss = text_kld + image_kld
+                self.sim_last_sent_loss = float(sent_loss) if not isinstance(sent_loss, float) else sent_loss
+                if not isinstance(text_kld, float):
+                    self.sim_last_text_kld = float(text_kld.detach())
+                if not isinstance(image_kld, float):
+                    self.sim_last_image_kld = float(image_kld.detach())
+                loss = loss + eff_w * sent_loss
 
             outputs = (loss,) + outputs
         return outputs
