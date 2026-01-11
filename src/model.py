@@ -133,9 +133,29 @@ class MV_CLIP(nn.Module):
                 p.requires_grad_(False)
 
         if self.sim_use_image_teacher:
-            pos_prompt = "a positive photo"
-            neg_prompt = "a negative photo"
-            prompt_inputs = self.sim_clip_tokenizer([pos_prompt, neg_prompt], padding=True, truncation=True, return_tensors="pt")
+            pos_prompts = [
+                "a positive photo",
+                "a photo with positive sentiment",
+                "a happy photo",
+                "a joyful photo",
+                "a pleasant photo",
+                "a cheerful photo",
+                "a nice photo",
+                "a good photo",
+            ]
+            neg_prompts = [
+                "a negative photo",
+                "a photo with negative sentiment",
+                "a sad photo",
+                "a gloomy photo",
+                "a depressing photo",
+                "a unpleasant photo",
+                "a bad photo",
+                "a terrible photo",
+            ]
+            all_prompts = pos_prompts + neg_prompts
+            prompt_inputs = self.sim_clip_tokenizer(all_prompts, padding=True, truncation=True, return_tensors="pt")
+            prompt_inputs = {k: v.to(next(self.model.parameters()).device) for k, v in prompt_inputs.items()}
             with torch.no_grad():
                 if hasattr(self.model, "get_text_features"):
                     prompt_embeds = self.model.get_text_features(**prompt_inputs)
@@ -143,9 +163,13 @@ class MV_CLIP(nn.Module):
                     prompt_text_out = self.model.text_model(**prompt_inputs)
                     prompt_embeds = self.model.text_projection(prompt_text_out.pooler_output)
                 prompt_embeds = F.normalize(prompt_embeds, dim=-1)
-            self.register_buffer("sim_image_prompt_embeds", prompt_embeds)
+            pos_embeds = prompt_embeds[: len(pos_prompts)]
+            neg_embeds = prompt_embeds[len(pos_prompts) :]
+            self.register_buffer("sim_image_pos_prompt_embeds", pos_embeds)
+            self.register_buffer("sim_image_neg_prompt_embeds", neg_embeds)
         else:
-            self.register_buffer("sim_image_prompt_embeds", torch.zeros((2, args.text_size)))
+            self.register_buffer("sim_image_pos_prompt_embeds", torch.zeros((1, args.text_size)))
+            self.register_buffer("sim_image_neg_prompt_embeds", torch.zeros((1, args.text_size)))
 
         self.loss_fct = nn.CrossEntropyLoss() # 交叉熵损失
         self.att = nn.Linear(args.text_size, 1, bias=False) # 一个线性层，把 hidden 向量映射成一个标量（logit），用于计算注意力权重
@@ -422,13 +446,19 @@ class MV_CLIP(nn.Module):
                     if teacher_text_probs is not None:
                         student_text_logits = self.sim_text_sent_head(sim_text_feature)
                         student_text_log_probs = F.log_softmax(student_text_logits / tau, dim=-1)
-                        text_kld = F.kl_div(student_text_log_probs, teacher_text_probs, reduction='batchmean') * (tau * tau)
+                        non_sar_mask = (labels == 0)
+                        if non_sar_mask.any():
+                            text_kld = F.kl_div(
+                                student_text_log_probs[non_sar_mask],
+                                teacher_text_probs[non_sar_mask],
+                                reduction='batchmean',
+                            ) * (tau * tau)
 
                 if self.sim_use_image_teacher:
-                    image_teacher_logits = torch.matmul(
-                        F.normalize(output['image_embeds'], dim=-1),
-                        F.normalize(self.sim_image_prompt_embeds, dim=-1).t(),
-                    )
+                    image_embed = F.normalize(output['image_embeds'], dim=-1)
+                    pos_logits = torch.matmul(image_embed, F.normalize(self.sim_image_pos_prompt_embeds, dim=-1).t()).mean(dim=-1)
+                    neg_logits = torch.matmul(image_embed, F.normalize(self.sim_image_neg_prompt_embeds, dim=-1).t()).mean(dim=-1)
+                    image_teacher_logits = torch.stack((pos_logits, neg_logits), dim=-1)
                     image_teacher_probs = F.softmax(image_teacher_logits / tau, dim=-1)
                     student_image_logits = self.sim_image_sent_head(sim_image_feature)
                     student_image_log_probs = F.log_softmax(student_image_logits / tau, dim=-1)
