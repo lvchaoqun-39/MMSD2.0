@@ -45,6 +45,15 @@ def set_args():
     parser.add_argument('--dropout_rate', default=0.1, type=float, help='dropout rate') # 丢弃率（随机丢弃神经元）
     parser.add_argument('--fim_top_k', default=12, type=int, help='top k for FIM') # FIM的top k参数
     parser.add_argument('--fim_dynrt_iters', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
+    parser.add_argument('--gnn_enable', default=1, type=int, help='enable gnn reasoning path')
+    parser.add_argument('--gnn_layers', default=2, type=int, help='number of gnn layers')
+    parser.add_argument('--gnn_top_k', default=-1, type=int, help='top k for gnn edges')
+    parser.add_argument('--gnn_edge_dropout', default=0.1, type=float, help='edge dropout for gnn')
+    parser.add_argument('--gnn_use_global', default=1, type=int, help='use global node in gnn')
+    parser.add_argument('--gnn_alpha', default=1.0, type=float, help='scale for gnn feature injection')
+    parser.add_argument('--gnn_contrastive_weight', default=0.05, type=float, help='weight for gnn contrastive loss')
+    parser.add_argument('--gnn_contrastive_temp', default=0.07, type=float, help='temperature for gnn contrastive')
+    parser.add_argument('--gnn_contrastive_edge_dropout', default=-1.0, type=float, help='edge dropout for gnn contrastive view')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子

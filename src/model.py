@@ -5,6 +5,151 @@ import torch
 import torch.nn.functional as F
 import copy
 
+
+class BipartiteGraphLayer(nn.Module):
+    def __init__(self, hidden_size: int, dropout_rate: float, use_global: bool):
+        super().__init__()
+        self.hidden_size = int(hidden_size)
+        self.use_global = bool(use_global)
+
+        self.text_value = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+        self.image_value = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+
+        self.text_ffn = nn.Sequential(
+            nn.Linear(self.hidden_size, self.hidden_size * 4),
+            nn.GELU(),
+            nn.Linear(self.hidden_size * 4, self.hidden_size),
+        )
+        self.image_ffn = nn.Sequential(
+            nn.Linear(self.hidden_size, self.hidden_size * 4),
+            nn.GELU(),
+            nn.Linear(self.hidden_size * 4, self.hidden_size),
+        )
+        self.text_ln = nn.LayerNorm(self.hidden_size)
+        self.image_ln = nn.LayerNorm(self.hidden_size)
+        self.msg_dropout = nn.Dropout(dropout_rate)
+
+        if self.use_global:
+            self.global_from_nodes = nn.Linear(self.hidden_size * 2, self.hidden_size, bias=False)
+            self.global_to_text = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+            self.global_to_image = nn.Linear(self.hidden_size, self.hidden_size, bias=False)
+            self.global_ffn = nn.Sequential(
+                nn.Linear(self.hidden_size, self.hidden_size * 4),
+                nn.GELU(),
+                nn.Linear(self.hidden_size * 4, self.hidden_size),
+            )
+            self.global_ln = nn.LayerNorm(self.hidden_size)
+
+    def _masked_mean(self, x, mask):
+        if mask is None:
+            return x.mean(dim=1)
+        mask = mask.to(dtype=x.dtype).unsqueeze(-1)
+        denom = mask.sum(dim=1).clamp(min=1.0)
+        return (x * mask).sum(dim=1) / denom
+
+    def forward(
+        self,
+        text_states,
+        image_states,
+        interaction,
+        attention_mask,
+        top_k: int,
+        edge_dropout: float,
+        global_state=None,
+    ):
+        bsz, text_len, hidden = text_states.shape
+        _, image_len, _ = image_states.shape
+
+        k_img = min(int(top_k), int(image_len))
+        if k_img < 1:
+            k_img = 1
+        k_txt = min(int(top_k), int(text_len))
+        if k_txt < 1:
+            k_txt = 1
+
+        topk_img = interaction.topk(k_img, dim=-1).indices
+        scores_t2v = interaction.gather(dim=-1, index=topk_img)
+        att_t2v = F.softmax(scores_t2v, dim=-1)
+        if self.training and float(edge_dropout) > 0:
+            att_t2v = F.dropout(att_t2v, p=float(edge_dropout), training=True)
+            att_t2v = att_t2v / (att_t2v.sum(dim=-1, keepdim=True) + 1e-8)
+        image_values = self.image_value(image_states)
+        batch_index = torch.arange(bsz, device=image_values.device)[:, None, None]
+        gathered_image_values = image_values[batch_index, topk_img]
+        msg_text = (att_t2v.unsqueeze(-1) * gathered_image_values).sum(dim=-2)
+
+        interaction_t = interaction.transpose(1, 2)
+        topk_txt = interaction_t.topk(k_txt, dim=-1).indices
+        scores_v2t = interaction_t.gather(dim=-1, index=topk_txt)
+        att_v2t = F.softmax(scores_v2t, dim=-1)
+        if self.training and float(edge_dropout) > 0:
+            att_v2t = F.dropout(att_v2t, p=float(edge_dropout), training=True)
+            att_v2t = att_v2t / (att_v2t.sum(dim=-1, keepdim=True) + 1e-8)
+        text_values = self.text_value(text_states)
+        gathered_text_values = text_values[batch_index, topk_txt]
+        msg_image = (att_v2t.unsqueeze(-1) * gathered_text_values).sum(dim=-2)
+
+        if self.use_global:
+            text_mean = self._masked_mean(text_states, attention_mask)
+            image_mean = image_states.mean(dim=1)
+            global_input = self.global_from_nodes(torch.cat((text_mean, image_mean), dim=-1))
+            if global_state is None:
+                global_state = global_input.unsqueeze(1)
+            global_state = self.global_ln(global_state + self.global_ffn(global_input).unsqueeze(1))
+            msg_text = msg_text + self.global_to_text(global_state).squeeze(1).unsqueeze(1)
+            msg_image = msg_image + self.global_to_image(global_state).squeeze(1).unsqueeze(1)
+
+        text_states = self.text_ln(text_states + self.text_ffn(self.msg_dropout(msg_text)))
+        image_states = self.image_ln(image_states + self.image_ffn(self.msg_dropout(msg_image)))
+
+        return text_states, image_states, global_state
+
+
+class BipartiteGraphReasoner(nn.Module):
+    def __init__(
+        self,
+        hidden_size: int,
+        num_layers: int,
+        top_k: int,
+        edge_dropout: float,
+        dropout_rate: float,
+        use_global: bool,
+    ):
+        super().__init__()
+        self.hidden_size = int(hidden_size)
+        self.num_layers = int(num_layers)
+        self.top_k = int(top_k)
+        self.edge_dropout = float(edge_dropout)
+        self.use_global = bool(use_global)
+        self.layers = nn.ModuleList(
+            [
+                BipartiteGraphLayer(
+                    hidden_size=self.hidden_size,
+                    dropout_rate=float(dropout_rate),
+                    use_global=self.use_global,
+                )
+                for _ in range(self.num_layers)
+            ]
+        )
+
+    def forward(self, text_states, image_states, interaction, attention_mask, edge_dropout=None):
+        if edge_dropout is None:
+            edge_dropout = self.edge_dropout
+        global_state = None
+        for layer in self.layers:
+            text_states, image_states, global_state = layer(
+                text_states=text_states,
+                image_states=image_states,
+                interaction=interaction,
+                attention_mask=attention_mask,
+                top_k=self.top_k,
+                edge_dropout=float(edge_dropout),
+                global_state=global_state,
+            )
+        if not self.use_global:
+            global_state = None
+        return text_states, image_states, global_state
+
 class MultimodalEncoder(nn.Module): # 本质上是“把 BERT 的 Transformer Encoder Layer 叠 N 层”，并在前向时可选地返回每一层的输出以及注意力矩阵
     def __init__(self, config, layer_number):
         super(MultimodalEncoder, self).__init__()
@@ -77,6 +222,32 @@ class MV_CLIP(nn.Module):
         self.fim_dynrt_image_value = nn.Linear(args.text_size, args.text_size, bias=False)
         self.fim_dynrt_text_value = nn.Linear(args.text_size, args.text_size, bias=False)
         self.fim_extra_fuse = nn.Linear(args.text_size * 2, args.text_size)
+
+        self.gnn_enable = int(getattr(args, "gnn_enable", 0))
+        if self.gnn_enable == 1:
+            self.gnn_layers = int(getattr(args, "gnn_layers", 2))
+            self.gnn_top_k = int(getattr(args, "gnn_top_k", -1))
+            if self.gnn_top_k < 1:
+                self.gnn_top_k = int(self.fim_top_k)
+            self.gnn_edge_dropout = float(getattr(args, "gnn_edge_dropout", 0.1))
+            self.gnn_use_global = int(getattr(args, "gnn_use_global", 1)) == 1
+            self.gnn_alpha = float(getattr(args, "gnn_alpha", 1.0))
+            self.gnn_contrastive_weight = float(getattr(args, "gnn_contrastive_weight", 0.0))
+            self.gnn_contrastive_temp = float(getattr(args, "gnn_contrastive_temp", 0.07))
+            self.gnn_contrastive_edge_dropout = float(getattr(args, "gnn_contrastive_edge_dropout", -1.0))
+            if self.gnn_contrastive_edge_dropout < 0:
+                self.gnn_contrastive_edge_dropout = self.gnn_edge_dropout
+
+            self.gnn_reasoner = BipartiteGraphReasoner(
+                hidden_size=args.text_size,
+                num_layers=self.gnn_layers,
+                top_k=self.gnn_top_k,
+                edge_dropout=self.gnn_edge_dropout,
+                dropout_rate=args.dropout_rate,
+                use_global=self.gnn_use_global,
+            )
+            self.gnn_out = nn.Linear(args.text_size * 2, args.text_size)
+            self.gnn_final_fuse = nn.Linear(args.text_size * 2, args.text_size)
 
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
@@ -197,6 +368,71 @@ class MV_CLIP(nn.Module):
 
         fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
 
+        gnn_contrastive_loss = None
+        if self.gnn_enable == 1:
+            gnn_text_states, gnn_image_states, gnn_global_state = self.gnn_reasoner(
+                text_states=text_embeds,
+                image_states=image_embeds,
+                interaction=interaction,
+                attention_mask=inputs.get('attention_mask', None),
+                edge_dropout=self.gnn_edge_dropout,
+            )
+            gnn_text_feature = gnn_text_states[
+                torch.arange(gnn_text_states.shape[0], device=gnn_text_states.device),
+                last_token_index,
+            ]
+            gnn_image_feature = gnn_image_states[:, 0, :].squeeze(1)
+            gnn_text_weight = self.att(gnn_text_feature)
+            gnn_image_weight = self.att(gnn_image_feature)
+            gnn_att = nn.functional.softmax(torch.stack((gnn_text_weight, gnn_image_weight), dim=-1), dim=-1)
+            gnn_tw, gnn_iw = gnn_att.split([1, 1], dim=-1)
+            gnn_local_fuse = gnn_tw.squeeze(1) * gnn_text_feature + gnn_iw.squeeze(1) * gnn_image_feature
+            if gnn_global_state is None:
+                gnn_feature = gnn_local_fuse
+            else:
+                gnn_feature = self.gnn_out(torch.cat((gnn_local_fuse, gnn_global_state.squeeze(1)), dim=-1))
+            gnn_feature = gnn_feature * self.gnn_alpha
+            fuse_feature = self.gnn_final_fuse(torch.cat((fuse_feature, gnn_feature), dim=-1))
+
+            if (
+                labels is not None
+                and self.training
+                and float(getattr(self, "gnn_contrastive_weight", 0.0)) > 0
+            ):
+                g2_text_states, g2_image_states, g2_global_state = self.gnn_reasoner(
+                    text_states=text_embeds,
+                    image_states=image_embeds,
+                    interaction=interaction,
+                    attention_mask=inputs.get('attention_mask', None),
+                    edge_dropout=self.gnn_contrastive_edge_dropout,
+                )
+                g2_text_feature = g2_text_states[
+                    torch.arange(g2_text_states.shape[0], device=g2_text_states.device),
+                    last_token_index,
+                ]
+                g2_image_feature = g2_image_states[:, 0, :].squeeze(1)
+                g2_text_weight = self.att(g2_text_feature)
+                g2_image_weight = self.att(g2_image_feature)
+                g2_att = nn.functional.softmax(
+                    torch.stack((g2_text_weight, g2_image_weight), dim=-1), dim=-1
+                )
+                g2_tw, g2_iw = g2_att.split([1, 1], dim=-1)
+                g2_local_fuse = g2_tw.squeeze(1) * g2_text_feature + g2_iw.squeeze(1) * g2_image_feature
+                if g2_global_state is None:
+                    gnn_feature_2 = g2_local_fuse
+                else:
+                    gnn_feature_2 = self.gnn_out(
+                        torch.cat((g2_local_fuse, g2_global_state.squeeze(1)), dim=-1)
+                    )
+
+                z1 = F.normalize(gnn_feature, p=2, dim=-1)
+                z2 = F.normalize(gnn_feature_2, p=2, dim=-1)
+                logits = torch.matmul(z1, z2.transpose(0, 1)) / max(float(self.gnn_contrastive_temp), 1e-6)
+                contrastive_targets = torch.arange(logits.shape[0], device=logits.device)
+                gnn_contrastive_loss = 0.5 * (
+                    self.loss_fct(logits, contrastive_targets) + self.loss_fct(logits.transpose(0, 1), contrastive_targets)
+                )
+
         # 通过三个分类头得到未归一化的分类分数
         logits_fuse = self.classifier_fuse(fuse_feature)
         logits_text = self.classifier_text(text_feature)
@@ -215,6 +451,9 @@ class MV_CLIP(nn.Module):
             loss_text = self.loss_fct(logits_text, labels)
             loss_image = self.loss_fct(logits_image, labels)
             loss = loss_fuse + loss_text + loss_image
+
+            if gnn_contrastive_loss is not None:
+                loss = loss + float(self.gnn_contrastive_weight) * gnn_contrastive_loss
 
             outputs = (loss,) + outputs
         return outputs
