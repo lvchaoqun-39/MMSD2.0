@@ -51,6 +51,7 @@ def set_args():
     parser.add_argument('--gnn_edge_dropout', default=0.1, type=float, help='edge dropout for gnn')
     parser.add_argument('--gnn_use_global', default=1, type=int, help='use global node in gnn')
     parser.add_argument('--gnn_alpha', default=1.0, type=float, help='scale for gnn feature injection')
+    parser.add_argument('--gnn_gate_init', default=-2.0, type=float, help='init logit for gnn gate')
     parser.add_argument('--gnn_contrastive_weight', default=0.05, type=float, help='weight for gnn contrastive loss')
     parser.add_argument('--gnn_contrastive_temp', default=0.07, type=float, help='temperature for gnn contrastive')
     parser.add_argument('--gnn_contrastive_edge_dropout', default=-1.0, type=float, help='edge dropout for gnn contrastive view')

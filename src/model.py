@@ -60,6 +60,11 @@ class BipartiteGraphLayer(nn.Module):
         bsz, text_len, hidden = text_states.shape
         _, image_len, _ = image_states.shape
 
+        if attention_mask is not None:
+            text_valid = attention_mask.to(dtype=torch.bool)
+        else:
+            text_valid = None
+
         k_img = min(int(top_k), int(image_len))
         if k_img < 1:
             k_img = 1
@@ -77,8 +82,12 @@ class BipartiteGraphLayer(nn.Module):
         batch_index = torch.arange(bsz, device=image_values.device)[:, None, None]
         gathered_image_values = image_values[batch_index, topk_img]
         msg_text = (att_t2v.unsqueeze(-1) * gathered_image_values).sum(dim=-2)
+        if text_valid is not None:
+            msg_text = msg_text * text_valid.unsqueeze(-1).to(dtype=msg_text.dtype)
 
         interaction_t = interaction.transpose(1, 2)
+        if text_valid is not None:
+            interaction_t = interaction_t.masked_fill(~text_valid.unsqueeze(1), -1e4)
         topk_txt = interaction_t.topk(k_txt, dim=-1).indices
         scores_v2t = interaction_t.gather(dim=-1, index=topk_txt)
         att_v2t = F.softmax(scores_v2t, dim=-1)
@@ -237,6 +246,8 @@ class MV_CLIP(nn.Module):
             self.gnn_contrastive_edge_dropout = float(getattr(args, "gnn_contrastive_edge_dropout", -1.0))
             if self.gnn_contrastive_edge_dropout < 0:
                 self.gnn_contrastive_edge_dropout = self.gnn_edge_dropout
+            self.gnn_gate_init = float(getattr(args, "gnn_gate_init", -2.0))
+            self.gnn_gate = nn.Parameter(torch.tensor(self.gnn_gate_init))
 
             self.gnn_reasoner = BipartiteGraphReasoner(
                 hidden_size=args.text_size,
@@ -391,7 +402,8 @@ class MV_CLIP(nn.Module):
                 gnn_feature = gnn_local_fuse
             else:
                 gnn_feature = self.gnn_out(torch.cat((gnn_local_fuse, gnn_global_state.squeeze(1)), dim=-1))
-            gnn_feature = gnn_feature * self.gnn_alpha
+            gnn_gate = torch.sigmoid(self.gnn_gate) * float(self.gnn_alpha)
+            gnn_feature = gnn_feature * gnn_gate
             fuse_feature = self.gnn_final_fuse(torch.cat((fuse_feature, gnn_feature), dim=-1))
 
             if (
