@@ -5,6 +5,8 @@ import torch
 import torch.nn.functional as F
 import copy
 
+torch.cuda.empty_cache()
+
 
 class BipartiteGraphLayer(nn.Module):
     def __init__(self, hidden_size: int, dropout_rate: float, use_global: bool):
@@ -479,17 +481,10 @@ class MV_CLIP(nn.Module):
             weights = F.softmax(self.head_weight_logits, dim=-1)
             score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
         elif self.head_fusion == "mul":
-            if labels is None:
-                fuse_max, _ = fuse_score.max(dim=-1)
-                text_max, _ = text_score.max(dim=-1)
-                image_max, _ = image_score.max(dim=-1)
-                weights = self._head_weights_multiplicative(fuse_max, text_max, image_max)
-            else:
-                labels_ = labels.to(torch.long).unsqueeze(-1)
-                fuse_py = fuse_score.gather(dim=-1, index=labels_).squeeze(-1)
-                text_py = text_score.gather(dim=-1, index=labels_).squeeze(-1)
-                image_py = image_score.gather(dim=-1, index=labels_).squeeze(-1)
-                weights = self._head_weights_multiplicative(fuse_py, text_py, image_py)
+            fuse_max, _ = fuse_score.max(dim=-1)
+            text_max, _ = text_score.max(dim=-1)
+            image_max, _ = image_score.max(dim=-1)
+            weights = self._head_weights_multiplicative(fuse_max, text_max, image_max)
             score = weights[:, 0:1] * fuse_score + weights[:, 1:2] * text_score + weights[:, 2:3] * image_score
         else:
             score = fuse_score + text_score + image_score
