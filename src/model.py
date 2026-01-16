@@ -537,13 +537,19 @@ class MV_CLIP(nn.Module):
             ):
                 top2 = score.topk(k=2, dim=-1).values
                 margin = top2[:, 0] - top2[:, 1]
-                use_oracle = margin < float(self.head_mul_oracle_tau)
+                pred = score.argmax(dim=-1)
+                use_oracle = (margin < float(self.head_mul_oracle_tau)) & (pred != labels.to(torch.long))
                 if use_oracle.any():
                     oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
                     oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
                     lam = float(self.head_mul_oracle_lambda)
+                    tau = max(float(self.head_mul_oracle_tau), 1e-8)
+                    lam_vec = (lam * ((tau - margin) / tau).clamp(min=0.0, max=1.0)).to(score.dtype)
                     score = score.clone()
-                    score[use_oracle] = (1.0 - lam) * score[use_oracle] + lam * oracle_score[use_oracle]
+                    score[use_oracle] = (
+                        (1.0 - lam_vec[use_oracle].unsqueeze(-1)) * score[use_oracle]
+                        + lam_vec[use_oracle].unsqueeze(-1) * oracle_score[use_oracle]
+                    )
         else:
             score = fuse_score + text_score + image_score
 
