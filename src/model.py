@@ -271,16 +271,40 @@ class MV_CLIP(nn.Module):
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
 
-    def _head_weights_multiplicative(self, fuse_prob_y, text_prob_y, image_prob_y):
-        delta = float(self.head_weight_delta) # delta 越大 ：权重差异被放大，“强的头更强、弱的头更弱”，融合更偏向某一路（更像硬选择/专家选择）。 delta 越小 ：权重更平均，趋近于简单加权/接近直接相加。
-        x = 3.0
-        power = delta / (x - 1.0)
-        wf = ((1.0 - text_prob_y) * (1.0 - image_prob_y)).clamp(min=1e-6).pow(power)
-        wt = ((1.0 - fuse_prob_y) * (1.0 - image_prob_y)).clamp(min=1e-6).pow(power)
-        wi = ((1.0 - fuse_prob_y) * (1.0 - text_prob_y)).clamp(min=1e-6).pow(power)
-        weights = torch.stack([wf, wt, wi], dim=-1)
+    def _head_weights_multiplicative_from_probs(self, modalities_probs, labels):
+        delta = float(self.head_weight_delta)
+        num_modalities = int(modalities_probs.shape[1])
+        power = delta / (float(num_modalities) - 1.0)
+        labels_ = labels.to(torch.long).view(-1, 1, 1)
+        p_correct = modalities_probs.gather(dim=-1, index=labels_.expand(-1, num_modalities, 1)).squeeze(-1)
+
+        weights = []
+        for i in range(num_modalities):
+            others = [j for j in range(num_modalities) if j != i]
+            prod = torch.ones_like(p_correct[:, i])
+            for j in others:
+                prod = prod * (1.0 - p_correct[:, j])
+            weights.append(prod.clamp(min=1e-6).pow(power))
+        weights = torch.stack(weights, dim=1)
         if int(self.head_weight_normalize) == 1:
-            weights = weights / (weights.sum(dim=-1, keepdim=True) + 1e-8)
+            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
+        return weights
+
+    def _head_weights_multiplicative_from_conf(self, conf):
+        delta = float(self.head_weight_delta)
+        num_modalities = int(conf.shape[1])
+        power = delta / (float(num_modalities) - 1.0)
+
+        weights = []
+        for i in range(num_modalities):
+            others = [j for j in range(num_modalities) if j != i]
+            prod = torch.ones_like(conf[:, i])
+            for j in others:
+                prod = prod * (1.0 - conf[:, j])
+            weights.append(prod.clamp(min=1e-6).pow(power))
+        weights = torch.stack(weights, dim=1)
+        if int(self.head_weight_normalize) == 1:
+            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
         return weights
 
     def _dynrt_squash(self, x):
@@ -475,33 +499,33 @@ class MV_CLIP(nn.Module):
         text_score = nn.functional.softmax(logits_text, dim=-1)
         image_score = nn.functional.softmax(logits_image, dim=-1)
 
+        modalities = torch.stack([fuse_score, text_score, image_score], dim=1)
+
         if self.head_fusion == "add":
             score = fuse_score + text_score + image_score
         elif self.head_fusion == "learned":
             weights = F.softmax(self.head_weight_logits, dim=-1)
             score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
         elif self.head_fusion == "mul":
-            fuse_max, _ = fuse_score.max(dim=-1)
-            text_max, _ = text_score.max(dim=-1)
-            image_max, _ = image_score.max(dim=-1)
-            weights = self._head_weights_multiplicative(fuse_max, text_max, image_max)
-            score = weights[:, 0:1] * fuse_score + weights[:, 1:2] * text_score + weights[:, 2:3] * image_score
+            if self.training and labels is not None:
+                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+            else:
+                conf, _ = modalities.max(dim=-1)
+                weights = self._head_weights_multiplicative_from_conf(conf)
+            score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
         else:
             score = fuse_score + text_score + image_score
 
         outputs = (score,)
         if labels is not None:
             if self.head_fusion == "mul":
-                labels_ = labels.to(torch.long).unsqueeze(-1)
-                fuse_logp = F.log_softmax(logits_fuse, dim=-1).gather(dim=-1, index=labels_).squeeze(-1)
-                text_logp = F.log_softmax(logits_text, dim=-1).gather(dim=-1, index=labels_).squeeze(-1)
-                image_logp = F.log_softmax(logits_image, dim=-1).gather(dim=-1, index=labels_).squeeze(-1)
-                fuse_py = fuse_score.gather(dim=-1, index=labels_).squeeze(-1)
-                text_py = text_score.gather(dim=-1, index=labels_).squeeze(-1)
-                image_py = image_score.gather(dim=-1, index=labels_).squeeze(-1)
-                weights = self._head_weights_multiplicative(fuse_py, text_py, image_py)
-                nll = -torch.stack([fuse_logp, text_logp, image_logp], dim=-1)
-                loss = (weights * nll).sum(dim=-1).mean()
+                logits_all = torch.stack([logits_fuse, logits_text, logits_image], dim=1)
+                logp = F.log_softmax(logits_all, dim=-1)
+                labels_ = labels.to(torch.long).view(-1, 1, 1)
+                logp_y = logp.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
+                nll = -logp_y
+                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                loss = (weights * nll).sum(dim=1).mean()
             elif self.head_fusion == "learned":
                 weights = F.softmax(self.head_weight_logits, dim=-1)
                 loss_fuse = self.loss_fct(logits_fuse, labels)
