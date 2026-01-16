@@ -529,10 +529,10 @@ class MV_CLIP(nn.Module):
 
             if (not self.training) and labels is not None and float(self.head_mul_oracle_lambda) > 0:
                 oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                labels_ = labels.to(torch.long).view(-1, 1, 1)
-                old = weights_pc.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
-                mixed = (1.0 - float(self.head_mul_oracle_lambda)) * old + float(self.head_mul_oracle_lambda) * oracle_weights
-                weights_pc = weights_pc.scatter(dim=-1, index=labels_.expand(-1, 3, 1), src=mixed.unsqueeze(-1))
+                oracle_weights_pc = oracle_weights.unsqueeze(-1).expand_as(weights_pc)
+                weights_pc = (1.0 - float(self.head_mul_oracle_lambda)) * weights_pc + float(
+                    self.head_mul_oracle_lambda
+                ) * oracle_weights_pc
 
             score = (weights_pc * modalities).sum(dim=1)
         else:
