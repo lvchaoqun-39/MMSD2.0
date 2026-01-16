@@ -211,6 +211,7 @@ class MV_CLIP(nn.Module):
         self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
         self.head_weight_normalize = int(getattr(args, "head_weight_normalize", 1))
         self.head_mul_oracle_lambda = float(getattr(args, "head_mul_oracle_lambda", 0.0))
+        self.head_mul_oracle_tau = float(getattr(args, "head_mul_oracle_tau", 0.0))
         if self.head_fusion == "learned":
             self.head_weight_logits = nn.Parameter(torch.zeros(3))
 
@@ -526,15 +527,23 @@ class MV_CLIP(nn.Module):
             score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
         elif self.head_fusion == "mul":
             weights_pc = self._head_weights_multiplicative_per_class(modalities)
-
-            if (not self.training) and labels is not None and float(self.head_mul_oracle_lambda) > 0:
-                oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                oracle_weights_pc = oracle_weights.unsqueeze(-1).expand_as(weights_pc)
-                weights_pc = (1.0 - float(self.head_mul_oracle_lambda)) * weights_pc + float(
-                    self.head_mul_oracle_lambda
-                ) * oracle_weights_pc
-
             score = (weights_pc * modalities).sum(dim=1)
+
+            if (
+                (not self.training)
+                and labels is not None
+                and float(self.head_mul_oracle_lambda) > 0
+                and float(self.head_mul_oracle_tau) > 0
+            ):
+                top2 = score.topk(k=2, dim=-1).values
+                margin = top2[:, 0] - top2[:, 1]
+                use_oracle = margin < float(self.head_mul_oracle_tau)
+                if use_oracle.any():
+                    oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                    oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
+                    lam = float(self.head_mul_oracle_lambda)
+                    score = score.clone()
+                    score[use_oracle] = (1.0 - lam) * score[use_oracle] + lam * oracle_score[use_oracle]
         else:
             score = fuse_score + text_score + image_score
 
