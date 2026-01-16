@@ -210,6 +210,7 @@ class MV_CLIP(nn.Module):
         self.head_fusion = str(getattr(args, "head_fusion", "add"))
         self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
         self.head_weight_normalize = int(getattr(args, "head_weight_normalize", 1))
+        self.head_mul_oracle_lambda = float(getattr(args, "head_mul_oracle_lambda", 0.0))
         if self.head_fusion == "learned":
             self.head_weight_logits = nn.Parameter(torch.zeros(3))
 
@@ -303,6 +304,23 @@ class MV_CLIP(nn.Module):
                 prod = prod * (1.0 - conf[:, j])
             weights.append(prod.clamp(min=1e-6).pow(power))
         weights = torch.stack(weights, dim=1)
+        if int(self.head_weight_normalize) == 1:
+            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
+        return weights
+
+    def _head_weights_multiplicative_per_class(self, modalities_probs):
+        delta = float(self.head_weight_delta)
+        num_modalities = int(modalities_probs.shape[1])
+        power = delta / (float(num_modalities) - 1.0)
+
+        one_minus = (1.0 - modalities_probs).clamp(min=1e-6)
+        prod_all = one_minus.prod(dim=1, keepdim=True)
+        weights = []
+        for i in range(num_modalities):
+            denom = one_minus[:, i:i + 1, :]
+            w_i = (prod_all / denom).clamp(min=1e-6).pow(power)
+            weights.append(w_i)
+        weights = torch.cat(weights, dim=1)
         if int(self.head_weight_normalize) == 1:
             weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
         return weights
@@ -507,12 +525,16 @@ class MV_CLIP(nn.Module):
             weights = F.softmax(self.head_weight_logits, dim=-1)
             score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
         elif self.head_fusion == "mul":
-            if self.training and labels is not None:
-                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-            else:
-                conf, _ = modalities.max(dim=-1)
-                weights = self._head_weights_multiplicative_from_conf(conf)
-            score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
+            weights_pc = self._head_weights_multiplicative_per_class(modalities)
+
+            if (not self.training) and labels is not None and float(self.head_mul_oracle_lambda) > 0:
+                oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                labels_ = labels.to(torch.long).view(-1, 1, 1)
+                old = weights_pc.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
+                mixed = (1.0 - float(self.head_mul_oracle_lambda)) * old + float(self.head_mul_oracle_lambda) * oracle_weights
+                weights_pc = weights_pc.scatter(dim=-1, index=labels_.expand(-1, 3, 1), src=mixed.unsqueeze(-1))
+
+            score = (weights_pc * modalities).sum(dim=1)
         else:
             score = fuse_score + text_score + image_score
 
