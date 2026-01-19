@@ -212,6 +212,7 @@ class MV_CLIP(nn.Module):
         self.head_weight_normalize = int(getattr(args, "head_weight_normalize", 1))
         self.head_mul_oracle_lambda = float(getattr(args, "head_mul_oracle_lambda", 0.0))
         self.head_mul_oracle_tau = float(getattr(args, "head_mul_oracle_tau", 0.0))
+        self.head_mul_oracle_train_alpha = float(getattr(args, "head_mul_oracle_train_alpha", 0.0))
         if self.head_fusion == "learned":
             self.head_weight_logits = nn.Parameter(torch.zeros(3))
 
@@ -563,6 +564,17 @@ class MV_CLIP(nn.Module):
                 nll = -logp_y
                 weights = self._head_weights_multiplicative_from_probs(modalities, labels)
                 loss = (weights * nll).sum(dim=1).mean()
+
+                alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
+                if alpha > 0:
+                    oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
+                    eps = 1e-8
+                    p = score.clamp(min=eps)
+                    p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
+                    q = oracle_score.clamp(min=eps)
+                    q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
+                    distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
+                    loss = loss + alpha * distill_loss
             elif self.head_fusion == "learned":
                 weights = F.softmax(self.head_weight_logits, dim=-1)
                 loss_fuse = self.loss_fct(logits_fuse, labels)
