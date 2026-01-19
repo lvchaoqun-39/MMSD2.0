@@ -527,12 +527,8 @@ class MV_CLIP(nn.Module):
             weights = F.softmax(self.head_weight_logits, dim=-1)
             score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
         elif self.head_fusion == "mul":
-            if self.training and labels is not None:
-                modality_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                score = (modality_weights.unsqueeze(-1) * modalities).sum(dim=1)
-            else:
-                weights_pc = self._head_weights_multiplicative_per_class(modalities)
-                score = (weights_pc * modalities).sum(dim=1)
+            weights_pc = self._head_weights_multiplicative_per_class(modalities)
+            score = (weights_pc * modalities).sum(dim=1)
 
             if (
                 (not self.training)
