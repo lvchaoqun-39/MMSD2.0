@@ -81,4 +81,3 @@ class MyDataset(Dataset):
             label_list.append(instance[2])
             id_list.append(instance[3])
         return text_list, image_list, label_list, id_list
-

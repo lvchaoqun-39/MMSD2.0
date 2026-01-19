@@ -67,6 +67,8 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
 
     max_acc = 0.
+    use_fp16 = (int(getattr(args, 'fp16', 0)) == 1) and (device.type == 'cuda')
+    scaler = torch.cuda.amp.GradScaler(enabled=use_fp16)
     for i_epoch in trange(0, int(args.num_train_epochs), desc="Epoch", disable=False):
         sum_loss = 0.
         sum_step = 0
@@ -80,17 +82,19 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                 labels = torch.tensor(label_list).to(device)
 
-            loss, score = model(inputs,labels=labels) # 前向计算：把 inputs 和 labels 喂给模型，返回损失 loss 和输出 score （通常是 logits/预测分数）。
+            with torch.cuda.amp.autocast(enabled=use_fp16):
+                loss, score = model(inputs,labels=labels) # 前向计算：把 inputs 和 labels 喂给模型，返回损失 loss 和输出 score （通常是 logits/预测分数）。
             sum_loss += loss.item()
             sum_step += 1
 
             iter_bar.set_description("Iter (loss=%5.3f)" % loss.item()) # 更新进度条显示，把当前 batch 的 loss 动态写到进度条标题里。
-            loss.backward() # 反向传播
-            optimizer.step() # 更新参数
+            scaler.scale(loss).backward() # 反向传播
+            scaler.step(optimizer) # 更新参数
+            scaler.update()
             if args.optimizer_name == 'adam':
                 scheduler.step() # 仅当使用 Adam 分支时推进学习率调度器，让学习率按 warmup/衰减策略变化。
             optimizer.zero_grad() # 清空梯度，为下一个 batch 做准备
-
+        
         wandb.log({'train_loss': sum_loss/sum_step})
         dev_acc, dev_f1 ,dev_precision,dev_recall = evaluate_acc_f1(args, model, device, dev_data, processor, mode='dev')
         wandb.log({'dev_acc': dev_acc, 'dev_f1': dev_f1, 'dev_precision': dev_precision, 'dev_recall': dev_recall})

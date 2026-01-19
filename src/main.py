@@ -61,6 +61,7 @@ def set_args():
     parser.add_argument('--head_mul_oracle_lambda', default=0.0, type=float, help='mix oracle weights into mul inference')
     parser.add_argument('--head_mul_oracle_tau', default=0.0, type=float, help='margin threshold for oracle mixing')
     parser.add_argument('--head_mul_oracle_train_alpha', default=0.0, type=float, help='distill mul score toward oracle score during training')
+    parser.add_argument('--fp16', default=0, type=int, help='use torch autocast fp16 on cuda')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
@@ -94,7 +95,7 @@ def main():
     )
     wandb.watch_called = False  
 
-    train_data = MyDataset(mode='train', text_name=args.text_name, limit=None)
+    train_data = MyDataset(mode='train', text_name=args.text_name, limit=args.limit)
     dev_data = MyDataset(mode='valid', text_name=args.text_name, limit=None)
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None)
 
