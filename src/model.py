@@ -1,4 +1,4 @@
-from transformers import CLIPModel,BertConfig
+from transformers import CLIPModel,BertConfig,RobertaModel,ViTModel
 from transformers.models.bert.modeling_bert import BertLayer
 import torch.nn as nn
 import torch
@@ -590,5 +590,52 @@ class MV_CLIP(nn.Module):
             if gnn_contrastive_loss is not None:
                 loss = loss + float(self.gnn_contrastive_weight) * gnn_contrastive_loss
 
+            outputs = (loss,) + outputs
+        return outputs
+
+
+class RoBERTaViTFusion(nn.Module):
+    def __init__(self, args):
+        super().__init__()
+        text_encoder_name = str(getattr(args, "text_encoder_name", "roberta-base"))
+        vision_encoder_name = str(getattr(args, "vision_encoder_name", "google/vit-base-patch16-224"))
+        self.text_encoder = RobertaModel.from_pretrained(text_encoder_name)
+        self.vision_encoder = ViTModel.from_pretrained(vision_encoder_name)
+
+        text_dim = int(self.text_encoder.config.hidden_size)
+        image_dim = int(self.vision_encoder.config.hidden_size)
+        fusion_dim = int(getattr(args, "fusion_dim", 512))
+        dropout = float(getattr(args, "dropout_rate", 0.1))
+
+        self.fusion = nn.Sequential(
+            nn.Linear(text_dim + image_dim, fusion_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(fusion_dim, fusion_dim // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+        )
+        self.classifier = nn.Linear(fusion_dim // 2, int(getattr(args, "label_number", 2)))
+        self.loss_fct = nn.CrossEntropyLoss()
+
+    def forward(self, inputs, labels):
+        text_out = self.text_encoder(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs.get("attention_mask", None),
+        )
+        text_feature = text_out.last_hidden_state[:, 0, :]
+
+        vis_out = self.vision_encoder(pixel_values=inputs["pixel_values"])
+        if getattr(vis_out, "pooler_output", None) is None:
+            image_feature = vis_out.last_hidden_state[:, 0, :]
+        else:
+            image_feature = vis_out.pooler_output
+
+        fused = self.fusion(torch.cat([text_feature, image_feature], dim=-1))
+        logits = self.classifier(fused)
+        score = F.softmax(logits, dim=-1)
+        outputs = (score,)
+        if labels is not None:
+            loss = self.loss_fct(logits, labels)
             outputs = (loss,) + outputs
         return outputs

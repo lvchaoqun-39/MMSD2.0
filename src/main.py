@@ -7,14 +7,14 @@ os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7897'
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --model MV_CLIP --text_name text_json_final --weight_decay 0.05 --train_batch_size 32 --dev_batch_size 32 --learning_rate 5e-4 --clip_learning_rate 1e-6 --num_train_epochs 10 --layers 3 --max_grad_norm 5 --dropout_rate 0.1 --optimizer_name adam --text_size 512 --image_size 768 --warmup_proportion 0.2 --device -1 --limit 100
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --device 0 
 
-from model import MV_CLIP
+from model import MV_CLIP, RoBERTaViTFusion
 from train import train
 from data_set import MyDataset
 import torch
 import argparse
 import random
 import numpy as np
-from transformers import CLIPProcessor
+from transformers import CLIPProcessor, AutoTokenizer, ViTFeatureExtractor
 import wandb
 import pickle
 from PIL import ImageFile
@@ -23,7 +23,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 def set_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', default='1', type=str, help='device number')
-    parser.add_argument('--model', default='MV_CLIP', type=str, help='the model name', choices=['MV_CLIP']) # 使用的模型
+    parser.add_argument('--model', default='RoBERTaViT', type=str, help='the model name', choices=['MV_CLIP', 'RoBERTaViT']) # 使用的模型
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name') # 文本数据文件夹名
     parser.add_argument('--simple_linear', default=False, type=bool, help='linear implementation choice')
     parser.add_argument('--num_train_epochs', default=10, type=int, help='number of train epoched') # 训练轮数
@@ -65,6 +65,10 @@ def set_args():
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
+
+    parser.add_argument('--text_encoder_name', default='roberta-base', type=str, help='text encoder name for RoBERTaViT')
+    parser.add_argument('--vision_encoder_name', default='google/vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
+    parser.add_argument('--fusion_dim', default=512, type=int, help='fusion dim for RoBERTaViT')
     return parser.parse_args()
 
 
@@ -102,6 +106,11 @@ def main():
     if args.model == 'MV_CLIP':
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         model = MV_CLIP(args)
+    elif args.model == 'RoBERTaViT':
+        tokenizer = AutoTokenizer.from_pretrained(args.text_encoder_name, use_fast=True)
+        image_processor = ViTFeatureExtractor.from_pretrained(args.vision_encoder_name)
+        processor = {'tokenizer': tokenizer, 'image_processor': image_processor}
+        model = RoBERTaViTFusion(args)
     else:
         raise RuntimeError('Error model name!')
 

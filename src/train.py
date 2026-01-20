@@ -14,6 +14,22 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logger = logging.getLogger(__name__)
 
 
+def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
+    tokenizer = processor['tokenizer']
+    image_processor = processor['image_processor']
+    text_inputs = tokenizer(
+        text_list,
+        padding='max_length',
+        truncation=True,
+        max_length=max_len,
+        return_tensors='pt',
+    )
+    images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
+    image_inputs = image_processor(images=images, return_tensors='pt')
+    merged = {**dict(text_inputs), **dict(image_inputs)}
+    return {k: v.to(device) for k, v in merged.items()}
+
+
 def train(args, model, device, train_data, dev_data, test_data, processor):
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)  # 如果输出目录不存在，就创建它
@@ -83,7 +99,10 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             text_list, image_list, label_list, id_list = batch # 把当前 batch 解包成 4 份内容：文本、图像、标签、样本 id
             if args.model == 'MV_CLIP':
                 inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
-                labels = torch.tensor(label_list).to(device)
+                labels = torch.tensor(label_list, dtype=torch.long).to(device)
+            elif args.model == 'RoBERTaViT':
+                inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                labels = torch.tensor(label_list, dtype=torch.long).to(device)
 
             with torch.cuda.amp.autocast(enabled=use_fp16):
                 loss, score = model(inputs,labels=labels) # 前向计算：把 inputs 和 labels 喂给模型，返回损失 loss 和输出 score （通常是 logits/预测分数）。
@@ -149,7 +168,10 @@ def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None
                 if args.model == 'MV_CLIP':
                     # 用 processor 把文本+图像处理成模型输入张量 inputs ，并把 labels 转成张量，都放到 device 上。
                     inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
-                    labels = torch.tensor(label_list).to(device)
+                    labels = torch.tensor(label_list, dtype=torch.long).to(device)
+                elif args.model == 'RoBERTaViT':
+                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                    labels = torch.tensor(label_list, dtype=torch.long).to(device)
                 
                 t_targets = labels # 把真实标签保存为 t_targets
                 loss, t_outputs = model(inputs,labels=labels)

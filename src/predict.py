@@ -1,6 +1,6 @@
 import os
-from model import CLIPClassificationModel_transformer
-from transformers import CLIPProcessor
+from model import MV_CLIP, RoBERTaViTFusion
+from transformers import CLIPProcessor, AutoTokenizer, ViTFeatureExtractor
 from torch.utils.data import DataLoader
 import torch
 from data_set import MyDataset
@@ -9,6 +9,22 @@ from tqdm import tqdm
 import json
 import numpy as np
 from sklearn import metrics
+
+
+def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
+    tokenizer = processor['tokenizer']
+    image_processor = processor['image_processor']
+    text_inputs = tokenizer(
+        text_list,
+        padding='max_length',
+        truncation=True,
+        max_length=max_len,
+        return_tensors='pt',
+    )
+    images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
+    image_inputs = image_processor(images=images, return_tensors='pt')
+    merged = {**dict(text_inputs), **dict(image_inputs)}
+    return {k: v.to(device) for k, v in merged.items()}
 
 
 def predict(args, model, device, data, processor, pre = None):
@@ -28,8 +44,13 @@ def predict(args, model, device, data, processor, pre = None):
                 text_list, image_list, label_list, id_list = t_batch
                 image.extend(id_list)
                 text.extend(text_list) # 把当前 batch 的样本 id、文本内容累积到外部列表里，方便最终对齐保存
-                inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device) # 把“原始文本列表 + 图像列表”转换为模型可用的张量输入
-                labels = torch.tensor(label_list).to(device) # 把标签列表转成张量并搬到设备
+                if args.model == 'MV_CLIP':
+                    inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                elif args.model == 'RoBERTaViT':
+                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                else:
+                    raise RuntimeError('Error model name!')
+                labels = torch.tensor(label_list, dtype=torch.long).to(device) # 把标签列表转成张量并搬到设备
 
                 t_targets = labels # 本 batch 的真实标签
                 loss, t_outputs = model(inputs,labels=labels) # ：调用模型前向， t_outputs ：模型输出 logits
@@ -66,6 +87,7 @@ def predict(args, model, device, data, processor, pre = None):
 def set_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', default='0', type=str, help='device number')
+    parser.add_argument('--model', default='MV_CLIP', type=str, help='the model name', choices=['MV_CLIP', 'RoBERTaViT'])
     parser.add_argument('--max_len', type=int, default=77, help='max length of text')
     parser.add_argument('--text_size', default=512, type=int, help='text hidden size')
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size')
@@ -77,6 +99,10 @@ def set_args():
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name')
     parser.add_argument('--layers', default=3, type=int, help='number of layers of transformers')
     parser.add_argument('--simple_linear', default=False, type=bool, help='linear implementation choice')
+
+    parser.add_argument('--text_encoder_name', default='roberta-base', type=str, help='text encoder name for RoBERTaViT')
+    parser.add_argument('--vision_encoder_name', default='google/vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
+    parser.add_argument('--fusion_dim', default=512, type=int, help='fusion dim for RoBERTaViT')
     return parser.parse_args()
 
 
@@ -86,8 +112,16 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
     device = torch.device("cuda" if torch.cuda.is_available() and int(args.device) >= 0 else "cpu")
 
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32") # 加载 CLIP 的处理器（负责把文本 tokenize、把图片做 resize/normalize，并打包成张量输入）
-    model = CLIPClassificationModel_transformer(args) # 构建自定义的分类模型（基于 CLIP + transformer/分类头，具体在model.py里）
+    if args.model == 'MV_CLIP':
+        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        model = MV_CLIP(args)
+    elif args.model == 'RoBERTaViT':
+        tokenizer = AutoTokenizer.from_pretrained(args.text_encoder_name, use_fast=True)
+        image_processor = ViTFeatureExtractor.from_pretrained(args.vision_encoder_name)
+        processor = {'tokenizer': tokenizer, 'image_processor': image_processor}
+        model = RoBERTaViTFusion(args)
+    else:
+        raise RuntimeError('Error model name!')
 
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None) # 构建测试集数据集对象
 
