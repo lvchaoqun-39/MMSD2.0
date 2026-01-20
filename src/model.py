@@ -183,8 +183,9 @@ class MultimodalEncoder(nn.Module): # 本质上是“把 BERT 的 Transformer En
 class MV_CLIP(nn.Module):
     def __init__(self, args):
         super(MV_CLIP, self).__init__()
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32") # 从 Hugging Face 加载预训练的 CLIP 模型（ViT-B/32）。它负责把图像/文本编码成向量特征
-        self.config = BertConfig.from_pretrained("bert-base-uncased") # 读取一份 BERT 的配置对象 BertConfig ，这里主要是“借用 BERT 的 Transformer 配置结构”
+        cache_dir = getattr(args, "hf_cache_dir", None)
+        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", cache_dir=cache_dir) # 从 Hugging Face 加载预训练的 CLIP 模型（ViT-B/32）。它负责把图像/文本编码成向量特征
+        self.config = BertConfig.from_pretrained("bert-base-uncased", cache_dir=cache_dir) # 读取一份 BERT 的配置对象 BertConfig ，这里主要是“借用 BERT 的 Transformer 配置结构”
         self.config.hidden_size = 512 # 把 Transformer 的隐藏层维度改成 512，用来对齐 CLIP 的特征维度（CLIP ViT-B/32 的 embedding 通常是 512）。
         self.config.num_attention_heads = 8 # 设置多头注意力的头数为 8。要求 hidden_size 能被头数整除（512/8=64），这样每个 head 的维度是 64
         self.trans = MultimodalEncoder(self.config, layer_number=args.layers) # 用上面这份配置创建一个自定义的多模态 Transformer 编码器
@@ -599,8 +600,9 @@ class RoBERTaViTFusion(nn.Module):
         super().__init__()
         text_encoder_name = str(getattr(args, "text_encoder_name", "roberta-base"))
         vision_encoder_name = str(getattr(args, "vision_encoder_name", "google/vit-base-patch16-224"))
-        self.text_encoder = RobertaModel.from_pretrained(text_encoder_name)
-        self.vision_encoder = ViTModel.from_pretrained(vision_encoder_name)
+        cache_dir = getattr(args, "hf_cache_dir", None)
+        self.text_encoder = RobertaModel.from_pretrained(text_encoder_name, cache_dir=cache_dir)
+        self.vision_encoder = ViTModel.from_pretrained(vision_encoder_name, cache_dir=cache_dir)
 
         text_dim = int(self.text_encoder.config.hidden_size)
         image_dim = int(self.vision_encoder.config.hidden_size)
