@@ -60,7 +60,7 @@ def set_args():
     parser.add_argument('--head_weight_normalize', default=1, type=int, help='normalize head weights')
     parser.add_argument('--head_mul_oracle_lambda', default=0.0, type=float, help='mix oracle weights into mul inference')
     parser.add_argument('--head_mul_oracle_tau', default=0.0, type=float, help='margin threshold for oracle mixing')
-    parser.add_argument('--head_mul_oracle_train_alpha', default=0.0, type=float, help='distill mul score toward oracle score during training')
+    parser.add_argument('--head_mul_oracle_train_alpha', default=0.05, type=float, help='distill mul score toward oracle score during training')
     parser.add_argument('--fp16', default=0, type=int, help='use torch autocast fp16 on cuda')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
