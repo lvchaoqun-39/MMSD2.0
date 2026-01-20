@@ -103,7 +103,6 @@ def set_args():
     parser.add_argument('--text_encoder_name', default='roberta-base', type=str, help='text encoder name for RoBERTaViT')
     parser.add_argument('--vision_encoder_name', default='google/vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
     parser.add_argument('--fusion_dim', default=512, type=int, help='fusion dim for RoBERTaViT')
-    parser.add_argument('--hf_cache_dir', default=None, type=str, help='huggingface cache dir')
     return parser.parse_args()
 
 
@@ -117,8 +116,8 @@ def main():
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         model = MV_CLIP(args)
     elif args.model == 'RoBERTaViT':
-        tokenizer = AutoTokenizer.from_pretrained(args.text_encoder_name, use_fast=True, cache_dir=args.hf_cache_dir)
-        image_processor = ViTFeatureExtractor.from_pretrained(args.vision_encoder_name, cache_dir=args.hf_cache_dir)
+        tokenizer = AutoTokenizer.from_pretrained(args.text_encoder_name, use_fast=True)
+        image_processor = ViTFeatureExtractor.from_pretrained(args.vision_encoder_name)
         processor = {'tokenizer': tokenizer, 'image_processor': image_processor}
         model = RoBERTaViTFusion(args)
     else:

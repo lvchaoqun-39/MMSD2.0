@@ -599,9 +599,8 @@ class RoBERTaViTFusion(nn.Module):
         super().__init__()
         text_encoder_name = str(getattr(args, "text_encoder_name", "roberta-base"))
         vision_encoder_name = str(getattr(args, "vision_encoder_name", "google/vit-base-patch16-224"))
-        cache_dir = getattr(args, "hf_cache_dir", None)
-        self.text_encoder = RobertaModel.from_pretrained(text_encoder_name, cache_dir=cache_dir)
-        self.vision_encoder = ViTModel.from_pretrained(vision_encoder_name, cache_dir=cache_dir)
+        self.text_encoder = RobertaModel.from_pretrained(text_encoder_name)
+        self.vision_encoder = ViTModel.from_pretrained(vision_encoder_name)
 
         text_dim = int(self.text_encoder.config.hidden_size)
         image_dim = int(self.vision_encoder.config.hidden_size)
