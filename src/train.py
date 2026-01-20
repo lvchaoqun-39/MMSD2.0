@@ -98,7 +98,7 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 scheduler.step() # 仅当使用 Adam 分支时推进学习率调度器，让学习率按 warmup/衰减策略变化。
             optimizer.zero_grad() # 清空梯度，为下一个 batch 做准备
 
-            if device.type == 'cuda' and (step + 1) % 20 == 0:
+            if device.type == 'cuda':
                 torch.cuda.empty_cache()
         
         if device.type == 'cuda':

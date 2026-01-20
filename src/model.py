@@ -351,6 +351,9 @@ class MV_CLIP(nn.Module):
         image_features = output['vision_model_output']['last_hidden_state'] # 图像特征
         text_feature = output['text_model_output']['pooler_output'] # 文本池化特征
         image_feature = output['vision_model_output']['pooler_output'] # 图像池化特征
+        del output  # 清理不需要的中间变量
+        if next(self.parameters()).is_cuda:
+            torch.cuda.empty_cache()
         text_feature = self.text_linear(text_feature) # 文本特征线性变换
         image_feature = self.image_linear(image_feature) # 图像特征线性变换
 
