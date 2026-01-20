@@ -73,6 +73,9 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         sum_loss = 0.
         sum_step = 0
 
+        if device.type == 'cuda':
+            torch.cuda.empty_cache()
+
         iter_bar = tqdm(train_loader, desc="Iter (loss=X.XXX)", disable=False) # 对 batch 循环加进度条
         model.train()
 
@@ -94,7 +97,13 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             if args.optimizer_name == 'adam':
                 scheduler.step() # 仅当使用 Adam 分支时推进学习率调度器，让学习率按 warmup/衰减策略变化。
             optimizer.zero_grad() # 清空梯度，为下一个 batch 做准备
+
+            if device.type == 'cuda' and (step + 1) % 20 == 0:
+                torch.cuda.empty_cache()
         
+        if device.type == 'cuda':
+            torch.cuda.empty_cache()
+
         wandb.log({'train_loss': sum_loss/sum_step})
         dev_acc, dev_f1 ,dev_precision,dev_recall = evaluate_acc_f1(args, model, device, dev_data, processor, mode='dev')
         wandb.log({'dev_acc': dev_acc, 'dev_f1': dev_f1, 'dev_precision': dev_precision, 'dev_recall': dev_recall})
@@ -121,7 +130,8 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             # macro_test_precision / micro_test_precision : 测试集精确率（找出来是讽刺的找的准不准） 。
             # macro_test_recall / micro_test_recall : 测试集召回率（找的全不全） 。
 
-        torch.cuda.empty_cache()
+        if device.type == 'cuda':
+            torch.cuda.empty_cache()
     logger.info('Train done')
 
 
@@ -178,4 +188,7 @@ def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None
             f1 = metrics.f1_score(t_targets_all.cpu(), t_outputs_all.cpu(), labels=[0, 1],average='macro')
             precision =  metrics.precision_score(t_targets_all.cpu(),t_outputs_all.cpu(), labels=[0, 1],average='macro')
             recall = metrics.recall_score(t_targets_all.cpu(),t_outputs_all.cpu(), labels=[0, 1],average='macro')
+
+        if device.type == 'cuda':
+            torch.cuda.empty_cache()
         return acc, f1 ,precision,recall
