@@ -9,6 +9,7 @@ from tqdm import tqdm
 import json
 import numpy as np
 from sklearn import metrics
+from PIL import Image
 
 
 def build_roberta_vit_inputs(processor, text_list, image_list, max_len):
@@ -21,7 +22,15 @@ def build_roberta_vit_inputs(processor, text_list, image_list, max_len):
         max_length=max_len,
         return_tensors='pt',
     )
-    images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
+    images = []
+    for img in image_list:
+        if isinstance(img, str):
+            with Image.open(img) as im:
+                images.append(im.convert('RGB').copy())
+        elif hasattr(img, 'convert'):
+            images.append(img.convert('RGB'))
+        else:
+            images.append(img)
     image_inputs = image_processor(images=images, return_tensors='pt')
     merged = {**dict(text_inputs), **dict(image_inputs)}
     return merged
@@ -64,7 +73,16 @@ def predict(args, model, device, data, processor, pre = None):
                 image.extend(id_list)
                 text.extend(text_list) # 把当前 batch 的样本 id、文本内容累积到外部列表里，方便最终对齐保存
                 if args.model == 'MV_CLIP':
-                    inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                    images = []
+                    for img in image_list:
+                        if isinstance(img, str):
+                            with Image.open(img) as im:
+                                images.append(im.convert('RGB').copy())
+                        elif hasattr(img, 'convert'):
+                            images.append(img.convert('RGB'))
+                        else:
+                            images.append(img)
+                    inputs = processor(text=text_list, images=images, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                 elif args.model == 'RoBERTaViT':
                     inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)
                     inputs = _to_device(inputs, device, non_blocking=pin_memory)

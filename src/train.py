@@ -7,6 +7,7 @@ from tqdm import tqdm, trange
 from sklearn import metrics
 import wandb
 import numpy as np
+from PIL import Image
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S',
@@ -24,7 +25,15 @@ def build_roberta_vit_inputs(processor, text_list, image_list, max_len):
         max_length=max_len,
         return_tensors='pt',
     )
-    images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
+    images = []
+    for img in image_list:
+        if isinstance(img, str):
+            with Image.open(img) as im:
+                images.append(im.convert('RGB').copy())
+        elif hasattr(img, 'convert'):
+            images.append(img.convert('RGB'))
+        else:
+            images.append(img)
     image_inputs = image_processor(images=images, return_tensors='pt')
     merged = {**dict(text_inputs), **dict(image_inputs)}
     return merged
@@ -142,7 +151,16 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         for step, batch in enumerate(iter_bar): # 每次迭代完成一次“前向→算 loss→反向→参数更新”
             text_list, image_list, label_list, id_list = batch # 把当前 batch 解包成 4 份内容：文本、图像、标签、样本 id
             if args.model == 'MV_CLIP':
-                inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                images = []
+                for img in image_list:
+                    if isinstance(img, str):
+                        with Image.open(img) as im:
+                            images.append(im.convert('RGB').copy())
+                    elif hasattr(img, 'convert'):
+                        images.append(img.convert('RGB'))
+                    else:
+                        images.append(img)
+                inputs = processor(text=text_list, images=images, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                 labels = torch.tensor(label_list, dtype=torch.long).to(device)
             elif args.model == 'RoBERTaViT':
                 inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)
@@ -229,7 +247,16 @@ def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None
                 text_list, image_list, label_list, id_list = t_batch
                 if args.model == 'MV_CLIP':
                     # 用 processor 把文本+图像处理成模型输入张量 inputs ，并把 labels 转成张量，都放到 device 上。
-                    inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
+                    images = []
+                    for img in image_list:
+                        if isinstance(img, str):
+                            with Image.open(img) as im:
+                                images.append(im.convert('RGB').copy())
+                        elif hasattr(img, 'convert'):
+                            images.append(img.convert('RGB'))
+                        else:
+                            images.append(img)
+                    inputs = processor(text=text_list, images=images, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                     labels = torch.tensor(label_list, dtype=torch.long).to(device)
                 elif args.model == 'RoBERTaViT':
                     inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)

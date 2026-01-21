@@ -58,7 +58,7 @@ class MyDataset(Dataset):
     def __getitem__(self, index):
         id=self.image_ids[index]
         text = self.text_loader(id)
-        image_feature = self.image_loader(id)
+        image_feature = self.data[id]["image_path"]
         label = self.data[id]["label"]
         return text,image_feature, label, id
 
