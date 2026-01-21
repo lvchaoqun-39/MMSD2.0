@@ -53,7 +53,7 @@ class RoBERTaViTBackbone(nn.Module):
     ):
         super().__init__()
         self.text_model = AutoModel.from_pretrained(text_model_name_or_path)
-        self.vision_model = ViTModel.from_pretrained(vision_model_name_or_path)
+        self.vision_model = ViTModel.from_pretrained(vision_model_name_or_path, add_pooling_layer=False)
 
         text_hidden = int(getattr(self.text_model.config, "hidden_size"))
         vision_hidden = int(getattr(self.vision_model.config, "hidden_size"))
@@ -75,6 +75,10 @@ class RoBERTaViTBackbone(nn.Module):
             output_attentions=output_attentions,
             return_dict=True,
         )
+
+        vision_pooler = getattr(vision_out, "pooler_output", None)
+        if vision_pooler is None:
+            vision_pooler = vision_out.last_hidden_state[:, 0]
         text_pooler = getattr(text_out, "pooler_output", None)
         if text_pooler is None:
             text_pooler = text_out.last_hidden_state[:, 0]
@@ -87,7 +91,7 @@ class RoBERTaViTBackbone(nn.Module):
             },
             "vision_model_output": {
                 "last_hidden_state": vision_out.last_hidden_state,
-                "pooler_output": vision_out.pooler_output,
+                "pooler_output": vision_pooler,
             },
         }
 
@@ -285,6 +289,13 @@ class MV_CLIP(nn.Module):
             vision_model_name_or_path=vision_backbone,
             projection_dim=int(args.text_size),
         )
+
+        if int(getattr(args, "freeze_text", 0)) == 1:
+            for p in self.model.text_model.parameters():
+                p.requires_grad = False
+        if int(getattr(args, "freeze_vision", 0)) == 1:
+            for p in self.model.vision_model.parameters():
+                p.requires_grad = False
         self.config = BertConfig.from_pretrained("bert-base-uncased") # 读取一份 BERT 的配置对象 BertConfig ，这里主要是“借用 BERT 的 Transformer 配置结构”
         self.config.hidden_size = int(args.text_size) # 把 Transformer 的隐藏层维度改成 512，用来对齐 CLIP 的特征维度（CLIP ViT-B/32 的 embedding 通常是 512）。
         self.config.num_attention_heads = 8 # 设置多头注意力的头数为 8。要求 hidden_size 能被头数整除（512/8=64），这样每个 head 的维度是 64
@@ -447,7 +458,7 @@ class MV_CLIP(nn.Module):
         return v
 
     def forward(self, inputs, labels):
-        output = self.model(**inputs,output_attentions=True)
+        output = self.model(**inputs)
         text_features = output['text_model_output']['last_hidden_state'] # 文本特征
         image_features = output['vision_model_output']['last_hidden_state'] # 图像特征
         text_feature = output['text_model_output']['pooler_output'] # 文本池化特征

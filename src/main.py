@@ -33,6 +33,8 @@ def set_args():
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size') # 图像隐藏层大小
     parser.add_argument('--text_backbone', default='roberta-base', type=str, help='text backbone model name or path')
     parser.add_argument('--vision_backbone', default=None, type=str, help='vision backbone model name or path')
+    parser.add_argument('--freeze_text', default=0, type=int, help='freeze text backbone')
+    parser.add_argument('--freeze_vision', default=0, type=int, help='freeze vision backbone')
     parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="Epsilon for Adam optimizer.") # Adam优化器的epsilon参数
     parser.add_argument("--optimizer_name", type=str, default='adam',
                         help="use which optimizer to train the model.") # 使用的优化器
@@ -63,6 +65,8 @@ def set_args():
     parser.add_argument('--head_mul_oracle_tau', default=0.0, type=float, help='margin threshold for oracle mixing')
     parser.add_argument('--head_mul_oracle_train_alpha', default=0.0, type=float, help='distill mul score toward oracle score during training')
     parser.add_argument('--fp16', default=0, type=int, help='use torch autocast fp16 on cuda')
+    parser.add_argument('--num_workers', default=4, type=int, help='dataloader num_workers')
+    parser.add_argument('--pin_memory', default=1, type=int, help='dataloader pin_memory')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子

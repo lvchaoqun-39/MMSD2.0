@@ -19,10 +19,21 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         os.mkdir(args.output_dir)  # 如果输出目录不存在，就创建它
 
     # train_loader 是一个可迭代对象；遍历它时（ for step, batch in enumerate(iter_bar): ），每次得到的 batch 就是 collate_func 组装好的一个 batch： (text_list, image_list, label_list, id_list)
-    train_loader = DataLoader(dataset=train_data,
-                              batch_size=args.train_batch_size, # 分批
-                              collate_fn=MyDataset.collate_func, # 将单个数据点处理成模型输入的格式
-                              shuffle=True) # 每个epoch开始前随机打乱数据顺序
+    num_workers = int(getattr(args, 'num_workers', 0))
+    pin_memory = (device.type == 'cuda') and (int(getattr(args, 'pin_memory', 1)) == 1)
+    persistent_workers = num_workers > 0
+    train_loader_kwargs = {
+        "dataset": train_data,
+        "batch_size": args.train_batch_size,
+        "collate_fn": MyDataset.collate_func,
+        "shuffle": True,
+        "num_workers": num_workers,
+        "pin_memory": pin_memory,
+        "persistent_workers": persistent_workers,
+    }
+    if persistent_workers:
+        train_loader_kwargs["prefetch_factor"] = 2
+    train_loader = DataLoader(**train_loader_kwargs)
     total_steps = int(len(train_loader) * args.num_train_epochs) # 全程一共会跑多少个 batch
     model.to(device) # 把模型的参数和缓冲区（weights、bias、BatchNorm 的 running stats 等） 移动到指定计算设备上。
 
@@ -47,13 +58,15 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         scheduler = AdafactorSchedule(optimizer) # 创建与 Adafactor 配套的学习率调度器
     elif args.optimizer_name == 'adam':
         print('Use AdamW Optimizer for Training.')
-        from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+        from torch.optim import AdamW
+        from transformers.optimization import get_linear_schedule_with_warmup
         if args.model == 'MV_CLIP':
-            clip_params = list(map(id, model.model.parameters())) # 取出 model.model 这部分参数对象的“身份标识”(内存地址层面的 id)
-            base_params = filter(lambda p: id(p) not in clip_params, model.parameters()) # 剩下的就是“非 CLIP 主干”的参数（比如额外加的分类头、融合层等）。 这么做的原因是：如果不排除，CLIP 主干参数会同时出现在两个参数组里，导致重复更新/冲突。
+            clip_param_ids = set(map(id, model.model.parameters()))
+            base_params = [p for p in model.parameters() if (id(p) not in clip_param_ids) and p.requires_grad]
+            backbone_params = [p for p in model.model.parameters() if p.requires_grad]
             optimizer = AdamW([
                     {"params": base_params}, # 基础部分参数，使用默认学习率 args.learning_rate
-                    {"params": model.model.parameters(),"lr": args.clip_learning_rate} # CLIP 主干参数，单独用更小/不同的学习率 args.clip_learning_rate（常见做法：微调预训练 backbone 时学习率更小）
+                    {"params": backbone_params,"lr": args.clip_learning_rate} # CLIP 主干参数，单独用更小/不同的学习率 args.clip_learning_rate（常见做法：微调预训练 backbone 时学习率更小）
                     ], lr=args.learning_rate, weight_decay=args.weight_decay)
 
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
@@ -136,7 +149,21 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
 
 def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None, mode='test'):
-        data_loader = DataLoader(data, batch_size=args.dev_batch_size, collate_fn=MyDataset.collate_func,shuffle=False)
+        num_workers = int(getattr(args, 'num_workers', 0))
+        pin_memory = (device.type == 'cuda') and (int(getattr(args, 'pin_memory', 1)) == 1)
+        persistent_workers = num_workers > 0
+        data_loader_kwargs = {
+            "dataset": data,
+            "batch_size": args.dev_batch_size,
+            "collate_fn": MyDataset.collate_func,
+            "shuffle": False,
+            "num_workers": num_workers,
+            "pin_memory": pin_memory,
+            "persistent_workers": persistent_workers,
+        }
+        if persistent_workers:
+            data_loader_kwargs["prefetch_factor"] = 2
+        data_loader = DataLoader(**data_loader_kwargs)
         n_correct, n_total = 0, 0 # n_total 当前已经累计的样本总数； n_total 当前已经累计的 样本总数
         t_targets_all, t_outputs_all = None, None # t_targets_all 整个数据集所有样本的真实标签；t_outputs_all 整个数据集所有样本的预测标签
 
