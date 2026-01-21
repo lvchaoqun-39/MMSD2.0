@@ -11,7 +11,7 @@ import numpy as np
 from sklearn import metrics
 
 
-def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
+def build_roberta_vit_inputs(processor, text_list, image_list, max_len):
     tokenizer = processor['tokenizer']
     image_processor = processor['image_processor']
     text_inputs = tokenizer(
@@ -24,12 +24,31 @@ def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
     images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
     image_inputs = image_processor(images=images, return_tensors='pt')
     merged = {**dict(text_inputs), **dict(image_inputs)}
-    return {k: v.to(device) for k, v in merged.items()}
+    return merged
+
+
+def _to_device(batch, device, non_blocking=False):
+    return {k: v.to(device, non_blocking=non_blocking) for k, v in batch.items()}
 
 
 def predict(args, model, device, data, processor, pre = None):
 
-    data_loader = DataLoader(data, batch_size=args.test_batch_size, collate_fn=MyDataset.collate_func,shuffle=False) # 把数据集 data 包装成可迭代的批数据加载器
+    num_workers = int(getattr(args, 'num_workers', 0))
+    pin_memory = bool(int(getattr(args, 'pin_memory', 0)))
+    persistent_workers = bool(int(getattr(args, 'persistent_workers', 0)))
+    prefetch_factor = int(getattr(args, 'prefetch_factor', 2))
+    data_loader_kwargs = {
+        "dataset": data,
+        "batch_size": args.test_batch_size,
+        "collate_fn": MyDataset.collate_func,
+        "shuffle": False,
+        "num_workers": num_workers,
+        "pin_memory": pin_memory,
+        "persistent_workers": (persistent_workers and num_workers > 0),
+    }
+    if num_workers > 0:
+        data_loader_kwargs["prefetch_factor"] = prefetch_factor
+    data_loader = DataLoader(**data_loader_kwargs)
     n_correct, n_total = 0, 0 # 计数已预测正确的样本数量和总样本数量
     t_targets_all, t_outputs_all = None, None # 用于后续汇总所有 batch 的真实标签与模型输出
 
@@ -47,7 +66,8 @@ def predict(args, model, device, data, processor, pre = None):
                 if args.model == 'MV_CLIP':
                     inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                 elif args.model == 'RoBERTaViT':
-                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)
+                    inputs = _to_device(inputs, device, non_blocking=pin_memory)
                 else:
                     raise RuntimeError('Error model name!')
                 labels = torch.tensor(label_list, dtype=torch.long).to(device) # 把标签列表转成张量并搬到设备
@@ -94,6 +114,10 @@ def set_args():
     parser.add_argument('--dropout_rate', default=0.5, type=float, help='dropout rate')
     parser.add_argument('--label_number', type=int, default=2, help='number of classification labels')
     parser.add_argument('--test_batch_size', type=int, default=8, help='batch size for text phase')
+    parser.add_argument('--num_workers', default=4, type=int, help='dataloader worker number')
+    parser.add_argument('--pin_memory', default=1, type=int, help='pin memory for dataloader')
+    parser.add_argument('--persistent_workers', default=1, type=int, help='persistent workers for dataloader')
+    parser.add_argument('--prefetch_factor', default=2, type=int, help='prefetch factor for dataloader')
     parser.add_argument('--model_path', type=str, default="../output_dir/MV_CLIP", help='save model dpath')
     parser.add_argument('--save_file', type=str, default="result.json", help='save result path')
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name')

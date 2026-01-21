@@ -62,25 +62,35 @@ def set_args():
     parser.add_argument('--head_mul_oracle_tau', default=0.0, type=float, help='margin threshold for oracle mixing')
     parser.add_argument('--head_mul_oracle_train_alpha', default=0.0, type=float, help='distill mul score toward oracle score during training')
     parser.add_argument('--fp16', default=0, type=int, help='use torch autocast fp16 on cuda')
+    parser.add_argument('--num_workers', default=4, type=int, help='dataloader worker number')
+    parser.add_argument('--pin_memory', default=1, type=int, help='pin memory for dataloader')
+    parser.add_argument('--persistent_workers', default=1, type=int, help='persistent workers for dataloader')
+    parser.add_argument('--prefetch_factor', default=2, type=int, help='prefetch factor for dataloader')
+    parser.add_argument('--empty_cache_steps', default=0, type=int, help='call cuda empty_cache every N steps, 0 to disable')
+    parser.add_argument('--cudnn_deterministic', default=0, type=int, help='enable cudnn deterministic for reproducibility')
+    parser.add_argument('--cudnn_benchmark', default=1, type=int, help='enable cudnn benchmark for speed')
     parser.add_argument('--output_dir', default='../output_dir/', type=str, help='the output path') # 输出路径
     parser.add_argument('--limit', default=None, type=int, help='the limited number of training examples') # 训练样本数量限制
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
 
     parser.add_argument('--text_encoder_name', default='roberta-base', type=str, help='text encoder name for RoBERTaViT')
-    parser.add_argument('--vision_encoder_name', default='./vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
+    parser.add_argument('--vision_encoder_name', default='google/vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
     parser.add_argument('--fusion_dim', default=512, type=int, help='fusion dim for RoBERTaViT')
+    parser.add_argument('--backbone_learning_rate', default=1e-5, type=float, help='backbone lr for RoBERTaViT')
+    parser.add_argument('--freeze_backbone_epochs', default=0, type=int, help='freeze backbone epochs for RoBERTaViT')
     parser.add_argument('--hf_cache_dir', default=None, type=str, help='HuggingFace cache directory')
     return parser.parse_args()
 
 
-def seed_everything(seed=42):
+def seed_everything(seed=42, cudnn_deterministic=True, cudnn_benchmark=False):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.deterministic = bool(cudnn_deterministic)
+    torch.backends.cudnn.benchmark = bool(cudnn_benchmark)
 
 
 def main():
@@ -90,7 +100,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() and int(args.device) >= 0 else "cpu")
     print(f"Using device: {device}")
 
-    seed_everything(args.seed)
+    seed_everything(args.seed, cudnn_deterministic=bool(int(args.cudnn_deterministic)), cudnn_benchmark=bool(int(args.cudnn_benchmark)))
 
     wandb.init(
         project="MMSD2.0",

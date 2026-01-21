@@ -14,7 +14,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logger = logging.getLogger(__name__)
 
 
-def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
+def build_roberta_vit_inputs(processor, text_list, image_list, max_len):
     tokenizer = processor['tokenizer']
     image_processor = processor['image_processor']
     text_inputs = tokenizer(
@@ -27,7 +27,11 @@ def build_roberta_vit_inputs(processor, text_list, image_list, max_len, device):
     images = [img.convert('RGB') if hasattr(img, 'convert') else img for img in image_list]
     image_inputs = image_processor(images=images, return_tensors='pt')
     merged = {**dict(text_inputs), **dict(image_inputs)}
-    return {k: v.to(device) for k, v in merged.items()}
+    return merged
+
+
+def _to_device(batch, device, non_blocking=False):
+    return {k: v.to(device, non_blocking=non_blocking) for k, v in batch.items()}
 
 
 def train(args, model, device, train_data, dev_data, test_data, processor):
@@ -35,10 +39,23 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
         os.mkdir(args.output_dir)  # 如果输出目录不存在，就创建它
 
     # train_loader 是一个可迭代对象；遍历它时（ for step, batch in enumerate(iter_bar): ），每次得到的 batch 就是 collate_func 组装好的一个 batch： (text_list, image_list, label_list, id_list)
-    train_loader = DataLoader(dataset=train_data,
-                              batch_size=args.train_batch_size, # 分批
-                              collate_fn=MyDataset.collate_func, # 将单个数据点处理成模型输入的格式
-                              shuffle=True) # 每个epoch开始前随机打乱数据顺序
+    num_workers = int(getattr(args, 'num_workers', 0))
+    pin_memory = bool(int(getattr(args, 'pin_memory', 0)))
+    persistent_workers = bool(int(getattr(args, 'persistent_workers', 0)))
+    prefetch_factor = int(getattr(args, 'prefetch_factor', 2))
+
+    train_loader_kwargs = {
+        "dataset": train_data,
+        "batch_size": args.train_batch_size,
+        "collate_fn": MyDataset.collate_func,
+        "shuffle": True,
+        "num_workers": num_workers,
+        "pin_memory": pin_memory,
+        "persistent_workers": (persistent_workers and num_workers > 0),
+    }
+    if num_workers > 0:
+        train_loader_kwargs["prefetch_factor"] = prefetch_factor
+    train_loader = DataLoader(**train_loader_kwargs)
     total_steps = int(len(train_loader) * args.num_train_epochs) # 全程一共会跑多少个 batch
     model.to(device) # 把模型的参数和缓冲区（weights、bias、BatchNorm 的 running stats 等） 移动到指定计算设备上。
 
@@ -74,8 +91,24 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
 
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
                                                     num_training_steps=total_steps) # 学习率会线性增加，从 warmup_proportion * total_steps 到 total_steps
+        elif args.model == 'RoBERTaViT' and hasattr(model, 'text_encoder') and hasattr(model, 'vision_encoder'):
+            backbone_lr = float(getattr(args, 'backbone_learning_rate', 1e-5))
+            backbone_params = list(model.text_encoder.parameters()) + list(model.vision_encoder.parameters())
+            backbone_param_ids = set(map(id, backbone_params))
+            head_params = [p for p in model.parameters() if id(p) not in backbone_param_ids]
+            optimizer = AdamW(
+                [
+                    {"params": head_params, "lr": args.learning_rate},
+                    {"params": backbone_params, "lr": backbone_lr},
+                ],
+                lr=args.learning_rate,
+                eps=args.adam_epsilon,
+                weight_decay=args.weight_decay,
+            )
+            scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
+                                                num_training_steps=total_steps)
         else:
-            optimizer = optimizer = AdamW(model.parameters(), lr=args.learning_rate, eps=args.adam_epsilon, weight_decay=args.weight_decay)
+            optimizer = AdamW(model.parameters(), lr=args.learning_rate, eps=args.adam_epsilon, weight_decay=args.weight_decay)
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_proportion * total_steps),
                                                 num_training_steps=total_steps)
     else:
@@ -85,12 +118,23 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
     max_acc = 0.
     use_fp16 = (int(getattr(args, 'fp16', 0)) == 1) and (device.type == 'cuda')
     scaler = torch.cuda.amp.GradScaler(enabled=use_fp16)
+
+    freeze_backbone_epochs = int(getattr(args, 'freeze_backbone_epochs', 0))
+    if args.model == 'RoBERTaViT' and freeze_backbone_epochs > 0 and hasattr(model, 'text_encoder') and hasattr(model, 'vision_encoder'):
+        for p in model.text_encoder.parameters():
+            p.requires_grad = False
+        for p in model.vision_encoder.parameters():
+            p.requires_grad = False
+
     for i_epoch in trange(0, int(args.num_train_epochs), desc="Epoch", disable=False):
         sum_loss = 0.
         sum_step = 0
 
-        if device.type == 'cuda':
-            torch.cuda.empty_cache()
+        if args.model == 'RoBERTaViT' and freeze_backbone_epochs > 0 and i_epoch == freeze_backbone_epochs and hasattr(model, 'text_encoder') and hasattr(model, 'vision_encoder'):
+            for p in model.text_encoder.parameters():
+                p.requires_grad = True
+            for p in model.vision_encoder.parameters():
+                p.requires_grad = True
 
         iter_bar = tqdm(train_loader, desc="Iter (loss=X.XXX)", disable=False) # 对 batch 循环加进度条
         model.train()
@@ -101,7 +145,8 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                 labels = torch.tensor(label_list, dtype=torch.long).to(device)
             elif args.model == 'RoBERTaViT':
-                inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)
+                inputs = _to_device(inputs, device, non_blocking=pin_memory)
                 labels = torch.tensor(label_list, dtype=torch.long).to(device)
 
             with torch.cuda.amp.autocast(enabled=use_fp16):
@@ -117,10 +162,11 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
                 scheduler.step() # 仅当使用 Adam 分支时推进学习率调度器，让学习率按 warmup/衰减策略变化。
             optimizer.zero_grad() # 清空梯度，为下一个 batch 做准备
 
-            if device.type == 'cuda' and (step + 1) % 20 == 0:
+            empty_cache_steps = int(getattr(args, 'empty_cache_steps', 0))
+            if device.type == 'cuda' and empty_cache_steps > 0 and (step + 1) % empty_cache_steps == 0:
                 torch.cuda.empty_cache()
         
-        if device.type == 'cuda':
+        if device.type == 'cuda' and int(getattr(args, 'empty_cache_steps', 0)) > 0:
             torch.cuda.empty_cache()
 
         wandb.log({'train_loss': sum_loss/sum_step})
@@ -149,13 +195,29 @@ def train(args, model, device, train_data, dev_data, test_data, processor):
             # macro_test_precision / micro_test_precision : 测试集精确率（找出来是讽刺的找的准不准） 。
             # macro_test_recall / micro_test_recall : 测试集召回率（找的全不全） 。
 
-        if device.type == 'cuda':
+        if device.type == 'cuda' and int(getattr(args, 'empty_cache_steps', 0)) > 0:
             torch.cuda.empty_cache()
     logger.info('Train done')
 
 
 def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None, mode='test'):
-        data_loader = DataLoader(data, batch_size=args.dev_batch_size, collate_fn=MyDataset.collate_func,shuffle=False)
+        num_workers = int(getattr(args, 'num_workers', 0))
+        pin_memory = bool(int(getattr(args, 'pin_memory', 0)))
+        persistent_workers = bool(int(getattr(args, 'persistent_workers', 0)))
+        prefetch_factor = int(getattr(args, 'prefetch_factor', 2))
+
+        data_loader_kwargs = {
+            "dataset": data,
+            "batch_size": args.dev_batch_size,
+            "collate_fn": MyDataset.collate_func,
+            "shuffle": False,
+            "num_workers": num_workers,
+            "pin_memory": pin_memory,
+            "persistent_workers": (persistent_workers and num_workers > 0),
+        }
+        if num_workers > 0:
+            data_loader_kwargs["prefetch_factor"] = prefetch_factor
+        data_loader = DataLoader(**data_loader_kwargs)
         n_correct, n_total = 0, 0 # n_total 当前已经累计的样本总数； n_total 当前已经累计的 样本总数
         t_targets_all, t_outputs_all = None, None # t_targets_all 整个数据集所有样本的真实标签；t_outputs_all 整个数据集所有样本的预测标签
 
@@ -170,7 +232,8 @@ def evaluate_acc_f1(args, model, device, data, processor, macro=False,pre = None
                     inputs = processor(text=text_list, images=image_list, padding='max_length', truncation=True, max_length=args.max_len, return_tensors="pt").to(device)
                     labels = torch.tensor(label_list, dtype=torch.long).to(device)
                 elif args.model == 'RoBERTaViT':
-                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len, device)
+                    inputs = build_roberta_vit_inputs(processor, text_list, image_list, args.max_len)
+                    inputs = _to_device(inputs, device, non_blocking=pin_memory)
                     labels = torch.tensor(label_list, dtype=torch.long).to(device)
                 
                 t_targets = labels # 把真实标签保存为 t_targets
