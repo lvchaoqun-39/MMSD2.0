@@ -180,6 +180,130 @@ class MultimodalEncoder(nn.Module): # 本质上是“把 BERT 的 Transformer En
         return all_encoder_layers, all_encoder_attentions
 
 
+class TriHeadFusion(nn.Module):
+    def __init__(self, args, num_modalities: int = 3):
+        super().__init__()
+        self.num_modalities = int(num_modalities)
+        self.head_fusion = str(getattr(args, "head_fusion", "add"))
+        self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
+        self.head_weight_normalize = int(getattr(args, "head_weight_normalize", 1))
+        self.head_mul_oracle_lambda = float(getattr(args, "head_mul_oracle_lambda", 0.0))
+        self.head_mul_oracle_tau = float(getattr(args, "head_mul_oracle_tau", 0.0))
+        self.head_mul_oracle_train_alpha = float(getattr(args, "head_mul_oracle_train_alpha", 0.0))
+        if self.head_fusion == "learned":
+            self.head_weight_logits = nn.Parameter(torch.zeros(self.num_modalities))
+
+    def _head_weights_multiplicative_from_probs(self, modalities_probs, labels):
+        delta = float(self.head_weight_delta)
+        num_modalities = int(modalities_probs.shape[1])
+        power = delta / (float(num_modalities) - 1.0)
+        labels_ = labels.to(torch.long).view(-1, 1, 1)
+        p_correct = modalities_probs.gather(dim=-1, index=labels_.expand(-1, num_modalities, 1)).squeeze(-1)
+
+        weights = []
+        for i in range(num_modalities):
+            others = [j for j in range(num_modalities) if j != i]
+            prod = torch.ones_like(p_correct[:, i])
+            for j in others:
+                prod = prod * (1.0 - p_correct[:, j])
+            weights.append(prod.clamp(min=1e-6).pow(power))
+        weights = torch.stack(weights, dim=1)
+        if int(self.head_weight_normalize) == 1:
+            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
+        return weights
+
+    def _head_weights_multiplicative_per_class(self, modalities_probs):
+        delta = float(self.head_weight_delta)
+        num_modalities = int(modalities_probs.shape[1])
+        power = delta / (float(num_modalities) - 1.0)
+
+        one_minus = (1.0 - modalities_probs).clamp(min=1e-6)
+        prod_all = one_minus.prod(dim=1, keepdim=True)
+        weights = []
+        for i in range(num_modalities):
+            denom = one_minus[:, i:i + 1, :]
+            w_i = (prod_all / denom).clamp(min=1e-6).pow(power)
+            weights.append(w_i)
+        weights = torch.cat(weights, dim=1)
+        if int(self.head_weight_normalize) == 1:
+            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
+        return weights
+
+    def forward(self, logits_fuse, logits_text, logits_image, labels, loss_fct, training: bool):
+        fuse_score = F.softmax(logits_fuse, dim=-1)
+        text_score = F.softmax(logits_text, dim=-1)
+        image_score = F.softmax(logits_image, dim=-1)
+        modalities = torch.stack([fuse_score, text_score, image_score], dim=1)
+
+        if self.head_fusion == "add":
+            score = fuse_score + text_score + image_score
+        elif self.head_fusion == "learned":
+            weights = F.softmax(self.head_weight_logits, dim=-1)
+            score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
+        elif self.head_fusion == "mul":
+            weights_pc = self._head_weights_multiplicative_per_class(modalities)
+            score = (weights_pc * modalities).sum(dim=1)
+
+            if (
+                (not bool(training))
+                and labels is not None
+                and float(self.head_mul_oracle_lambda) > 0
+                and float(self.head_mul_oracle_tau) > 0
+            ):
+                top2 = score.topk(k=2, dim=-1).values
+                margin = top2[:, 0] - top2[:, 1]
+                pred = score.argmax(dim=-1)
+                use_oracle = (margin < float(self.head_mul_oracle_tau)) & (pred != labels.to(torch.long))
+                if use_oracle.any():
+                    oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                    oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
+                    lam = float(self.head_mul_oracle_lambda)
+                    tau = max(float(self.head_mul_oracle_tau), 1e-8)
+                    lam_vec = (lam * ((tau - margin) / tau).clamp(min=0.0, max=1.0)).to(score.dtype)
+                    score = score.clone()
+                    score[use_oracle] = (
+                        (1.0 - lam_vec[use_oracle].unsqueeze(-1)) * score[use_oracle]
+                        + lam_vec[use_oracle].unsqueeze(-1) * oracle_score[use_oracle]
+                    )
+        else:
+            score = fuse_score + text_score + image_score
+
+        loss = None
+        if labels is not None:
+            if self.head_fusion == "mul":
+                logits_all = torch.stack([logits_fuse, logits_text, logits_image], dim=1)
+                logp = F.log_softmax(logits_all, dim=-1)
+                labels_ = labels.to(torch.long).view(-1, 1, 1)
+                logp_y = logp.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
+                nll = -logp_y
+                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                loss = (weights * nll).sum(dim=1).mean()
+
+                alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
+                if alpha > 0:
+                    oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
+                    eps = 1e-8
+                    p = score.clamp(min=eps)
+                    p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
+                    q = oracle_score.clamp(min=eps)
+                    q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
+                    distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
+                    loss = loss + alpha * distill_loss
+            elif self.head_fusion == "learned":
+                weights = F.softmax(self.head_weight_logits, dim=-1)
+                loss_fuse = loss_fct(logits_fuse, labels)
+                loss_text = loss_fct(logits_text, labels)
+                loss_image = loss_fct(logits_image, labels)
+                loss = weights[0] * loss_fuse + weights[1] * loss_text + weights[2] * loss_image
+            else:
+                loss_fuse = loss_fct(logits_fuse, labels)
+                loss_text = loss_fct(logits_text, labels)
+                loss_image = loss_fct(logits_image, labels)
+                loss = loss_fuse + loss_text + loss_image
+
+        return score, loss
+
+
 class MV_CLIP(nn.Module):
     def __init__(self, args):
         super(MV_CLIP, self).__init__()
@@ -208,14 +332,7 @@ class MV_CLIP(nn.Module):
         self.classifier_text = nn.Linear(args.text_size, args.label_number)
         self.classifier_image = nn.Linear(args.image_size, args.label_number)
 
-        self.head_fusion = str(getattr(args, "head_fusion", "add"))
-        self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
-        self.head_weight_normalize = int(getattr(args, "head_weight_normalize", 1))
-        self.head_mul_oracle_lambda = float(getattr(args, "head_mul_oracle_lambda", 0.0))
-        self.head_mul_oracle_tau = float(getattr(args, "head_mul_oracle_tau", 0.0))
-        self.head_mul_oracle_train_alpha = float(getattr(args, "head_mul_oracle_train_alpha", 0.0))
-        if self.head_fusion == "learned":
-            self.head_weight_logits = nn.Parameter(torch.zeros(3))
+        self.head_fuser = TriHeadFusion(args, num_modalities=3)
 
         # 可学习权重
         self.cim_text_proj = nn.Linear(args.text_size, args.text_size, bias=False)
@@ -274,59 +391,6 @@ class MV_CLIP(nn.Module):
 
         self.loss_fct = nn.CrossEntropyLoss()
         self.att = nn.Linear(args.text_size, 1, bias=False)
-
-    def _head_weights_multiplicative_from_probs(self, modalities_probs, labels):
-        delta = float(self.head_weight_delta)
-        num_modalities = int(modalities_probs.shape[1])
-        power = delta / (float(num_modalities) - 1.0)
-        labels_ = labels.to(torch.long).view(-1, 1, 1)
-        p_correct = modalities_probs.gather(dim=-1, index=labels_.expand(-1, num_modalities, 1)).squeeze(-1)
-
-        weights = []
-        for i in range(num_modalities):
-            others = [j for j in range(num_modalities) if j != i]
-            prod = torch.ones_like(p_correct[:, i])
-            for j in others:
-                prod = prod * (1.0 - p_correct[:, j])
-            weights.append(prod.clamp(min=1e-6).pow(power))
-        weights = torch.stack(weights, dim=1)
-        if int(self.head_weight_normalize) == 1:
-            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
-        return weights
-
-    def _head_weights_multiplicative_from_conf(self, conf):
-        delta = float(self.head_weight_delta)
-        num_modalities = int(conf.shape[1])
-        power = delta / (float(num_modalities) - 1.0)
-
-        weights = []
-        for i in range(num_modalities):
-            others = [j for j in range(num_modalities) if j != i]
-            prod = torch.ones_like(conf[:, i])
-            for j in others:
-                prod = prod * (1.0 - conf[:, j])
-            weights.append(prod.clamp(min=1e-6).pow(power))
-        weights = torch.stack(weights, dim=1)
-        if int(self.head_weight_normalize) == 1:
-            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
-        return weights
-
-    def _head_weights_multiplicative_per_class(self, modalities_probs):
-        delta = float(self.head_weight_delta)
-        num_modalities = int(modalities_probs.shape[1])
-        power = delta / (float(num_modalities) - 1.0)
-
-        one_minus = (1.0 - modalities_probs).clamp(min=1e-6)
-        prod_all = one_minus.prod(dim=1, keepdim=True)
-        weights = []
-        for i in range(num_modalities):
-            denom = one_minus[:, i:i + 1, :]
-            w_i = (prod_all / denom).clamp(min=1e-6).pow(power)
-            weights.append(w_i)
-        weights = torch.cat(weights, dim=1)
-        if int(self.head_weight_normalize) == 1:
-            weights = weights / (weights.sum(dim=1, keepdim=True) + 1e-8)
-        return weights
 
     def _dynrt_squash(self, x):
         squared_norm = (x * x).sum(dim=-1, keepdim=True)
@@ -515,82 +579,19 @@ class MV_CLIP(nn.Module):
         logits_text = self.classifier_text(text_feature)
         logits_image = self.classifier_image(image_feature)
    
-        # 用 softmax 把 logits 变成每个类别的概率
-        fuse_score = nn.functional.softmax(logits_fuse, dim=-1)
-        text_score = nn.functional.softmax(logits_text, dim=-1)
-        image_score = nn.functional.softmax(logits_image, dim=-1)
-
-        modalities = torch.stack([fuse_score, text_score, image_score], dim=1)
-
-        if self.head_fusion == "add":
-            score = fuse_score + text_score + image_score
-        elif self.head_fusion == "learned":
-            weights = F.softmax(self.head_weight_logits, dim=-1)
-            score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
-        elif self.head_fusion == "mul":
-            weights_pc = self._head_weights_multiplicative_per_class(modalities)
-            score = (weights_pc * modalities).sum(dim=1)
-
-            if (
-                (not self.training)
-                and labels is not None
-                and float(self.head_mul_oracle_lambda) > 0
-                and float(self.head_mul_oracle_tau) > 0
-            ):
-                top2 = score.topk(k=2, dim=-1).values
-                margin = top2[:, 0] - top2[:, 1]
-                pred = score.argmax(dim=-1)
-                use_oracle = (margin < float(self.head_mul_oracle_tau)) & (pred != labels.to(torch.long))
-                if use_oracle.any():
-                    oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                    oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
-                    lam = float(self.head_mul_oracle_lambda)
-                    tau = max(float(self.head_mul_oracle_tau), 1e-8)
-                    lam_vec = (lam * ((tau - margin) / tau).clamp(min=0.0, max=1.0)).to(score.dtype)
-                    score = score.clone()
-                    score[use_oracle] = (
-                        (1.0 - lam_vec[use_oracle].unsqueeze(-1)) * score[use_oracle]
-                        + lam_vec[use_oracle].unsqueeze(-1) * oracle_score[use_oracle]
-                    )
-        else:
-            score = fuse_score + text_score + image_score
+        score, loss = self.head_fuser(
+            logits_fuse=logits_fuse,
+            logits_text=logits_text,
+            logits_image=logits_image,
+            labels=labels,
+            loss_fct=self.loss_fct,
+            training=self.training,
+        )
 
         outputs = (score,)
         if labels is not None:
-            if self.head_fusion == "mul":
-                logits_all = torch.stack([logits_fuse, logits_text, logits_image], dim=1)
-                logp = F.log_softmax(logits_all, dim=-1)
-                labels_ = labels.to(torch.long).view(-1, 1, 1)
-                logp_y = logp.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
-                nll = -logp_y
-                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                loss = (weights * nll).sum(dim=1).mean()
-
-                alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
-                if alpha > 0:
-                    oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
-                    eps = 1e-8
-                    p = score.clamp(min=eps)
-                    p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
-                    q = oracle_score.clamp(min=eps)
-                    q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
-                    distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
-                    loss = loss + alpha * distill_loss
-            elif self.head_fusion == "learned":
-                weights = F.softmax(self.head_weight_logits, dim=-1)
-                loss_fuse = self.loss_fct(logits_fuse, labels)
-                loss_text = self.loss_fct(logits_text, labels)
-                loss_image = self.loss_fct(logits_image, labels)
-                loss = weights[0] * loss_fuse + weights[1] * loss_text + weights[2] * loss_image
-            else:
-                loss_fuse = self.loss_fct(logits_fuse, labels)
-                loss_text = self.loss_fct(logits_text, labels)
-                loss_image = self.loss_fct(logits_image, labels)
-                loss = loss_fuse + loss_text + loss_image
-
             if gnn_contrastive_loss is not None:
                 loss = loss + float(self.gnn_contrastive_weight) * gnn_contrastive_loss
-
             outputs = (loss,) + outputs
         return outputs
 
@@ -609,6 +610,21 @@ class RoBERTaViTFusion(nn.Module):
         fusion_dim = int(getattr(args, "fusion_dim", 512))
         dropout = float(getattr(args, "dropout_rate", 0.1))
 
+        if bool(getattr(args, "simple_linear", False)):
+            self.text_linear = nn.Linear(text_dim, text_dim)
+            self.image_linear = nn.Linear(image_dim, image_dim)
+        else:
+            self.text_linear = nn.Sequential(
+                nn.Linear(text_dim, text_dim),
+                nn.Dropout(dropout),
+                nn.GELU(),
+            )
+            self.image_linear = nn.Sequential(
+                nn.Linear(image_dim, image_dim),
+                nn.Dropout(dropout),
+                nn.GELU(),
+            )
+
         self.fusion = nn.Sequential(
             nn.Linear(text_dim + image_dim, fusion_dim),
             nn.ReLU(),
@@ -617,7 +633,11 @@ class RoBERTaViTFusion(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
         )
-        self.classifier = nn.Linear(fusion_dim // 2, int(getattr(args, "label_number", 2)))
+        label_number = int(getattr(args, "label_number", 2))
+        self.classifier = nn.Linear(fusion_dim // 2, label_number)
+        self.classifier_text = nn.Linear(text_dim, label_number)
+        self.classifier_image = nn.Linear(image_dim, label_number)
+        self.head_fuser = TriHeadFusion(args, num_modalities=3)
         self.loss_fct = nn.CrossEntropyLoss()
 
     def forward(self, inputs, labels):
@@ -633,11 +653,24 @@ class RoBERTaViTFusion(nn.Module):
         else:
             image_feature = vis_out.pooler_output
 
+        text_feature = self.text_linear(text_feature)
+        image_feature = self.image_linear(image_feature)
+
         fused = self.fusion(torch.cat([text_feature, image_feature], dim=-1))
-        logits = self.classifier(fused)
-        score = F.softmax(logits, dim=-1)
+        logits_fuse = self.classifier(fused)
+        logits_text = self.classifier_text(text_feature)
+        logits_image = self.classifier_image(image_feature)
+
+        score, loss = self.head_fuser(
+            logits_fuse=logits_fuse,
+            logits_text=logits_text,
+            logits_image=logits_image,
+            labels=labels,
+            loss_fct=self.loss_fct,
+            training=self.training,
+        )
+
         outputs = (score,)
         if labels is not None:
-            loss = self.loss_fct(logits, labels)
             outputs = (loss,) + outputs
         return outputs

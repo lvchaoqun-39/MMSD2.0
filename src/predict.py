@@ -131,6 +131,12 @@ def set_args():
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size')
     parser.add_argument('--dropout_rate', default=0.5, type=float, help='dropout rate')
     parser.add_argument('--label_number', type=int, default=2, help='number of classification labels')
+    parser.add_argument('--head_fusion', default='mul', type=str, help='how to combine three heads')
+    parser.add_argument('--head_weight_delta', default=0.5, type=float, help='delta for multiplicative head weights')
+    parser.add_argument('--head_weight_normalize', default=1, type=int, help='normalize head weights')
+    parser.add_argument('--head_mul_oracle_lambda', default=0.0, type=float, help='mix oracle weights into mul inference')
+    parser.add_argument('--head_mul_oracle_tau', default=0.0, type=float, help='margin threshold for oracle mixing')
+    parser.add_argument('--head_mul_oracle_train_alpha', default=0.0, type=float, help='distill mul score toward oracle score during training')
     parser.add_argument('--test_batch_size', type=int, default=8, help='batch size for text phase')
     parser.add_argument('--num_workers', default=4, type=int, help='dataloader worker number')
     parser.add_argument('--pin_memory', default=1, type=int, help='pin memory for dataloader')
@@ -168,7 +174,8 @@ def main():
 
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None) # 构建测试集数据集对象
 
-    model.load_state_dict(torch.load(os.path.join(args.model_path, "model.pt"), map_location="cpu")) # 从 args.model_path/model.pt 读取权重；先映射到 CPU，避免因设备不一致加载失败
+    strict_load = not (args.model == 'RoBERTaViT')
+    model.load_state_dict(torch.load(os.path.join(args.model_path, "model.pt"), map_location="cpu"), strict=strict_load) # 从 args.model_path/model.pt 读取权重；先映射到 CPU，避免因设备不一致加载失败
     model.to(device)
     model.eval()
 
