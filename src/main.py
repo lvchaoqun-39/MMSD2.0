@@ -67,7 +67,7 @@ def set_args():
     parser.add_argument('--seed', type=int, default=43, help='random seed') # 随机种子
 
     parser.add_argument('--text_encoder_name', default='roberta-base', type=str, help='text encoder name for RoBERTaViT')
-    parser.add_argument('--vision_encoder_name', default='google/vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
+    parser.add_argument('--vision_encoder_name', default='./vit-base-patch16-224', type=str, help='vision encoder name for RoBERTaViT')
     parser.add_argument('--fusion_dim', default=512, type=int, help='fusion dim for RoBERTaViT')
     parser.add_argument('--hf_cache_dir', default=None, type=str, help='HuggingFace cache directory')
     return parser.parse_args()
