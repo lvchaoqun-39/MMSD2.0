@@ -7,14 +7,13 @@ os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7897'
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --model MV_CLIP --text_name text_json_final --weight_decay 0.05 --train_batch_size 32 --dev_batch_size 32 --learning_rate 5e-4 --clip_learning_rate 1e-6 --num_train_epochs 10 --layers 3 --max_grad_norm 5 --dropout_rate 0.1 --optimizer_name adam --text_size 512 --image_size 768 --warmup_proportion 0.2 --device -1 --limit 100
 # C:\Users\lvcha\miniconda3\envs\mmsd2\python.exe src/main.py --device 0 
 
-from model import MV_CLIP
+from model import MV_CLIP, RobertaViTProcessor
 from train import train
 from data_set import MyDataset
 import torch
 import argparse
 import random
 import numpy as np
-from transformers import CLIPProcessor
 import wandb
 import pickle
 from PIL import ImageFile
@@ -32,6 +31,8 @@ def set_args():
     parser.add_argument('--label_number', default=2, type=int, help='the number of classification labels') # 分类标签数量
     parser.add_argument('--text_size', default=512, type=int, help='text hidden size') # 文本隐藏层大小
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size') # 图像隐藏层大小
+    parser.add_argument('--text_backbone', default='roberta-base', type=str, help='text backbone model name or path')
+    parser.add_argument('--vision_backbone', default=None, type=str, help='vision backbone model name or path')
     parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="Epsilon for Adam optimizer.") # Adam优化器的epsilon参数
     parser.add_argument("--optimizer_name", type=str, default='adam',
                         help="use which optimizer to train the model.") # 使用的优化器
@@ -100,7 +101,12 @@ def main():
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None)
 
     if args.model == 'MV_CLIP':
-        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        vision_backbone = args.vision_backbone or os.path.join(repo_root, "vit-base-patch16-224")
+        if not os.path.exists(vision_backbone):
+            vision_backbone = "google/vit-base-patch16-224"
+        processor = RobertaViTProcessor.from_pretrained(args.text_backbone, vision_backbone)
+        args.vision_backbone = vision_backbone
         model = MV_CLIP(args)
     else:
         raise RuntimeError('Error model name!')

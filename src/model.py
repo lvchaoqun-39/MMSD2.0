@@ -1,4 +1,7 @@
-from transformers import CLIPModel,BertConfig
+import os
+
+from transformers import AutoFeatureExtractor, AutoModel, AutoTokenizer, BertConfig, ViTModel
+from transformers.tokenization_utils_base import BatchEncoding
 from transformers.models.bert.modeling_bert import BertLayer
 import torch.nn as nn
 import torch
@@ -6,6 +9,87 @@ import torch.nn.functional as F
 import copy
 
 torch.cuda.empty_cache()
+
+
+class RobertaViTProcessor:
+    def __init__(self, text_model_name_or_path: str, vision_model_name_or_path: str):
+        self.tokenizer = AutoTokenizer.from_pretrained(text_model_name_or_path, use_fast=True)
+        self.feature_extractor = AutoFeatureExtractor.from_pretrained(vision_model_name_or_path)
+
+    @classmethod
+    def from_pretrained(cls, text_model_name_or_path: str, vision_model_name_or_path: str):
+        return cls(text_model_name_or_path=text_model_name_or_path, vision_model_name_or_path=vision_model_name_or_path)
+
+    def __call__(
+        self,
+        text,
+        images,
+        padding="max_length",
+        truncation=True,
+        max_length=None,
+        return_tensors="pt",
+        **kwargs,
+    ):
+        text_inputs = self.tokenizer(
+            text,
+            padding=padding,
+            truncation=truncation,
+            max_length=max_length,
+            return_tensors=return_tensors,
+        )
+        image_inputs = self.feature_extractor(images=images, return_tensors=return_tensors)
+        data = {}
+        data.update(text_inputs)
+        data.update(image_inputs)
+        return BatchEncoding(data=data)
+
+
+class RoBERTaViTBackbone(nn.Module):
+    def __init__(
+        self,
+        text_model_name_or_path: str,
+        vision_model_name_or_path: str,
+        projection_dim: int,
+    ):
+        super().__init__()
+        self.text_model = AutoModel.from_pretrained(text_model_name_or_path)
+        self.vision_model = ViTModel.from_pretrained(vision_model_name_or_path)
+
+        text_hidden = int(getattr(self.text_model.config, "hidden_size"))
+        vision_hidden = int(getattr(self.vision_model.config, "hidden_size"))
+        projection_dim = int(projection_dim)
+
+        self.text_projection = nn.Linear(text_hidden, projection_dim, bias=False)
+        self.visual_projection = nn.Linear(vision_hidden, projection_dim, bias=False)
+        self.text_pooler_projection = nn.Linear(text_hidden, projection_dim, bias=False)
+
+    def forward(self, input_ids=None, attention_mask=None, pixel_values=None, output_attentions=None, **kwargs):
+        text_out = self.text_model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_attentions=output_attentions,
+            return_dict=True,
+        )
+        vision_out = self.vision_model(
+            pixel_values=pixel_values,
+            output_attentions=output_attentions,
+            return_dict=True,
+        )
+        text_pooler = getattr(text_out, "pooler_output", None)
+        if text_pooler is None:
+            text_pooler = text_out.last_hidden_state[:, 0]
+        text_pooler = self.text_pooler_projection(text_pooler)
+
+        return {
+            "text_model_output": {
+                "last_hidden_state": text_out.last_hidden_state,
+                "pooler_output": text_pooler,
+            },
+            "vision_model_output": {
+                "last_hidden_state": vision_out.last_hidden_state,
+                "pooler_output": vision_out.pooler_output,
+            },
+        }
 
 
 class BipartiteGraphLayer(nn.Module):
@@ -183,9 +267,26 @@ class MultimodalEncoder(nn.Module): # 本质上是“把 BERT 的 Transformer En
 class MV_CLIP(nn.Module):
     def __init__(self, args):
         super(MV_CLIP, self).__init__()
-        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32") # 从 Hugging Face 加载预训练的 CLIP 模型（ViT-B/32）。它负责把图像/文本编码成向量特征
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        default_vision_backbone = os.path.join(repo_root, "vit-base-patch16-224")
+        text_backbone = getattr(args, "text_backbone", "roberta-base")
+        if text_backbone is None:
+            text_backbone = "roberta-base"
+        text_backbone = str(text_backbone)
+
+        vision_backbone = getattr(args, "vision_backbone", default_vision_backbone)
+        if vision_backbone is None:
+            vision_backbone = default_vision_backbone
+        vision_backbone = str(vision_backbone)
+        if not os.path.exists(vision_backbone):
+            vision_backbone = "google/vit-base-patch16-224"
+        self.model = RoBERTaViTBackbone(
+            text_model_name_or_path=text_backbone,
+            vision_model_name_or_path=vision_backbone,
+            projection_dim=int(args.text_size),
+        )
         self.config = BertConfig.from_pretrained("bert-base-uncased") # 读取一份 BERT 的配置对象 BertConfig ，这里主要是“借用 BERT 的 Transformer 配置结构”
-        self.config.hidden_size = 512 # 把 Transformer 的隐藏层维度改成 512，用来对齐 CLIP 的特征维度（CLIP ViT-B/32 的 embedding 通常是 512）。
+        self.config.hidden_size = int(args.text_size) # 把 Transformer 的隐藏层维度改成 512，用来对齐 CLIP 的特征维度（CLIP ViT-B/32 的 embedding 通常是 512）。
         self.config.num_attention_heads = 8 # 设置多头注意力的头数为 8。要求 hidden_size 能被头数整除（512/8=64），这样每个 head 的维度是 64
         self.trans = MultimodalEncoder(self.config, layer_number=args.layers) # 用上面这份配置创建一个自定义的多模态 Transformer 编码器
         if args.simple_linear:

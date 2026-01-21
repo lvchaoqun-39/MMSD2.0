@@ -1,6 +1,5 @@
 import os
-from model import CLIPClassificationModel_transformer
-from transformers import CLIPProcessor
+from model import MV_CLIP, RobertaViTProcessor
 from torch.utils.data import DataLoader
 import torch
 from data_set import MyDataset
@@ -69,6 +68,8 @@ def set_args():
     parser.add_argument('--max_len', type=int, default=77, help='max length of text')
     parser.add_argument('--text_size', default=512, type=int, help='text hidden size')
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size')
+    parser.add_argument('--text_backbone', default='roberta-base', type=str, help='text backbone model name or path')
+    parser.add_argument('--vision_backbone', default=None, type=str, help='vision backbone model name or path')
     parser.add_argument('--dropout_rate', default=0.5, type=float, help='dropout rate')
     parser.add_argument('--label_number', type=int, default=2, help='number of classification labels')
     parser.add_argument('--test_batch_size', type=int, default=8, help='batch size for text phase')
@@ -86,8 +87,13 @@ def main():
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
     device = torch.device("cuda" if torch.cuda.is_available() and int(args.device) >= 0 else "cpu")
 
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32") # 加载 CLIP 的处理器（负责把文本 tokenize、把图片做 resize/normalize，并打包成张量输入）
-    model = CLIPClassificationModel_transformer(args) # 构建自定义的分类模型（基于 CLIP + transformer/分类头，具体在model.py里）
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    vision_backbone = args.vision_backbone or os.path.join(repo_root, "vit-base-patch16-224")
+    if not os.path.exists(vision_backbone):
+        vision_backbone = "google/vit-base-patch16-224"
+    processor = RobertaViTProcessor.from_pretrained(args.text_backbone, vision_backbone)
+    args.vision_backbone = vision_backbone
+    model = MV_CLIP(args)
 
     test_data = MyDataset(mode='test', text_name=args.text_name, limit=None) # 构建测试集数据集对象
 
