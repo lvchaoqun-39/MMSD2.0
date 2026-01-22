@@ -27,8 +27,8 @@ def set_args():
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name') # 文本数据文件夹名
     parser.add_argument('--simple_linear', default=False, type=bool, help='linear implementation choice')
     parser.add_argument('--num_train_epochs', default=10, type=int, help='number of train epoched') # 训练轮数
-    parser.add_argument('--train_batch_size', default=16, type=int, help='batch size in train phase') # 训练时每次批量处理样本数量
-    parser.add_argument('--dev_batch_size', default=16, type=int, help='batch size in dev phase') # 验证时每次批量处理样本数量
+    parser.add_argument('--train_batch_size', default=32, type=int, help='batch size in train phase') # 训练时每次批量处理样本数量
+    parser.add_argument('--dev_batch_size', default=32, type=int, help='batch size in dev phase') # 验证时每次批量处理样本数量
     parser.add_argument('--label_number', default=2, type=int, help='the number of classification labels') # 分类标签数量
     parser.add_argument('--text_size', default=512, type=int, help='text hidden size') # 文本隐藏层大小
     parser.add_argument('--image_size', default=768, type=int, help='image hidden size') # 图像隐藏层大小

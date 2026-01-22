@@ -381,9 +381,20 @@ class MV_CLIP(nn.Module):
         image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1)) # (B, n, d) = (LN(VW_v))
         interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp() # (B, m, n) = 交互矩阵 (E)，已经乘上了温度 exp(cim_logit_scale)
 
+        attention_mask = inputs.get('attention_mask', None)
+        text_valid = attention_mask.to(dtype=torch.bool) if attention_mask is not None else None
+
+        interaction_t = interaction.transpose(1, 2)
+        if text_valid is not None:
+            interaction_t_masked = interaction_t.masked_fill(~text_valid.unsqueeze(1), -1e4)
+        else:
+            interaction_t_masked = interaction_t
+
         text_att_full = F.softmax(interaction, dim=-1)
-        image_att_full = F.softmax(interaction.transpose(1, 2), dim=-1)
+        image_att_full = F.softmax(interaction_t_masked, dim=-1)
         text_c_full = torch.matmul(text_att_full, image_embeds)
+        if text_valid is not None:
+            text_c_full = text_c_full * text_valid.unsqueeze(-1).to(dtype=text_c_full.dtype)
         image_c_full = torch.matmul(image_att_full, text_embeds)
 
         # FIM 的 mask
@@ -399,12 +410,11 @@ class MV_CLIP(nn.Module):
         text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
 
         # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
-        interaction_t = interaction.transpose(1, 2) # (B, n, m)
-        k_txt = min(int(self.fim_top_k), interaction_t.shape[-1])
+        k_txt = min(int(self.fim_top_k), interaction_t_masked.shape[-1])
         if k_txt < 1:
             k_txt = 1
-        topk_txt = interaction_t.topk(k_txt, dim=-1).indices # (B, n, k)
-        b_v2t = interaction_t.gather(dim=-1, index=topk_txt)
+        topk_txt = interaction_t_masked.topk(k_txt, dim=-1).indices # (B, n, k)
+        b_v2t = interaction_t_masked.gather(dim=-1, index=topk_txt)
         text_values = self.fim_dynrt_text_value(text_embeds)
         u_v2t = text_values[batch_index, topk_txt]
         image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
