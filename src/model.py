@@ -259,6 +259,8 @@ class MV_CLIP(nn.Module):
                 self.gnn_contrastive_edge_dropout = self.gnn_edge_dropout
             self.gnn_gate_init = float(getattr(args, "gnn_gate_init", -2.0))
             self.gnn_gate = nn.Parameter(torch.tensor(self.gnn_gate_init))
+            self.gnn_gate_net = nn.Linear(args.text_size * 2, 1, bias=False)
+            nn.init.zeros_(self.gnn_gate_net.weight)
 
             self.gnn_reasoner = BipartiteGraphReasoner(
                 hidden_size=args.text_size,
@@ -458,6 +460,7 @@ class MV_CLIP(nn.Module):
 
         gnn_contrastive_loss = None
         if self.gnn_enable == 1:
+            pre_gnn_fuse_feature = fuse_feature
             gnn_text_states, gnn_image_states, gnn_global_state = self.gnn_reasoner(
                 text_states=text_embeds,
                 image_states=image_embeds,
@@ -479,7 +482,10 @@ class MV_CLIP(nn.Module):
                 gnn_feature = gnn_local_fuse
             else:
                 gnn_feature = self.gnn_out(torch.cat((gnn_local_fuse, gnn_global_state.squeeze(1)), dim=-1))
-            gnn_gate = torch.sigmoid(self.gnn_gate) * float(self.gnn_alpha)
+            gnn_gate_logit = self.gnn_gate + self.gnn_gate_net(
+                torch.cat((pre_gnn_fuse_feature, gnn_feature), dim=-1)
+            )
+            gnn_gate = torch.sigmoid(gnn_gate_logit).to(dtype=gnn_feature.dtype) * float(self.gnn_alpha)
             gnn_feature = gnn_feature * gnn_gate
             fuse_feature = self.gnn_final_fuse(torch.cat((fuse_feature, gnn_feature), dim=-1))
 
@@ -513,6 +519,12 @@ class MV_CLIP(nn.Module):
                     gnn_feature_2 = self.gnn_out(
                         torch.cat((g2_local_fuse, g2_global_state.squeeze(1)), dim=-1)
                     )
+
+                gnn_gate_logit_2 = self.gnn_gate + self.gnn_gate_net(
+                    torch.cat((pre_gnn_fuse_feature, gnn_feature_2), dim=-1)
+                )
+                gnn_gate_2 = torch.sigmoid(gnn_gate_logit_2).to(dtype=gnn_feature_2.dtype) * float(self.gnn_alpha)
+                gnn_feature_2 = gnn_feature_2 * gnn_gate_2
 
                 z1 = F.normalize(gnn_feature, p=2, dim=-1)
                 z2 = F.normalize(gnn_feature_2, p=2, dim=-1)
