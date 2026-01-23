@@ -190,7 +190,7 @@ class MV_CLIP(nn.Module):
         self.trans = MultimodalEncoder(self.config, layer_number=args.layers) # 用上面这份配置创建一个自定义的多模态 Transformer 编码器
         if args.simple_linear:
             self.text_linear =  nn.Linear(args.text_size, args.text_size)
-            self.image_linear =  nn.Linear(args.image_size, args.image_size)
+            self.image_linear =  nn.Linear(args.text_size, args.text_size)
         else:
             self.text_linear =  nn.Sequential(
                 nn.Linear(args.text_size, args.text_size),
@@ -198,14 +198,14 @@ class MV_CLIP(nn.Module):
                 nn.GELU()
             )
             self.image_linear =  nn.Sequential(
-                nn.Linear(args.image_size, args.image_size),
+                nn.Linear(args.text_size, args.text_size),
                 nn.Dropout(args.dropout_rate),
                 nn.GELU()
             )
 
         self.classifier_fuse = nn.Linear(args.text_size , args.label_number)
         self.classifier_text = nn.Linear(args.text_size, args.label_number)
-        self.classifier_image = nn.Linear(args.image_size, args.label_number)
+        self.classifier_image = nn.Linear(args.text_size, args.label_number)
 
         self.head_fusion = str(getattr(args, "head_fusion", "add"))
         self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
@@ -357,10 +357,11 @@ class MV_CLIP(nn.Module):
         if next(self.parameters()).is_cuda:
             torch.cuda.empty_cache()
         text_feature = self.text_linear(text_feature) # 文本特征线性变换
-        image_feature = self.image_linear(image_feature) # 图像特征线性变换
 
         text_embeds = self.model.text_projection(text_features) # 文本特征投影 (B, m, d) = T
         image_embeds = self.model.visual_projection(image_features) # 图像特征投影 (B, n, d) = V
+
+        image_feature = self.image_linear(image_embeds[:, 0, :])
         
         # image_token_len = image_embeds.shape[1]
         # input_embeds = torch.cat((image_embeds, text_embeds), dim=1) # 合并文本特征和图像特征成为多模态嵌入特征
