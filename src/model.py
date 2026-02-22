@@ -388,8 +388,6 @@ class MV_CLIP(nn.Module):
         text_embeds = None
         image_embeds = None
         interaction = None
-
-        image_feature = self.image_linear(image_embeds[:, 0, :])
         
         # image_token_len = image_embeds.shape[1]
         # input_embeds = torch.cat((image_embeds, text_embeds), dim=1) # 合并文本特征和图像特征成为多模态嵌入特征
