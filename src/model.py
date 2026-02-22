@@ -190,7 +190,7 @@ class MV_CLIP(nn.Module):
         self.trans = MultimodalEncoder(self.config, layer_number=args.layers) # 用上面这份配置创建一个自定义的多模态 Transformer 编码器
         if args.simple_linear:
             self.text_linear =  nn.Linear(args.text_size, args.text_size)
-            self.image_linear =  nn.Linear(args.text_size, args.text_size)
+            self.image_linear =  nn.Linear(args.image_size, args.image_size)
         else:
             self.text_linear =  nn.Sequential(
                 nn.Linear(args.text_size, args.text_size),
@@ -198,7 +198,7 @@ class MV_CLIP(nn.Module):
                 nn.GELU()
             )
             self.image_linear =  nn.Sequential(
-                nn.Linear(args.text_size, args.text_size),
+                nn.Linear(args.image_size, args.image_size),
                 nn.Dropout(args.dropout_rate),
                 nn.GELU()
             )
