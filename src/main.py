@@ -26,6 +26,22 @@ def set_args():
     parser.add_argument('--model', default='MV_CLIP', type=str, help='the model name', choices=['MV_CLIP']) # 使用的模型
     parser.add_argument('--text_name', default='text_json_final', type=str, help='the text data folder name') # 文本数据文件夹名
     parser.add_argument('--simple_linear', default=False, type=bool, help='linear implementation choice')
+    parser.add_argument('--cim_enable', default=1, type=int, choices=[0, 1], help='enable cross-modal interaction (CIM)')
+    parser.add_argument('--fim_enable', default=1, type=int, choices=[0, 1], help='enable factual inconsistency modeling (FIM)')
+    parser.add_argument(
+        '--score_heads',
+        default='all',
+        type=str,
+        choices=['all', 'fuse', 'text', 'image', 'fuse+text', 'fuse+image', 'text+image'],
+        help='which heads to use for prediction score',
+    )
+    parser.add_argument(
+        '--loss_heads',
+        default='all',
+        type=str,
+        choices=['all', 'fuse', 'text', 'image', 'fuse+text', 'fuse+image', 'text+image'],
+        help='which heads to use for training loss',
+    )
     parser.add_argument('--num_train_epochs', default=10, type=int, help='number of train epoched') # 训练轮数
     parser.add_argument('--train_batch_size', default=32, type=int, help='batch size in train phase') # 训练时每次批量处理样本数量
     parser.add_argument('--dev_batch_size', default=32, type=int, help='batch size in dev phase') # 验证时每次批量处理样本数量

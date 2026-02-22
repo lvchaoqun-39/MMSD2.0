@@ -205,7 +205,12 @@ class MV_CLIP(nn.Module):
 
         self.classifier_fuse = nn.Linear(args.text_size , args.label_number)
         self.classifier_text = nn.Linear(args.text_size, args.label_number)
-        self.classifier_image = nn.Linear(args.text_size, args.label_number)
+        self.classifier_image = nn.Linear(args.image_size, args.label_number)
+
+        self.cim_enable = int(getattr(args, "cim_enable", 1))
+        self.fim_enable = int(getattr(args, "fim_enable", 1))
+        self.score_heads = str(getattr(args, "score_heads", "all"))
+        self.loss_heads = str(getattr(args, "loss_heads", "all"))
 
         self.head_fusion = str(getattr(args, "head_fusion", "add"))
         self.head_weight_delta = float(getattr(args, "head_weight_delta", 1.0))
@@ -357,9 +362,32 @@ class MV_CLIP(nn.Module):
         if next(self.parameters()).is_cuda:
             torch.cuda.empty_cache()
         text_feature = self.text_linear(text_feature) # 文本特征线性变换
+        image_feature = self.image_linear(image_feature) # 图像特征线性变换
 
-        text_embeds = self.model.text_projection(text_features) # 文本特征投影 (B, m, d) = T
-        image_embeds = self.model.visual_projection(image_features) # 图像特征投影 (B, n, d) = V
+        def parse_heads(spec):
+            spec = str(spec)
+            if spec == 'all':
+                return [0, 1, 2]
+            if spec == 'fuse':
+                return [0]
+            if spec == 'text':
+                return [1]
+            if spec == 'image':
+                return [2]
+            if spec == 'fuse+text':
+                return [0, 1]
+            if spec == 'fuse+image':
+                return [0, 2]
+            if spec == 'text+image':
+                return [1, 2]
+            return [0, 1, 2]
+
+        score_head_idx = parse_heads(self.score_heads)
+        loss_head_idx = parse_heads(self.loss_heads)
+
+        text_embeds = None
+        image_embeds = None
+        interaction = None
 
         image_feature = self.image_linear(image_embeds[:, 0, :])
         
@@ -379,59 +407,115 @@ class MV_CLIP(nn.Module):
         # fuse_hiddens = fuse_hiddens[-1] # 取 Transformer 编码器的最后一层输出作为融合后的隐藏状态
         # new_text_features = fuse_hiddens[:, image_token_len:, :] # 提取文本部分的融合特征
 
-        # 公式2 张量形状（B=batch, m=文本长度, n=图像patch数, d=512）
-        text_proj = self.cim_text_ln(F.normalize(self.cim_text_proj(text_embeds), p=2, dim=-1)) # (B, m, d) = (LN(TW_t))
-        image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1)) # (B, n, d) = (LN(VW_v))
-        interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp() # (B, m, n) = 交互矩阵 (E)，已经乘上了温度 exp(cim_logit_scale)
-
         attention_mask = inputs.get('attention_mask', None)
-        text_valid = attention_mask.to(dtype=torch.bool) if attention_mask is not None else None
-
-        interaction_t = interaction.transpose(1, 2)
-        if text_valid is not None:
-            interaction_t_masked = interaction_t.masked_fill(~text_valid.unsqueeze(1), -1e4)
-        else:
-            interaction_t_masked = interaction_t
-
-        text_att_full = F.softmax(interaction, dim=-1)
-        image_att_full = F.softmax(interaction_t_masked, dim=-1)
-        text_c_full = torch.matmul(text_att_full, image_embeds)
-        if text_valid is not None:
-            text_c_full = text_c_full * text_valid.unsqueeze(-1).to(dtype=text_c_full.dtype)
-        image_c_full = torch.matmul(image_att_full, text_embeds)
-
-        # FIM 的 mask
-        # 对每个文本 token i ，在 E[i, :] 上选 top‑k 的图像 patch
-        k_img = min(int(self.fim_top_k), interaction.shape[-1])
-        if k_img < 1:
-            k_img = 1
-        topk_img = interaction.topk(k_img, dim=-1).indices # (B, m, k)
-        b_t2v = interaction.gather(dim=-1, index=topk_img)
-        image_values = self.fim_dynrt_image_value(image_embeds)
-        batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
-        u_t2v = image_values[batch_index, topk_img]
-        text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
-
-        # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
-        k_txt = min(int(self.fim_top_k), interaction_t_masked.shape[-1])
-        if k_txt < 1:
-            k_txt = 1
-        topk_txt = interaction_t_masked.topk(k_txt, dim=-1).indices # (B, n, k)
-        b_v2t = interaction_t_masked.gather(dim=-1, index=topk_txt)
-        text_values = self.fim_dynrt_text_value(text_embeds)
-        u_v2t = text_values[batch_index, topk_txt]
-        image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
-
-         # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”（残差）作为事实不一致信号
-        # text_fim = text_c - text_c_masked # (B, m, d)
-        # image_fim = image_c - image_c_masked # (B, n, d)
-
-        # 用 “FFN + 残差 + LN” 得到 FIM 输出
-        text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
-        image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
-
-        last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
+        last_token_index = attention_mask.to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
+
+        if int(self.cim_enable) == 1:
+            text_embeds = self.model.text_projection(text_features)
+            image_embeds = self.model.visual_projection(image_features)
+
+            text_proj = self.cim_text_ln(F.normalize(self.cim_text_proj(text_embeds), p=2, dim=-1))
+            image_proj = self.cim_image_ln(F.normalize(self.cim_image_proj(image_embeds), p=2, dim=-1))
+            interaction = torch.matmul(text_proj, image_proj.transpose(1, 2)) * self.cim_logit_scale.exp()
+
+            text_valid = attention_mask.to(dtype=torch.bool) if attention_mask is not None else None
+            interaction_t = interaction.transpose(1, 2)
+            if text_valid is not None:
+                interaction_t_masked = interaction_t.masked_fill(~text_valid.unsqueeze(1), -1e4)
+            else:
+                interaction_t_masked = interaction_t
+
+            text_att_full = F.softmax(interaction, dim=-1)
+            image_att_full = F.softmax(interaction_t_masked, dim=-1)
+            text_c_full = torch.matmul(text_att_full, image_embeds)
+            if text_valid is not None:
+                text_c_full = text_c_full * text_valid.unsqueeze(-1).to(dtype=text_c_full.dtype)
+            image_c_full = torch.matmul(image_att_full, text_embeds)
+        else:
+            text_embeds_pooled = self.model.text_projection(text_feature.unsqueeze(1)).squeeze(1)
+            image_embeds_pooled = self.model.visual_projection(image_feature.unsqueeze(1)).squeeze(1)
+            base_text_weight = self.att(text_embeds_pooled)
+            base_image_weight = self.att(image_embeds_pooled)
+            base_att = nn.functional.softmax(
+                torch.stack((base_text_weight, base_image_weight), dim=-1), dim=-1
+            )
+            base_tw, base_iw = base_att.split([1, 1], dim=-1)
+            fuse_feature = base_tw.squeeze(1) * text_embeds_pooled + base_iw.squeeze(1) * image_embeds_pooled
+
+            logits_fuse = self.classifier_fuse(fuse_feature)
+            logits_text = self.classifier_text(text_feature)
+            logits_image = self.classifier_image(image_feature)
+
+            fuse_score = nn.functional.softmax(logits_fuse, dim=-1)
+            text_score = nn.functional.softmax(logits_text, dim=-1)
+            image_score = nn.functional.softmax(logits_image, dim=-1)
+
+            scores_all = [fuse_score, text_score, image_score]
+            logits_all = [logits_fuse, logits_text, logits_image]
+
+            def fuse_scores(scores, head_idx, method):
+                scores_sel = [scores[i] for i in head_idx]
+                if len(scores_sel) == 1:
+                    return scores_sel[0]
+                if method == "learned":
+                    w = F.softmax(self.head_weight_logits[torch.tensor(head_idx, device=self.head_weight_logits.device)], dim=-1)
+                    out = 0
+                    for i, s in enumerate(scores_sel):
+                        out = out + w[i] * s
+                    return out
+                if method == "mul":
+                    modalities = torch.stack(scores_sel, dim=1)
+                    weights_pc = self._head_weights_multiplicative_per_class(modalities)
+                    return (weights_pc * modalities).sum(dim=1)
+                out = 0
+                for s in scores_sel:
+                    out = out + s
+                return out
+
+            score = fuse_scores(scores_all, score_head_idx, self.head_fusion)
+            outputs = (score,)
+            if labels is not None:
+                def loss_from_logits(logits, scores, head_idx, method):
+                    logits_sel = [logits[i] for i in head_idx]
+                    scores_sel = [scores[i] for i in head_idx]
+                    if len(logits_sel) == 1:
+                        return self.loss_fct(logits_sel[0], labels)
+                    if method == "learned":
+                        w = F.softmax(self.head_weight_logits[torch.tensor(head_idx, device=self.head_weight_logits.device)], dim=-1)
+                        loss_val = 0
+                        for i, lo in enumerate(logits_sel):
+                            loss_val = loss_val + w[i] * self.loss_fct(lo, labels)
+                        return loss_val
+                    if method == "mul":
+                        logits_stack = torch.stack(logits_sel, dim=1)
+                        logp = F.log_softmax(logits_stack, dim=-1)
+                        labels_ = labels.to(torch.long).view(-1, 1, 1)
+                        logp_y = logp.gather(dim=-1, index=labels_.expand(-1, logp.shape[1], 1)).squeeze(-1)
+                        nll = -logp_y
+                        modalities = torch.stack(scores_sel, dim=1)
+                        weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                        loss_val = (weights * nll).sum(dim=1).mean()
+
+                        alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
+                        if alpha > 0:
+                            oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
+                            eps = 1e-8
+                            p = score.clamp(min=eps)
+                            p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
+                            q = oracle_score.clamp(min=eps)
+                            q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
+                            distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
+                            loss_val = loss_val + alpha * distill_loss
+                        return loss_val
+                    loss_val = 0
+                    for lo in logits_sel:
+                        loss_val = loss_val + self.loss_fct(lo, labels)
+                    return loss_val
+
+                loss = loss_from_logits(logits_all, scores_all, loss_head_idx, self.head_fusion)
+                outputs = (loss,) + outputs
+            return outputs
 
         base_text_features = text_c_full
         base_text_feature = base_text_features[
@@ -441,23 +525,48 @@ class MV_CLIP(nn.Module):
         base_image_feature = image_c_full[:, 0, :].squeeze(1)
         base_text_weight = self.att(base_text_feature)
         base_image_weight = self.att(base_image_feature)
-        base_att = nn.functional.softmax(torch.stack((base_text_weight, base_image_weight), dim=-1),dim=-1)
-        base_tw, base_iw = base_att.split([1,1], dim=-1)
+        base_att = nn.functional.softmax(torch.stack((base_text_weight, base_image_weight), dim=-1), dim=-1)
+        base_tw, base_iw = base_att.split([1, 1], dim=-1)
         base_fuse_feature = base_tw.squeeze(1) * base_text_feature + base_iw.squeeze(1) * base_image_feature
 
-        fim_text_features = text_fim
-        fim_text_feature = fim_text_features[
-            torch.arange(fim_text_features.shape[0], device=fim_text_features.device),
-            last_token_index,
-        ]
-        fim_image_feature = image_fim[:, 0, :].squeeze(1)
-        fim_text_weight = self.att(fim_text_feature)
-        fim_image_weight = self.att(fim_image_feature)
-        fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1),dim=-1)
-        fim_tw, fim_iw = fim_att.split([1,1], dim=-1)
-        fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
+        if int(self.fim_enable) == 1:
+            k_img = min(int(self.fim_top_k), interaction.shape[-1])
+            if k_img < 1:
+                k_img = 1
+            topk_img = interaction.topk(k_img, dim=-1).indices
+            b_t2v = interaction.gather(dim=-1, index=topk_img)
+            image_values = self.fim_dynrt_image_value(image_embeds)
+            batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
+            u_t2v = image_values[batch_index, topk_img]
+            text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
 
-        fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
+            k_txt = min(int(self.fim_top_k), interaction_t_masked.shape[-1])
+            if k_txt < 1:
+                k_txt = 1
+            topk_txt = interaction_t_masked.topk(k_txt, dim=-1).indices
+            b_v2t = interaction_t_masked.gather(dim=-1, index=topk_txt)
+            text_values = self.fim_dynrt_text_value(text_embeds)
+            u_v2t = text_values[batch_index, topk_txt]
+            image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
+
+            text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
+            image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
+
+            fim_text_features = text_fim
+            fim_text_feature = fim_text_features[
+                torch.arange(fim_text_features.shape[0], device=fim_text_features.device),
+                last_token_index,
+            ]
+            fim_image_feature = image_fim[:, 0, :].squeeze(1)
+            fim_text_weight = self.att(fim_text_feature)
+            fim_image_weight = self.att(fim_image_feature)
+            fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1), dim=-1)
+            fim_tw, fim_iw = fim_att.split([1, 1], dim=-1)
+            fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
+
+            fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
+        else:
+            fuse_feature = base_fuse_feature
 
         gnn_contrastive_loss = None
         if self.gnn_enable == 1:
@@ -545,73 +654,93 @@ class MV_CLIP(nn.Module):
         text_score = nn.functional.softmax(logits_text, dim=-1)
         image_score = nn.functional.softmax(logits_image, dim=-1)
 
-        modalities = torch.stack([fuse_score, text_score, image_score], dim=1)
+        scores_all = [fuse_score, text_score, image_score]
+        logits_all = [logits_fuse, logits_text, logits_image]
 
-        if self.head_fusion == "add":
-            score = fuse_score + text_score + image_score
-        elif self.head_fusion == "learned":
-            weights = F.softmax(self.head_weight_logits, dim=-1)
-            score = weights[0] * fuse_score + weights[1] * text_score + weights[2] * image_score
-        elif self.head_fusion == "mul":
-            weights_pc = self._head_weights_multiplicative_per_class(modalities)
-            score = (weights_pc * modalities).sum(dim=1)
+        def fuse_scores(scores, head_idx, method):
+            scores_sel = [scores[i] for i in head_idx]
+            if len(scores_sel) == 1:
+                return scores_sel[0]
+            if method == "learned":
+                w = F.softmax(self.head_weight_logits[torch.tensor(head_idx, device=self.head_weight_logits.device)], dim=-1)
+                out = 0
+                for i, s in enumerate(scores_sel):
+                    out = out + w[i] * s
+                return out
+            if method == "mul":
+                modalities = torch.stack(scores_sel, dim=1)
+                weights_pc = self._head_weights_multiplicative_per_class(modalities)
+                out = (weights_pc * modalities).sum(dim=1)
 
-            if (
-                (not self.training)
-                and labels is not None
-                and float(self.head_mul_oracle_lambda) > 0
-                and float(self.head_mul_oracle_tau) > 0
-            ):
-                top2 = score.topk(k=2, dim=-1).values
-                margin = top2[:, 0] - top2[:, 1]
-                pred = score.argmax(dim=-1)
-                use_oracle = (margin < float(self.head_mul_oracle_tau)) & (pred != labels.to(torch.long))
-                if use_oracle.any():
-                    oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                    oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
-                    lam = float(self.head_mul_oracle_lambda)
-                    tau = max(float(self.head_mul_oracle_tau), 1e-8)
-                    lam_vec = (lam * ((tau - margin) / tau).clamp(min=0.0, max=1.0)).to(score.dtype)
-                    score = score.clone()
-                    score[use_oracle] = (
-                        (1.0 - lam_vec[use_oracle].unsqueeze(-1)) * score[use_oracle]
-                        + lam_vec[use_oracle].unsqueeze(-1) * oracle_score[use_oracle]
-                    )
-        else:
-            score = fuse_score + text_score + image_score
+                if (
+                    (not self.training)
+                    and labels is not None
+                    and float(self.head_mul_oracle_lambda) > 0
+                    and float(self.head_mul_oracle_tau) > 0
+                ):
+                    top2 = out.topk(k=2, dim=-1).values
+                    margin = top2[:, 0] - top2[:, 1]
+                    pred = out.argmax(dim=-1)
+                    use_oracle = (margin < float(self.head_mul_oracle_tau)) & (pred != labels.to(torch.long))
+                    if use_oracle.any():
+                        oracle_weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                        oracle_score = (oracle_weights.unsqueeze(-1) * modalities).sum(dim=1)
+                        lam = float(self.head_mul_oracle_lambda)
+                        tau = max(float(self.head_mul_oracle_tau), 1e-8)
+                        lam_vec = (lam * ((tau - margin) / tau).clamp(min=0.0, max=1.0)).to(out.dtype)
+                        out = out.clone()
+                        out[use_oracle] = (
+                            (1.0 - lam_vec[use_oracle].unsqueeze(-1)) * out[use_oracle]
+                            + lam_vec[use_oracle].unsqueeze(-1) * oracle_score[use_oracle]
+                        )
+                return out
+            out = 0
+            for s in scores_sel:
+                out = out + s
+            return out
+
+        score = fuse_scores(scores_all, score_head_idx, self.head_fusion)
 
         outputs = (score,)
         if labels is not None:
-            if self.head_fusion == "mul":
-                logits_all = torch.stack([logits_fuse, logits_text, logits_image], dim=1)
-                logp = F.log_softmax(logits_all, dim=-1)
-                labels_ = labels.to(torch.long).view(-1, 1, 1)
-                logp_y = logp.gather(dim=-1, index=labels_.expand(-1, 3, 1)).squeeze(-1)
-                nll = -logp_y
-                weights = self._head_weights_multiplicative_from_probs(modalities, labels)
-                loss = (weights * nll).sum(dim=1).mean()
+            def loss_from_logits(logits, scores, head_idx, method):
+                logits_sel = [logits[i] for i in head_idx]
+                scores_sel = [scores[i] for i in head_idx]
+                if len(logits_sel) == 1:
+                    return self.loss_fct(logits_sel[0], labels)
+                if method == "learned":
+                    w = F.softmax(self.head_weight_logits[torch.tensor(head_idx, device=self.head_weight_logits.device)], dim=-1)
+                    loss_val = 0
+                    for i, lo in enumerate(logits_sel):
+                        loss_val = loss_val + w[i] * self.loss_fct(lo, labels)
+                    return loss_val
+                if method == "mul":
+                    logits_stack = torch.stack(logits_sel, dim=1)
+                    logp = F.log_softmax(logits_stack, dim=-1)
+                    labels_ = labels.to(torch.long).view(-1, 1, 1)
+                    logp_y = logp.gather(dim=-1, index=labels_.expand(-1, logp.shape[1], 1)).squeeze(-1)
+                    nll = -logp_y
+                    modalities = torch.stack(scores_sel, dim=1)
+                    weights = self._head_weights_multiplicative_from_probs(modalities, labels)
+                    loss_val = (weights * nll).sum(dim=1).mean()
 
-                alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
-                if alpha > 0:
-                    oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
-                    eps = 1e-8
-                    p = score.clamp(min=eps)
-                    p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
-                    q = oracle_score.clamp(min=eps)
-                    q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
-                    distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
-                    loss = loss + alpha * distill_loss
-            elif self.head_fusion == "learned":
-                weights = F.softmax(self.head_weight_logits, dim=-1)
-                loss_fuse = self.loss_fct(logits_fuse, labels)
-                loss_text = self.loss_fct(logits_text, labels)
-                loss_image = self.loss_fct(logits_image, labels)
-                loss = weights[0] * loss_fuse + weights[1] * loss_text + weights[2] * loss_image
-            else:
-                loss_fuse = self.loss_fct(logits_fuse, labels)
-                loss_text = self.loss_fct(logits_text, labels)
-                loss_image = self.loss_fct(logits_image, labels)
-                loss = loss_fuse + loss_text + loss_image
+                    alpha = float(getattr(self, "head_mul_oracle_train_alpha", 0.0))
+                    if alpha > 0:
+                        oracle_score = (weights.unsqueeze(-1) * modalities).sum(dim=1)
+                        eps = 1e-8
+                        p = score.clamp(min=eps)
+                        p = p / p.sum(dim=-1, keepdim=True).clamp(min=eps)
+                        q = oracle_score.clamp(min=eps)
+                        q = q / q.sum(dim=-1, keepdim=True).clamp(min=eps)
+                        distill_loss = (q * (q.log() - p.log())).sum(dim=-1).mean()
+                        loss_val = loss_val + alpha * distill_loss
+                    return loss_val
+                loss_val = 0
+                for lo in logits_sel:
+                    loss_val = loss_val + self.loss_fct(lo, labels)
+                return loss_val
+
+            loss = loss_from_logits(logits_all, scores_all, loss_head_idx, self.head_fusion)
 
             if gnn_contrastive_loss is not None:
                 loss = loss + float(self.gnn_contrastive_weight) * gnn_contrastive_loss
