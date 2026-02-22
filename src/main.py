@@ -43,6 +43,7 @@ def set_args():
     parser.add_argument('--weight_decay', default=0.05, type=float, help='weight decay') # 权重衰减（防止过拟合）
     parser.add_argument('--warmup_proportion', default=0.2, type=float, help='warm up proportion') # 预热比例
     parser.add_argument('--dropout_rate', default=0.1, type=float, help='dropout rate') # 丢弃率（随机丢弃神经元）
+    parser.add_argument('--fim_enable', default=1, type=int, help='enable FIM')
     parser.add_argument('--fim_top_k', default=12, type=int, help='top k for FIM') # FIM的top k参数
     parser.add_argument('--fim_dynrt_iters', default=1, type=int, help='dynamic routing iterations for FIM') # FIM的动态路由迭代次数
     parser.add_argument('--gnn_enable', default=1, type=int, help='enable gnn reasoning path')
