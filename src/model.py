@@ -222,8 +222,8 @@ class MV_CLIP(nn.Module):
         self.cim_text_ln = nn.LayerNorm(args.text_size)
         self.cim_image_ln = nn.LayerNorm(args.text_size)
         self.cim_logit_scale = nn.Parameter(torch.tensor(0.0))
-        self.fim_enable = int(getattr(args, "fim_enable", 1)) == 1
         self.fim_top_k = getattr(args, "fim_top_k", 5)
+        self.fim_enable = int(getattr(args, "fim_enable", 1))
 
         # 两层 MLP（ d -> 4d -> d ，GELU）
         self.fim_text_ffn = nn.Sequential(
@@ -401,6 +401,36 @@ class MV_CLIP(nn.Module):
             text_c_full = text_c_full * text_valid.unsqueeze(-1).to(dtype=text_c_full.dtype)
         image_c_full = torch.matmul(image_att_full, text_embeds)
 
+        # FIM 的 mask
+        # 对每个文本 token i ，在 E[i, :] 上选 top‑k 的图像 patch
+        k_img = min(int(self.fim_top_k), interaction.shape[-1])
+        if k_img < 1:
+            k_img = 1
+        topk_img = interaction.topk(k_img, dim=-1).indices # (B, m, k)
+        b_t2v = interaction.gather(dim=-1, index=topk_img)
+        image_values = self.fim_dynrt_image_value(image_embeds)
+        batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
+        u_t2v = image_values[batch_index, topk_img]
+        text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
+
+        # 对每个图像 patch j ，在 E^T[j, :] 上选 top‑k 的文本 token
+        k_txt = min(int(self.fim_top_k), interaction_t_masked.shape[-1])
+        if k_txt < 1:
+            k_txt = 1
+        topk_txt = interaction_t_masked.topk(k_txt, dim=-1).indices # (B, n, k)
+        b_v2t = interaction_t_masked.gather(dim=-1, index=topk_txt)
+        text_values = self.fim_dynrt_text_value(text_embeds)
+        u_v2t = text_values[batch_index, topk_txt]
+        image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
+
+         # FIM 输出：这里用“非 mask 交互结果 - mask 交互结果”（残差）作为事实不一致信号
+        # text_fim = text_c - text_c_masked # (B, m, d)
+        # image_fim = image_c - image_c_masked # (B, n, d)
+
+        # 用 “FFN + 残差 + LN” 得到 FIM 输出
+        text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
+        image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
+
         last_token_index = inputs['attention_mask'].to(torch.long).sum(dim=-1) - 1
         last_token_index = last_token_index.clamp(min=0)
 
@@ -416,40 +446,19 @@ class MV_CLIP(nn.Module):
         base_tw, base_iw = base_att.split([1,1], dim=-1)
         base_fuse_feature = base_tw.squeeze(1) * base_text_feature + base_iw.squeeze(1) * base_image_feature
 
-        if self.fim_enable:
-            k_img = min(int(self.fim_top_k), interaction.shape[-1])
-            if k_img < 1:
-                k_img = 1
-            topk_img = interaction.topk(k_img, dim=-1).indices
-            b_t2v = interaction.gather(dim=-1, index=topk_img)
-            image_values = self.fim_dynrt_image_value(image_embeds)
-            batch_index = torch.arange(image_values.shape[0], device=image_values.device)[:, None, None]
-            u_t2v = image_values[batch_index, topk_img]
-            text_dynrt = self._dynrt_route(u_t2v, b_t2v, self.fim_dynrt_iters)
+        fim_text_features = text_fim
+        fim_text_feature = fim_text_features[
+            torch.arange(fim_text_features.shape[0], device=fim_text_features.device),
+            last_token_index,
+        ]
+        fim_image_feature = image_fim[:, 0, :].squeeze(1)
+        fim_text_weight = self.att(fim_text_feature)
+        fim_image_weight = self.att(fim_image_feature)
+        fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1),dim=-1)
+        fim_tw, fim_iw = fim_att.split([1,1], dim=-1)
+        fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
 
-            k_txt = min(int(self.fim_top_k), interaction_t_masked.shape[-1])
-            if k_txt < 1:
-                k_txt = 1
-            topk_txt = interaction_t_masked.topk(k_txt, dim=-1).indices
-            b_v2t = interaction_t_masked.gather(dim=-1, index=topk_txt)
-            text_values = self.fim_dynrt_text_value(text_embeds)
-            u_v2t = text_values[batch_index, topk_txt]
-            image_dynrt = self._dynrt_route(u_v2t, b_v2t, self.fim_dynrt_iters)
-
-            text_fim = self.fim_text_ln(text_embeds + self.fim_text_ffn(text_dynrt))
-            image_fim = self.fim_image_ln(image_embeds + self.fim_image_ffn(image_dynrt))
-
-            fim_text_feature = text_fim[
-                torch.arange(text_fim.shape[0], device=text_fim.device),
-                last_token_index,
-            ]
-            fim_image_feature = image_fim[:, 0, :].squeeze(1)
-            fim_text_weight = self.att(fim_text_feature)
-            fim_image_weight = self.att(fim_image_feature)
-            fim_att = nn.functional.softmax(torch.stack((fim_text_weight, fim_image_weight), dim=-1), dim=-1)
-            fim_tw, fim_iw = fim_att.split([1, 1], dim=-1)
-            fim_fuse_feature = fim_tw.squeeze(1) * fim_text_feature + fim_iw.squeeze(1) * fim_image_feature
-
+        if self.fim_enable == 1:
             fuse_feature = self.fim_extra_fuse(torch.cat((base_fuse_feature, fim_fuse_feature), dim=-1))
         else:
             fuse_feature = base_fuse_feature
