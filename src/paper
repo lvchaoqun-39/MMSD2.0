@@ -1,0 +1,1157 @@
+%  LaTeX support: latex@mdpi.com 
+%  For support, please attach all files needed for compiling as well as the log file, and specify your operating system, LaTeX version, and LaTeX editor.
+
+%=================================================================
+\documentclass[journal,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+% For posting an early version of this manuscript as a preprint, you may use "preprints" as the journal. Changing "submit" to "accept" before posting will remove line numbers.
+
+% Below journals will use APA reference format:
+% admsci, aieduc, behavsci, businesses, econometrics, economies, education, ejihpe, famsci, games, humans, ijcs, ijfs, jintelligence, journalmedia, jrfm, jsam, languages, peacestud, psycholint, publications, tourismhosp, youth
+
+% Below journals will use Chicago reference format:
+% arts, genealogy, histories, humanities, laws, literature, religions, risks, socsci
+
+%--------------------
+% Class Options:
+%--------------------
+%----------
+% journal
+%----------
+% Choose between the following MDPI journals:
+% accountaudit, acoustics, actuators, addictions, adhesives, admsci, adolescents, aerobiology, aerospace, agriculture, agriengineering, agrochemicals, agronomy, ai, aichem, aieduc, aieng, aimater, aimed, aipa, air, aisens, algorithms, allergies, alloys, amh, analog, analytica, analytics, anatomia, anesthres, animals, antibiotics, antibodies, antioxidants, applbiosci, appliedchem, appliedmath, appliedphys, applmech, applmicrobiol, applnano, applsci, aquacj, architecture, arm, arthropoda, arts, asc, asi, astronautics, astronomy, atmosphere, atoms, audiolres, automation, axioms, bacteria, batteries, bdcc, behavsci, beverages, biochem, bioengineering, biologics, biology, biomass, biomechanics, biomed, biomedicines, biomedinformatics, biomimetics, biomolecules, biophysica, bioresourbioprod, biosensors, biosphere, biotech, birds, blockchains, bloods, blsf, brainsci, breath, buildings, businesses, cancers, carbon, cardio, cardiogenetics, cardiovascmed, catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, chemproc, children, chips, cimb, civileng, cleantechnol, climate, clinbioenerg, clinpract, clockssleep, cmd, cmtr, coasts, coatings, colloids, colorants, commodities, complexities, complications, compounds, computation, computers, condensedmatter, conservation, constrmater, cosmetics, covid, crops, cryo, cryptography, crystals, csmf, ctn, culture, curroncol, cyber, dairy, data, ddc, dentistry, dermato, dermatopathology, designs, devices, dhi, diabetology, diagnostics, dietetics, digital, disabilities, diseases, diversity, dna, drones, dynamics, earth, ebj, ecm, ecologies, econometrics, economies, edm, education, eesp, ejihpe, electricity, electrochem, electronicmat, electronics, encyclopedia, endocrines, energies, eng, engproc, entomology, entropy, environments, environremediat, epidemiologia, epigenomes, esa, est, famsci, fermentation, fibers, fintech, fire, fishes, fluids, foods, forecasting, forensicsci, forests, fossstud, foundations, fractalfract, fuels, future, futureinternet, futurepharmacol, futurephys, futuretransp, galaxies, games, gases, gastroent, gastrointestdisord, gastronomy, gels, genealogy, genes, geographies, geohazards, geomatics, geometry, geosciences, geotechnics, geriatrics, germs, glacies, grasses, green, greenhealth, gucdd, hardware, hazardousmatters, healthcare, hearts, hemato, hematolrep, hep, heritage, higheredu, highthroughput, histories, horticulturae, hospitals, humanities, humans, hydrobiology, hydrogen, hydrology, hydropower, hygiene, idr, iic, ijcs, ijem, ijerph, ijfs, ijgi, ijmd, ijms, ijns, ijom, ijpb, ijt, ijtm, ijtpp, ime, immuno, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jaestheticmed, jal, jcdd, jcm, jcp, jcrm, jcs, jcto, jdad, jdb, jdream, jemr, jeta, jfb, jfmk, jgbg, jgg, jimaging, jintelligence, jlpea, jmahp, jmmp, jmms, jmp, jmse, jne, jnt, jof, joi, joitmc, joma, jop, joptm, jor, journalmedia, jox, jpbi, jphytomed, jpm, jrfm, jsam, jsan, jtaer, jvd, jzbg, kidneydial, kinasesphosphatases, knowledge, labmed, laboratories, lae, land, languages, laws, life, lights, limnolrev, lipidology, liquids, literature, livers, logics, logistics, lubricants, lymphatics, machines, macromol, magnetism, magnetochemistry, make, marinedrugs, materials, materproc, mathematics, mca, measurements, medicina, medicines, medsci, membranes, merits, metabolites, metals, meteorology, methane, metrics, metrology, micro, microarrays, microbiolres, microelectronics, micromachines, microorganisms, microplastics, microwave, minerals, mining, mmphys, modelling, molbank, molecules, mps, msf, mti, multimedia, muscles, nanoenergyadv, nanomanufacturing, nanomaterials, ncrna, ndt, network, neuroglia, neuroimaging, neurolint, neurosci, nitrogen, notspecified, nursrep, nutraceuticals, nutrients, obesities, occuphealth, oceans, ohbm, onco, optics, oral, organics, organoids, osteology, oxygen, pandemics, parasites, parasitologia, particles, pathogens, pathophysiology, peacestud, pediatrrep, pets, pharmaceuticals, pharmaceutics, pharmacoepidemiology, pharmacy, philosophies, photochem, photonics, phycology, physchem, physics, physiologia, plants, plasma, platforms, pollutants, polymers, polysaccharides, populations, poultry, powders, precipitation, precisoncol, preprints, proceedings, processes, prosthesis, proteomes, psf, psychiatryint, psychoactives, psycholint, publications, purification, quantumrep, quaternary, qubs, radiation, rdt, reactions, realestate, receptors, recycling, regeneration, religions, remotesensing, reports, reprodmed, resources, rheumato, risks, rjpm, robotics, rsee, ruminants, safety, sci, scipharm, sclerosis, seeds, sensors, separations, sexes, shi, signals, sinusitis, siuj, skins, smartcities, sna, societies, socsci, software, soilsystems, solar, solids, spectroscj, sports, standards, stats, std, stratsediment, stresses, surfaces, surgeries, suschem, sustainability, symmetry, synbio, systems, tae, targets, taxonomy, technologies, telecom, test, textiles, thalassrep, therapeutics, thermo, timespace, tomography, tourismhosp, toxics, toxins, tph, transplantology, transportation, traumacare, traumas, tri, tropicalmed, universe, urbansci, uro, vaccines, vehicles, venereology, vetsci, vibration, virtualworlds, viruses, vision, waste, water, welding, wem, wevj, wild, wind, women, world, youth, zoonoticdis
+
+%---------
+% article
+%---------
+% The default type of manuscript is "article", but can be replaced by: 
+% abstract, addendum, article, benchmark, book, bookreview, briefcommunication, briefreport, casereport, changes, clinicopathologicalchallenge, comment, commentary, communication, conceptpaper, conferenceproceedings, correction, conferencereport, creative, datadescriptor, discussion, entry, expressionofconcern, extendedabstract, editorial, essay, erratum, fieldguide, hypothesis, interestingimages, letter, meetingreport, monograph, newbookreceived, obituary, opinion, proceedingpaper, projectreport, reply, retraction, review, perspective, protocol, shortnote, studyprotocol, supfile, systematicreview, technicalnote, viewpoint, guidelines, registeredreport, tutorial,  giantsinurology, urologyaroundtheworld
+% supfile = supplementary materials
+
+%----------
+% submit
+%----------
+% The class option "submit" will be changed to "accept" by the Editorial Office when the paper is accepted. This will only make changes to the frontpage (e.g., the logo of the journal will get visible), the headings, and the copyright information. Also, line numbering will be removed. Journal info and pagination for accepted papers will also be assigned by the Editorial Office.
+
+%------------------
+% moreauthors
+%------------------
+% If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
+
+%---------
+% pdftex
+%---------
+% The option pdftex is for use with pdfLaTeX. Remove "pdftex" for (1) compiling with LaTeX & dvi2pdf (if eps figures are used) or for (2) compiling with XeLaTeX.
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+%\externaleditor{Firstname Lastname} % More than 1 editor, please add `` and '' before the last editor name
+\datereceived{ } 
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ } 
+\datepublished{ } 
+%\datecorrected{} % For corrected papers: "Corrected: XXX" date in the original paper.
+%\dateretracted{} % For retracted papers: "Retracted: XXX" date in the original paper.
+%\doinum{} % Used for some special journals, like molbank
+%\pdfoutput=1 % Uncommented for upload to arXiv.org
+%\CorrStatement{yes}  % For updates
+%\longauthorlist{yes} % For many authors that exceed the left citation part
+%\IsAssociation{yes} % For association journals
+\newcommand\blue[1]{\textcolor{blue}{\{#1\}}}
+\newcommand\ljd[1]{\textcolor{blue}{\{ljd: #1\}}}
+\newcommand\lcq[2]{\textcolor{red}{\{lcq: #1\}}}
+\newcommand\red[1]{\textcolor{red}{\{#1\}}}
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
+% cleveref: load \crefname definitions after \begin{document}
+
+%=================================================================
+% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Title}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Firstname Lastname $^{1}$\orcidA{}, Firstname Lastname $^{2}$ and Firstname Lastname $^{2,}$*}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Firstname Lastname, Firstname Lastname and Firstname Lastname}
+
+%\longauthorlist{yes}
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
+$^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+
+% Contact information of the corresponding author
+\corres{Correspondence: e-mail@e-mail.com; Tel.: (optional; include country code; if there are multiple corresponding authors, add author initials) +xx-xxxx-xxx-xxxx (F.L.)}
+
+% Current address and/or shared authorship
+%\firstnote{Current address: Affiliation.}  
+% Current address should not be the same as any items in the Affiliation section.
+
+%\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes.
+
+%\simplesumm{} % Simple summary
+
+%\conference{} % An extended version of a conference paper
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+
+
+% Keywords
+
+
+% The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+%\PACS{J0101}
+%\MSC{}
+%\JEL{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Diversity
+%\LSID{\url{http://}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Applied Sciences
+%\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Data
+%\dataset{DOI number or link to the deposited data set if the data set is published separately. If the data set shall be published as a supplement to this paper, this field will be filled by the journal editors. In this case, please submit the data set as a supplement.}
+%\datasetlicense{License under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal BioTech, Fishes, Neuroimaging and Toxins
+%\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Encyclopedia
+%\encyclopediadef{For entry manuscripts only: please provide a brief overview of the entry title instead of an abstract.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Different journals have different requirements. Please check the specific journal guidelines in the "Instructions for Authors" on the journal's official website.
+%\addhighlights{yes}
+%\renewcommand{\addhighlights}{%
+%
+%\noindent The goal is to increase the discoverability and readability of the article via search engines and other scholars. Highlights should not be a copy of the abstract, but a simple text allowing the reader to quickly and simplified find out what the article is about and what can be cited from it. Each of these parts should be devoted up to 2~bullet points.\vspace{3pt}\\
+%\textbf{What are the main findings?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}\vspace{3pt}
+%\textbf{What are the implications of the main findings?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\section{Introduction}
+
+% \lcq{After each revision, should I keep your suggestions or delete them?}
+
+% \ljd{keep it, I will delete it when necessary. }
+
+
+\ljd{Content of Introduction need to present Background and significance of the work.}
+
+\ljd{First paragraph: Background and significance. After reading it, readers should be able to understand what is sarcasm and why it is so important that we need to research on it. }
+
+\ljd{Introduction, Development, Transition, and Conclusion is chinese Qi Cheng Zhuan He.}
+\ljd{First sentence: Here is the Qi/Introduction, why multimodal sarcasm detection important ? You can write "Along with the development of social media platforms, multimodal data has significantly enhanced the complex level of expressions, particularly in the sarcastic content, which is a xxxxxx". The definition of sarcasm is in 'xxxxx'}
+\ljd{Second sentence: Here is the Cheng/Development,  What can multimodal sarcasm detection do? you can write "Detecting sarcasm is important for developing diversifed applications, including public monitoring (3 refs), fake news detection ( 3 refs) and sentiment analysis ( 3 refs). " }
+\ljd{Third sentences: Here is a transition, leading readers to the problem. You can write "However, recognizing sarcasm in multimodal contents is still a challenge, because it requires xxxxxx". Here, xxxx should be consistent with your whole paper research goal.}
+\ljd{fourth sentence: Here is a Conclusion. what does this paper do, you can write " This study explores xxxx and xxxx for a better xxxx." }
+\ljd{First paragraph ends with four sentences. }
+
+As shown in Figure \ref{fig1}, the image depicts people looking depressed, yet the textual conveys the opposite meaning. 
+Detecting sarcasm is important for developing diversifed applications, including sentiment analysis, public opinion monitoring, and content understanding on social media platforms\citep{ref-12,ref-13,ref-14,ref-41,ref-42}.
+However, recognizing sarcasm in multimodal content is still a challenge, because it requires capturing sparse fine-grained incongruity and complex high-order cross-modal relations.
+This study explores fine-grained cross-modal alignment, incongruity-sensitive interaction mining, and relational cross-modal reasoning for better multimodal sarcasm understanding.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{粗略图.pdf}
+    \caption{\centering Illustration of multimodal sarcasm, where the positive text conflicts with the negative visual cues in the image. \ljd{Caption is used to demonstrate what sarcasm is and how the example represents the sarcasm. Please add. BTW, try to make it softer in colors. The figure is too cold. }}
+    \label{fig1}
+\end{figure}
+
+\ljd{Second Paragraph: review of existing methods. I suggest that you can do it from two dimensions: time and groups. early s: what they do to solve this; later stage:ge , what they do to solve this. In each stage, you can discuss several groups.}
+
+\blue{Existing multimodal sarcasm detection models are mailly divideed into x groups: 1) xxx 2) }
+Early studies in sarcasm detection predominantly leaned on textual cues. \citep{ref-1,ref-2,ref-3,ref-43}. 
+With the rapid growth of multimodal content on social media platforms, researchers began to explore multimodal sarcasm detection\citep{ref-4}. 
+Cai et al.  introduced the MMSD dataset and proposed a hierarchical fusion model to jointly integrate textual and visual information. 
+Following this work, several studies attempted to incorporate multimodal representations and pretrained language models to improve sarcasm detection performance\citep{ref-5,ref-6}. 
+For example, Hazarika et al. \citep{ref-5} proposed modality-invariant and modality-specific representation learning, while Rahman et al. \citep{ref-6} integrated multimodal signals into pretrained transformer models. 
+More recent studies focus on modeling fine-grained cross-modal interactions between textual and visual elements\citep{ref-7,ref-8,ref-44}. 
+Liang et al. \citep{ref-7} proposed a cross-modal graph convolutional network to explicitly model relationships between multimodal entities, while Qin et al. \citep{ref-8} used CLIP-based multi-view representations to improve multimodal sarcasm detection performance.
+
+\ljd{Third Paragraph: Based on all previous discussion, challenges should be mentioned with a logical chain. For example, if the challenge is about fine-grained misalignment and multiple interactions, please highlight them here with the importance of alignment and interaction in sarcasm detection. }
+
+Despite the promising outlook, current multimodal sarcasm detection methods still face three key challenges. First, most existing studies have difficulty capturing local misalignment and fine-grained conflicts between text and images, while sarcasm often comes from subtle inconsistencies at the local level. The cross-modal local correspondence itself is highly complex and asymmetric, which makes fine-grained alignment hard to model accurately. Previous work such as BLIP\citep{ref-15,ref-45} explicitly models the alignment between words and visual regions, showing that fine-grained cross-modal modeling is important for capturing complex semantics. However, how to build a unified and effective fine-grained interaction representation is still an open problem.
+Second, existing methods like ViLBERT\citep{ref-16} and LXMERT\citep{ref-17} usually use dense fully-connected mechanisms to model cross-modal interactions, where all text and visual elements are considered together. Although this way can cover enough cross-modal relations, many interactions are redundant or weakly related in real tasks. The truly useful local interactions are often sparse\citep{ref-46}. These high-value but sparse cross-modal signals are easily overwhelmed by noise introduced by dense modeling, which interferes with the model’s ability to identify key incongruent information. 
+Third, the complex relationships between cross-modal elements are not only reflected in one-to-one alignment, but also involve multiple dependencies among emotional expression, contextual information, and visual content. This makes sarcasm semantics show clear high-order relational characteristics. Such complex dependencies are difficult to model through simple pairwise matching or shallow fusion, and require a mechanism that can explicitly model structural relations and perform global reasoning. 
+
+\ljd{The challenges discussion is a little bit weak. As a reader, I can not obtain the paper's motivation clearly. Make it heavy and more. You can read about <An adaptive multimodal semantic knowledge enhanced framework for sarcasm detection>, this paper's 4th and 5th paragraph is used to lead reader from reviews to challenges. You also need one or two paragraphs to lead readers from your previous literature reviews to your challeges. }
+
+\ljd{Fourth Paragraph: An overall framework description here. "To tackl xxxx, we proposed xxxx". Mention the main blocks here with limited discussion of there functions.} \\
+
+To tackle these challenges, we propose a unified multimodal framework that models sarcasm understanding as a dynamic process involving fine-grained alignment, incongruity perception, and relational reasoning. The framework decomposes multimodal sarcasm reasoning into three complementary components:\textbf{ F}ine-\textbf{G}rained\textbf{ C}ross-Modal \textbf{A}lignment (\textbf{FGCA}), \textbf{I}ncongruity-Sensitive \textbf{C}ross-Modal \textbf{M}ining (\textbf{ICM}), and \textbf{R}elational \textbf{C}ross-Modal \textbf{R}easoning (\textbf{RCR}). 
+
+\ljd{Fifth Paragraph: Building Blocks1:} \\
+\ljd{1) Motivations, problems to solve; 2) How it solves the problem; mention building blocks; 3) benefits of using the proposed approaches, differences from existing approaches.}
+\ljd{Try to use diversifed expression. "The proposed xxx is designed to do xxxx" " The proposed xxxx specifically addressess the challenge of xxxx" "To better xxxx, we introduce xxxx to do xxxx."  "The key innovation is embeded in xxxx , which do xxxx job. " "Unlike conventional xxxx that often dilute signals. the propsoed xxx can xxxx."
+Your content is fine, but writing is too simple. }
+
+First, the proposed \textbf{FGCA} is designed to model local fine-grained cross-modal correspondences more accurately.This module constructs a cross-modal interaction matrix to explicitly represent the fine-grained association strength between text words and visual regions, forming a unified cross-modal interaction representation. Based on this interaction prior, the model can capture potential local misalignment and implicit semantic conflicts, providing a reliable structural basis for the following ICM and RCR modules.
+
+Second, To reduce the interference of noise on high-value yet sparse cross-modal interactions, we introduce \textbf{ICM} as a dedicated mining mechanism. Different from traditional dense modeling, ICM performs top-k selection within local neighborhoods based on the interaction matrix, and only keeps the most representative cross-modal interactions. On this basis, a dynamic routing mechanism is introduced to adaptively aggregate local information, strengthen key incongruity signals, and suppress irrelevant or noisy interactions. This allows the model to focus on cross-modal contradictions that are important for sarcasm detection.
+
+Third, To better capture the structural complexity of multimodal sarcasm, we introduce \textbf{RCR} to explicitly reason over complex dependencies and high-order relations across modalities.This module builds a cross-modal bipartite graph based on the interaction matrix, organizing text nodes and visual nodes into a unified graph representation. Through multi-layer message passing, information exchange between nodes is achieved. At the same time, global semantic enhancement is introduced to supplement overall context information, enabling structured modeling and reasoning of high-order multimodal relations, and improving the model’s understanding of complex sarcasm semantics.
+
+\blue{Our contributions can be summarized as follows:1) We introduce xxxx, a novel framework for multimodal sarcasm
+detection by YYYY. \ljd{The YYYY here is the method/technique you used in the proposed framework. xxxx is the name of proposed framework.}
+2) We propose the xxxx (the name of first module)
+module to enhance xxxx via yyyy, enabling zzzz. \ljd{zzzz is the consequence of the propose of first module. 3) We develop xxxx ( the name of second module) module which employ yyyy to do zzzz via wwww. \ljd{xxxx is the name of module, yyyy is the main architecture/techniques, zzzz is the consequence , wwww is the feature/cues/information you used here, and this feature/cues/information exactually solve the challenge we mentioned at third paragraph. 4) repeat the previous one for the fourth module.  }}}
+
+Our contributions can be summarized as follows:
+\begin{enumerate}
+\item	We introduce \textbf{F}ine-grained \textbf{I}ncongruity and \textbf{R}elational \textbf{M}odeling (\textbf{FIRM}), a novel framework for multimodal sarcasm detection by jointly modeling fine-grained cross-modal alignment, incongruity-sensitive interaction mining, and relational reasoning; 
+\item	We propose the \textbf{FGCA} module to enhance fine-grained cross-modal correspondence modeling via an interaction matrix, enabling unified representation of semantic associations between textual words and visual regions;
+\item	We develop \textbf{ICM} module, which employs top-k local neighborhood modeling and dynamic routing to identify salient incongruous interactions, thereby strengthening key cross-modal signals while suppressing noisy interference.;
+\item We further develop the \textbf{RCR} module, which constructs a cross-modal bipartite graph and performs message passing with global semantic enhancement to model high-order relations and support structured multimodal reasoning.
+
+\end{enumerate}
+
+
+% Our contributions can be summarized as follows:\\
+% \ljd{Identify the limitations is not a contribution. More technique details needed here and also in following blocks.} \\
+% \lcq{I don't understand what kind of technical details needed.}\\
+% \begin{enumerate}
+
+% \item We propose Fine-Grained Cross-Modal Alignment (\textbf{FGCA}), which builds an interaction matrix to model fine-grained semantic correspondence between text words and visual regions in a unified way. 
+% \item We design Incongruity-Sensitive Cross-Modal Mining (\textbf{ICM}), which performs top-k local neighborhood modeling based on the interaction matrix and combines dynamic routing to enhance key signals and reduce noise. 
+% \item We develop Relational Cross-Modal Reasoning (\textbf{RCR}), which constructs a cross-modal bipartite graph and performs high-order relation modeling through message passing and global semantic enhancement. 
+% \end{enumerate}
+
+% \ljd{Figure 1 is an example of sarcasm samples. If possible , Please make following modifyication. 1) The figure should better be a sample of your challenges. 2) A new figure can be added in your overall framework part to demonstrate your framework in a summarized way. For example, Figure 1 from <RCLMuFN: Relational context learning and multiplex fusion network for multimodal sarcasm detection>. }
+
+% \lcq{Regarding the first point, I don't know how to draw the challenges yet.}
+
+% \ljd{You can check the paper "Dual dynamic multi-granularity fusion method for multimodal sarcasm detection"}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Related work}
+\ljd{The whole section requires citations.}
+
+\subsection{Multimodal Sarcasm Detection}
+
+With the widespread dissemination of text and images on social media, sarcastic expressions increasingly exhibit cross-modal fusion characteristics, making it difficult for single-text analysis to fully capture their implicit semantics. Consequently, Multimodal Sarcasm Detection (MSD) has emerged as a significant research direction in the fields of natural language processing and multimodal learning in recent years\citep{ref-47,ref-48}.
+
+Multimodal Sarcasm Detection (MSD) has continuously evolved on the MMSD\citep{ref-1} and MMSD2.0 \citep{ref-19} datasets, transitioning from early approaches centered on cross-modal incongruity through contrastive learning\citep{ref-18,ref-20,ref-21,ref-22,ref-26,ref-28}to recent works emphasizing fine-grained characterization of "semantic-pragmatic" aspects and context. The TCIP framework proposed by Gao et al. \citep{ref-24} enhances generalization on the MMSD series datasets by constructing unimodal graphs for text and vision, as well as a visual-text heterogeneous graph. It employs Graph Convolutional Network (GCN) and dynamic routing to jointly model intra-modal and cross-modal topologies, unifies visual-visual, textual-textual, and visual-textual relationships within the heterogeneous graph's association matrix, and further uses contrastive learning to pull together true matches while pushing away spurious correlations. Meanwhile, the DDMGF method by He et al. \citep{ref-23} decouples intra-modal and inter-modal sarcasm, proposing a bi-layer region-aware attention and dynamic multi-granularity fusion to systematically address issues of interference from irrelevant features and neglected intra-modal conflicts. 
+
+ \subsection{Cross-Modal Alignment}
+Cross-modal alignment strategies typically involve correspondence at a fine-grained level between words and image regions, while concurrently assessing the intensity of cross-modal semantic conflicts\citep{ref-49}. Wang et al. \citep{ref-7} combines CLIP with co-attention, performing shallow interactions before deep relational alignment to mitigate the complexity of graph construction and mismatches in dynamic context updates. The aforementioned TCIP framework complements this approach from the perspectives of graph topology and distributional opposition. For noisy and text-dense images, Dong et al. \citep{ref-32} inject affective semantics via OCR routing and BLIP-2 (LoRA), enabling cross-modal alignment to consider both "object" and "affective" dimensions. These practices, complemented by fine-grained alignment and consistency constraint methods used by Qin et al. \citep{ref-19} and Dai et al. \citep{ref-33}, reflecting an evolution of alignment objectives from "matching" to "calibrating conflicts" in a task-customized manner. 
+
+\subsection{Attention-Based Fusion}
+
+The evolution of attention-based fusion has concentrated on two threads: firstly, selectively aggregating key cues through cross-modal co-attention, such as Wen et al. \citep{ref-22} modeling on both factual and affective layers, Wang et al. \citep{ref-17} employing weight-sharing cross-attention, and He et al. \citep{ref-23} filtering irrelevant features and aligning key cues at multiple granularities via bi-layer region-aware attention; second, capturing internal sarcastic conflicts within text or images through intra-modal multi-head self-attention. Guan  et al. \citep{ref-34}, in a textual context, perceives incongruity with "multi-head self-matching + multi-head co-matching" and combines it with transfer learning, providing a reusable attention design and training paradigm for cross-modal tasks. Currently, contrastive learning is used in conjunction with \citep{ref-26}\citep{ref-27} to mitigate the risk of attention mistaking correlation for causality. 
+
+\subsection{Graph-based Multimodal Reasoning}
+
+The advantage of graph-based multimodal reasoning lies in its explicit modeling of relationships and higher-order interactions\citep{ref-50}. Liang et al. \citep{ref-25} constructs graphs from words to entity regions to delineate cross-modal sarcastic relationships, Zhuang et al. \citep{ref-31} introduces the KGGC-Net framework with a common sense knowledge graph to complete implicit cues, and Wei et al. \citep{ref-27} propose G2SAM to enhance global semantic awareness. The aforementioned TCIP framework integrates unimodal and heterogeneous graphs, combining dynamic routing with contrastive constraints for robust reasoning. At the same time, to overcome the bottlenecks of fixed adjacency matrices and the dependence on detector quality, recent work has been shifted towards data-driven graphs, knowledge enhancement, and joint training with contrastive learning \citep{ref-30,ref-31,ref-32}. 
+ 
+ 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Method}
+\subsection{Task Definition}
+Based on the above studies, this paper focuses on the task of multimodal sarcasm detection and proposes a novel multimodal sarcasm recognition framework. 
+This task aims to determine whether multimodal content composed of both text and image expresses sarcastic semantics.
+
+Formally, let $T = \{t_1, t_2, \ldots, t_n\}$ denote the input text sequence, and let $V$ denote the corresponding image. 
+The objective of this task is to learn a mapping function:
+
+\begin{equation}
+f(T, V) \rightarrow y
+\end{equation}
+
+
+where $y \in \{0, 1\}$ represents the sarcasm label, with $y = 1$ indicating sarcastic content and $y = 0$ indicating non-sarcastic content.
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{论文框架图.pdf}
+    \caption{\centering Structure \ljd{1) Use pdf format instead of jpg. 2) Too sparse, too much space is empty. If you dont know what to put, there are two options, one is you can put full name of features , for example "patch-level visual representation"}, second is , you can use sign or icon to replace words like "aggregate" "squash" "Add \& Norm"}
+    \label{fig2}
+\end{figure}
+
+
+\subsection{Overall Architecture}
+As shown in Figure ~\ref{fig2}, the proposed model jointly models multimodal sarcasm from textual, image, and cross-modal interaction perspectives. Given input text and images, the model first utilizes a pre-trained CLIP backbone to extract token-level features from text and patch-level features from images, mapping them to a unified semantic space. Simultaneously, global features from text and images are used to construct separate text-based and image-based classification branches, capturing sarcasm cues at the unimodal level.
+
+FGCA constructs an explicit cross-modal interaction matrix from textual and visual features to characterize token-patch-level correspondences. Based on this interaction matrix, the model designs two complementary enhancement paths. On the one hand, it applies dynamic routing to aggregate the top-$k$ key cross-modal associations in the interaction matrix, thereby highlighting cross-modal incongruity cues that are relevant to sarcasm detection while suppressing noise interference. On the other hand, it formulates the selected token-patch relations as a bipartite graph and performs relational reasoning with a graph neural network to capture higher-order cross-modal semantic contrasts and contradictory relations; the resulting output is then injected into the fused features through a gating mechanism.
+
+Finally, the model generates predictions from the textual view, the visual view, and the cross-modal interaction view, and uses a fusion classification module to jointly integrate multi-view information and produce the final multimodal sarcasm detection result.
+
+
+\subsection{FGCA }
+To fully model the fine-grained semantic alignment between text and images, this paper proposes an interaction-matrix-driven cross-modal interaction module. Based on the pairwise similarities between text tokens and image patches, the module first constructs a unified cross-modal interaction representation, then performs contextual enhancement through bidirectional cross-attention, and finally aggregates the representations into a sentence-level and image-level fused feature representation.
+
+Specifically, we use a pretrained CLIP model as the encoder. As a pretrained model based on contrastive learning, CLIP integrates visual and language components and maps image-text pairs into a shared feature space. The extraction of textual and visual embeddings can be formulated as:
+
+
+\begin{equation}
+T = \{t_1, t_2, \ldots, t_m\} = \mathrm{CLIP}(\mathrm{Text})
+\end{equation}
+
+
+\begin{equation}
+V = \{v_1, v_2, \ldots, v_n\} = \mathrm{CLIP}(\mathrm{Image})
+\end{equation}
+
+
+Thus, we obtain the token-level textual representation $T = \{t_i\}_{i=1}^{N}$, where $t_i \in \mathbb{R}^{d}$, and the patch-level visual representation $V = \{v_j\}_{j=1}^{M}$, where $v_j \in \mathbb{R}^{d}$. Here, $T \in \mathbb{R}^{m \times d}$ and $V \in \mathbb{R}^{n \times d}$ denote the embedding matrices of the text and image, respectively. In particular, $t_i \in \mathbb{R}^{d}$ is the textual embedding of the $i$-th word, and $v_j \in \mathbb{R}^{d}$ is the visual embedding of the $j$-th image patch. The variable $d$ denotes the embedding dimension.
+
+Next, we construct a fine-grained cross-modal interaction score matrix between text and vision to measure the local semantic correspondences between the two modalities. The specific operation is as follows:
+
+To reduce the distributional discrepancy between features from different modalities and improve cross-modal comparability, we first apply linear projection and normalization to the textual and visual features, respectively:
+
+
+\begin{equation}
+\tilde{t}_i = \mathrm{LN}(\mathrm{Norm}(W_t t_i)), \qquad
+\tilde{v}_j = \mathrm{LN}(\mathrm{Norm}(W_v v_j))
+\end{equation}
+
+
+where $W_t, W_v \in \mathbb{R}^{d \times d}$ are learnable projection matrices.
+
+In the unified embedding space, the interaction strength between any text token and image patch is computed using scaled dot-product similarity, yielding the cross-modal interaction score matrix:
+
+
+\begin{equation}
+E_{i,j} = \alpha \cdot \tilde{t}_i^{\top}\tilde{v}_j, \qquad
+E \in \mathbb{R}^{N \times M}
+\end{equation}
+
+
+where
+
+\begin{equation}
+\alpha = \exp(\lambda)
+\end{equation}
+
+
+is a learnable temperature coefficient used to control the smoothness of the similarity distribution. A larger $\alpha$ amplifies high-confidence matches, thereby highlighting key cross-modal alignments.
+
+The resulting matrix $E$ explicitly characterizes the semantic relevance between text tokens and image patches. Each element $E_{i,j}$ indicates the degree of semantic matching between the $i$-th text token and the $j$-th image patch in the shared semantic space.
+
+It is worth noting that the interaction matrix $E$ is passed as a shared structural prior to the following two parallel enhancement paths. Specifically, the ICM path performs top-$k$ neighborhood selection and dynamic routing enhancement based on $E$ to model locally high-correlated cross-modal interactions. In contrast, the RCR path constructs a cross-modal bipartite graph based on $E$ and conducts reasoning over cross-modal relations through structured message passing.
+
+
+In addition to the fine-grained cross-modal interaction representation, this paper also preserves the global semantic representations of the text modality and the image modality for auxiliary discrimination in the subsequent prediction stage. Specifically, after being processed by the CLIP text encoder, the input text yields a global pooled representation $\bar{t}$, which is then passed through a linear mapping to obtain the unimodal textual representation:
+
+\begin{equation}
+h^{\text{text}} = f_{\text{text}}(\bar{t})
+\end{equation}
+
+
+where $f_{\text{text}}(\cdot)$ denotes the linear mapping function on the text side.
+
+Accordingly, $h^{\text{text}}$ and $h^{\text{image}}$ represent the unimodal global semantic features of the text modality and the image modality, respectively, and are used in the subsequent prediction stage. In contrast, the context-enhanced representations $c_i^t$ and $c_i^v$ derived from the interaction matrix $E$, together with the subsequent ICM and RCR modules, focus on fine-grained cross-modal interaction and relational reasoning. These two types of representations are functionally complementary and jointly support the final multi-head prediction stage.
+
+\subsection{ICM }
+
+Building on the cross-modal interaction matrix $E$ constructed by FGCA, the ICM path further uses $E$ to perform top-$k$ sparse neighborhood selection for each text token and image patch, and reinforces fine-grained matching relationships within locally highly correlated cross-modal neighborhoods through a dynamic routing mechanism.
+
+\subsubsection{Dynamic Routing-Based Cross-Modal Enhancement}
+
+We first project the cross-modal features into a shared representation space. Specifically, for each text token $t_i$, we select its top-$k$ most relevant image features and compute their transformed representations:
+
+
+\begin{equation}
+\tilde{v}_{i,r} = W_v v_r,\quad r \in N_k(i)
+\end{equation}
+
+
+where $W_v \in \mathbb{R}^{d \times d}$ is a learnable linear projection matrix, and $N_k(i)$ denotes the set of the top-$k$ most relevant visual neighbors of the text feature $t_i$.
+
+To model fine-grained cross-modal interactions, we adopt a dynamic routing mechanism. The routing process iteratively updates the coupling coefficients based on feature consistency. We initialize the routing logits $b_{i,r}^{(0)}$ with the cross-modal interaction scores $E_{i,r}$:
+
+
+\begin{equation}
+b_{i,r}^{(0)} = E_{i,r}
+\end{equation}
+
+
+At each iteration, the coupling coefficients are computed as follows:
+
+
+\begin{equation}
+c_{i,r} = \frac{\exp\left(b_{i,r}^{(q)}\right)}{\sum_{r=1}^{k} \exp\left(b_{i,r}^{(q)}\right)}
+\end{equation}
+
+
+where $b_{i,r}^{(q)}$ denotes the routing logit at the $q$-th iteration. Then, the aggregated representation for each text token is given by:
+
+
+\begin{equation}
+s_i = \sum_{r=1}^{k} c_{i,r}\tilde{v}_{i,r}
+\end{equation}
+
+
+The aggregated vector is then passed through a squash function:
+
+
+\begin{equation}
+t_i^{\text{route}} = \frac{\|s_i\|^2}{1+\|s_i\|^2}\cdot\frac{s_i}{\|s_i\|}
+\end{equation}
+
+
+This function preserves the vector direction while constraining the magnitude of the output vector.
+
+The routing logits are further updated based on the agreement between the projected features and the routing output:
+
+
+\begin{equation}
+b_{i,r}^{(q+1)} \leftarrow b_{i,r}^{(q)} + \tilde{v}_{i,r}^{\top} t_i^{\text{route}}
+\end{equation}
+
+
+The above routing process is repeated for $Q$ iterations to progressively refine cross-modal alignment.
+
+Finally, the routed features are fused with the original representations through a residual connection and a feed-forward network:
+
+
+\begin{equation}
+t_i^{\text{icm}} = \mathrm{LN}\left(t_i + \mathrm{FFN}\left(t_i^{\text{route}}\right)\right)
+\end{equation}
+
+
+The image-side features can be updated in a symmetric manner.
+
+\subsubsection{ICM Path Readout}
+
+Accordingly, we obtain the enhanced representations on the text side and the image side, denoted by $\{t_i^{\text{icm}}\}$ and $\{v_j^{\text{icm}}\}$, respectively. We then further extract representative nodes from the two sequences, denoted by $h_t^{\text{icm}}$ and $h_v^{\text{icm}}$. Next, shared linear scoring followed by normalization is applied to the two representations to obtain modality-level fusion weights:
+
+
+\begin{equation}
+[\beta_t, \beta_v] = \mathrm{softmax}([a(h_t^{\text{icm}}), a(h_v^{\text{icm}})])
+\end{equation}
+
+
+where $a(\cdot)$ denotes the scoring function. Based on the above weights, the fused representation can be obtained as:
+
+
+\begin{equation}
+h^{\text{icm}} = \beta_t h_t^{\text{icm}} + \beta_v h_v^{\text{icm}}
+\end{equation}
+
+
+\subsection{RCR}
+
+Similarly, based on the interaction matrix $E$ provided by FGCA, the RCR path constructs top-$k$ sparse edges according to cross-modal relevance, organizes text tokens and image patches into a cross-modal bipartite graph, and performs reasoning over inter-node relationships through structured message passing.
+
+\subsubsection{Bidirectional Cross-Modal Message Passing}
+
+To emphasize strongly correlated cross-modal alignment relationships while reducing the noise and computational cost introduced by full connectivity, we construct a bipartite graph between text nodes and image nodes based on the interaction matrix $E$, where edges are defined by similarity. Only the top-$k$ most relevant nodes are retained as adjacency relations, thereby forming a sparse graph structure. For each text token $t_i$, we select its $k$ most relevant image patches on the image side as its neighborhood $N_k(i)$. Similarly, for each image patch $v_j$, we select its $k$ most relevant text tokens on $E^\top$ as its neighborhood $N_k(j)$.
+
+(1) Text-Side Aggregation
+
+For each text token $t_i$, we normalize the interaction scores over its neighborhood $N_k(i)$ to obtain the cross-modal attention weights:
+
+
+\begin{equation}
+\alpha_{i,r} = \frac{\exp(E_{i,r})}{\sum_{p \in N_k(i)} \exp(E_{i,p})}, \quad r \in N_k(i)
+\end{equation}
+
+
+Then, the image patch representations within the neighborhood are linearly transformed and aggregated with attention weights to obtain the information from the image side:
+
+
+\begin{equation}
+m_i^v = \sum_{r \in N_k(i)} \alpha_{i,r} W_v v_r
+\end{equation}
+
+
+where $W_v \in \mathbb{R}^{d \times d}$ is a learnable linear projection matrix.
+
+(2) Image-Side Aggregation
+
+Similarly, for each image patch $v_j$, we normalize the interaction scores over its neighborhood $N_k(j)$ to obtain the weights:
+
+
+\begin{equation}
+\beta_{j,q} = \frac{\exp(E_{q,j})}{\sum_{p \in N_k(j)} \exp(E_{p,j})}, \quad q \in N_k(j)
+\end{equation}
+
+
+Then, the text-side information is aggregated as:
+
+
+\begin{equation}
+m_j^t = \sum_{q \in N_k(j)} \beta_{j,q} W_t t_q
+\end{equation}
+
+
+During training, the neighborhood edge weights can be randomly dropped and then renormalized to improve robustness.
+
+\subsubsection{Node Update and Global Semantic Enhancement}
+
+After obtaining the bidirectional messages, we update the node states using a Transformer-style formulation of "feed-forward network + residual connection + normalization":
+
+
+\begin{equation}
+t_i = \mathrm{LN}\left(t_i + \mathrm{FFN}_t(m_i^v)\right)
+\end{equation}
+
+
+\begin{equation}
+v_j = \mathrm{LN}\left(v_j + \mathrm{FFN}_t(m_j^t)\right)
+\end{equation}
+
+
+The above process is stacked for $L$ layers to achieve multi-step cross-modal relational reasoning and information propagation, thereby yielding the inferred node sequence representations $\{t_i^{(L)}\}$ and $\{v_j^{(L)}\}$.
+
+To incorporate sample-level global semantics and alleviate the limitation of relying only on local neighborhoods, RCR can further introduce a global state $g$. The global state in the first layer is initialized by the global aggregation results of the text and image nodes:
+
+
+\begin{equation}
+g^{(0)} = W_g \left(
+\left[
+\frac{\sum_{i=1}^{m} M_i \cdot t_i}{\sum_{i=1}^{m} M_i},
+\frac{1}{n}\sum_{j=1}^{n} v_j
+\right]
+\right)
+\end{equation}
+
+
+where $M_i$ denotes the validity mask at the $i$-th position of the text sequence.
+
+The global input is obtained by aggregating information from the text side and the image side, and is then updated iteratively as:
+
+
+\begin{equation}
+g^{(l)} = \mathrm{LN}\left(g^{(l-1)} + \mathrm{FFN}_g\left(g^{\mathrm{in},(l)}\right)\right)
+\end{equation}
+
+
+Meanwhile, the information in $g$ is injected into the text and image messages through linear mapping, allowing global semantics to modulate local interactions.
+
+
+\subsubsection{RCR Path Readout}
+
+After the reasoning process is completed, we extract representative nodes from the final updated text node sequence and image node sequence. Specifically, on the text side, we select the representation of the last valid token, denoted by $h_t^{\text{rcr}}$, and on the image side, we select the representation of the zeroth global image patch, denoted by $h_v^{\text{rcr}}$. Then, a shared linear scoring function is used to score the two representations, and modality-level weights are obtained through softmax normalization:
+
+
+\begin{equation}
+[\gamma_t, \gamma_v] = \mathrm{softmax}([a(h_t^{\text{rcr}}), a(h_v^{\text{rcr}})])
+\end{equation}
+
+
+Based on these weights, the local relational representation is obtained as:
+
+
+\begin{equation}
+h_{\text{local}}^{\text{rcr}} = \gamma_t h_t^{\text{rcr}} + \gamma_v h_v^{\text{rcr}}
+\end{equation}
+
+
+Furthermore, to preserve sample-level global semantic information, $h_{\text{local}}^{\text{rcr}}$ is concatenated with the global state $g$ and projected into a unified semantic space through $W_o$, yielding the final RCR representation $h^{\text{rcr}}$:
+
+
+\begin{equation}
+h^{\text{rcr}} = W_o [h_{\text{local}}^{\text{rcr}}, g]
+\end{equation}
+
+
+\subsection{Fusion and Prediction}
+\subsubsection{Parallel Path Fusion}
+
+In the preceding sections, we obtained the fused representation $h^{\text{icm}}$ from the ICM path and the reasoning representation $h^{\text{rcr}}$ from the RCR path. Since the two paths focus on complementary cross-modal information, we fuse them before prediction to obtain a more effective cross-modal discriminative representation.
+
+Considering that the contribution of the RCR path to the final decision may vary across samples, we first introduce a gating mechanism to adaptively regulate the injection strength of the RCR branch. Specifically, the representations from the two paths are concatenated and fed into a gating function to obtain the fusion coefficient:
+
+
+\begin{equation}
+\mu = \sigma \left( \theta + \omega^{\top}[h^{\text{icm}}, h^{\text{rcr}}] \right) \cdot \rho
+\end{equation}
+
+
+where $\sigma(\cdot)$ denotes the Sigmoid function, $\theta$ and $\omega$ are learnable parameters, and $\rho$ is a scaling factor used to control the injection strength of the RCR branch.
+
+Then, the RCR-path representation is scaled by this gating coefficient to obtain the gated reasoning representation:
+
+
+\begin{equation}
+\hat{h}^{\text{rcr}} = \mu h^{\text{rcr}}
+\end{equation}
+
+
+Before prediction, the two representations are concatenated and mapped linearly to obtain the final cross-modal fused representation:
+
+
+\begin{equation}
+h^{\text{final}} = W_f [h^{\text{icm}}, \hat{h}^{\text{rcr}}]
+\end{equation}
+
+
+where $W_f$ is a learnable fusion projection matrix. This representation integrates the fine-grained cross-modal interaction information from the ICM path and the structured relational reasoning information from the RCR path, and serves as the core input for subsequent classification prediction.
+
+\subsubsection{Multi-Head Prediction and Optimization Objective}
+
+To fully exploit the fused representation and the unimodal information, this paper designs three prediction branches in the prediction stage: a fusion head, a text head, and an image head. Specifically, based on the final fused representation $h^{\text{final}}$, the unimodal textual representation $h^{\text{text}}$, and the unimodal visual representation $h^{\text{image}}$, the corresponding classification logits are computed as follows:
+
+
+\begin{equation}
+z_f = W_f^{\text{cls}} h^{\text{final}} + b_f
+\end{equation}
+
+
+\begin{equation}
+z_t = W_t^{\text{cls}} h^{\text{text}} + b_t
+\end{equation}
+
+
+\begin{equation}
+z_v = W_v^{\text{cls}} h^{\text{image}} + b_v
+\end{equation}
+
+
+where $W_f^{\text{cls}}$, $W_t^{\text{cls}}$, and $W_v^{\text{cls}}$ denote the classification parameters of the fusion head, the text head, and the image head, respectively. The terms $b_f$, $b_t$, and $b_v$ are the learnable bias vectors of the classifiers corresponding to the fused representation, the textual representation, and the visual representation, respectively. They are used to enhance the affine transformation capability of the linear classifiers and improve class discrimination.
+
+Furthermore, softmax is applied to convert the logits of the three classification heads into class probabilities:
+
+
+\begin{equation}
+p_f = \mathrm{softmax}(z_f)
+\end{equation}
+
+
+\begin{equation}
+p_t = \mathrm{softmax}(z_t)
+\end{equation}
+
+
+\begin{equation}
+p_v = \mathrm{softmax}(z_v)
+\end{equation}
+
+
+To integrate the three results, this paper performs joint decision-making over the outputs of the three heads. Let
+
+
+\begin{equation}
+P = [p_f, p_t, p_v]
+\end{equation}
+
+
+Then, the final class probability is given by:
+
+
+\begin{equation}
+p = \sum_{m \in \{f,t,v\}} \omega_m \odot p_m
+\end{equation}
+
+
+where $\omega_m$ denotes the fusion weight corresponding to the $m$-th classification head. It adaptively adjusts the contribution of each head according to its reliability for the current class, thereby improving the robustness of the final prediction.
+
+During training, all three classification heads are jointly supervised, and the overall classification loss is defined as:
+
+
+\begin{equation}
+\mathcal{L}_{\text{cls}} = \sum_{m \in \{f,t,v\}} \omega_m \mathcal{L}_m
+\end{equation}
+
+
+
+\begin{equation}
+\mathcal{L}_m = \mathrm{CE}(z_m, y)
+\end{equation}
+
+
+where $\mathrm{CE}(\cdot)$ denotes the cross-entropy loss.
+
+Finally, the model outputs the predicted class based on the joint predictive distribution $p$.
+
+\section{Experiments}
+\subsection{Experimental Setup}
+We conducted experiments on two public datasets: MMSD 1.0 and MMSD 2.0. Both datasets originate from image-text posts published by Twitter (now X) users. Each sample consists of an image paired with corresponding text, annotated as sarcastic or non-sarcastic, as detailed in Table ~\ref{tab1}. MMSD 1.0 leans toward samples with explicit cross-modal conflicts, demanding strong cross-modal semantic alignment capabilities from models. MMSD 2.0 is an upgraded version derived from MMSD 1.0 through expansion and data cleaning. It features stricter annotations and incorporates more complex forms of sarcastic expression.
+
+All experiments were conducted on an NVIDIA GeForce RTX 4060 Laptop GPU using CUDA 11.7 and PyTorch 1.13.1 with the clip-vit-base-patch32 model. The optimizer employed Adam/AdamW with a learning rate of 4e-4 and a batch size of 32, utilizing cross-entropy loss for supervised learning.
+
+Model performance was evaluated using Precision (P), Recall (R), Micro-F1 score, and Accuracy (Acc) as metrics.
+\begin{table}[h]
+\centering
+\caption{\centering Dataset Distribution\label{tab1}}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{MMSD1.0/MMSD2.0} & \textbf{Training Set}& \textbf{Validation Set}& \textbf{Test Set}\\
+\hline
+positive& 8642/9576   & 959/1042   & 959/1037   \\
+\hline
+Negative& 11174/10240 & 1451/1368  & 1450/1372  \\
+\hline
+Total& 19816/19816 & 2410/2410  & 2409/2409  \\
+\hline
+\end{tabular}
+
+\end{table}
+
+
+\subsection{Comparative trial}
+
+\begin{table}[h]
+\centering
+\caption{\centering Comparison Test Results}
+\label{tab2}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Model}& \multicolumn{4}{c|}{MMSD} & \multicolumn{4}{c|}{MMSD2.0} \\
+\cline{2-9}
+ & Acc(\%) & P(\%) & R(\%) & F1(\%) & Acc(\%) & P(\%) & R(\%) & F1(\%) \\
+\hline
+HFM\citep{ref-4} & 83.44 & 76.57 & 84.15 & 80.18 & 70.57 & 64.84 & 69.05 & 66.88 \\
+\hline
+D\&RNet\citep{ref-18} & 84.02 & 77.97 & 83.42 & 80.60 & - & - & - & - \\
+\hline
+Att-BERT\citep{ref-20} & 86.05 & 80.87 & 85.08 & 82.92 & 80.03 & 76.28 & 77.82 & 77.04 \\
+\hline
+InCrossMGs\citep{ref-36} & 86.10 & 81.38 & 84.36 & 82.84 & - & - & - & - \\
+\hline
+CMGCN\citep{ref-7} & 86.54 & - & - & 82.73 & 79.83 & 75.82 & 78.01 & 76.90 \\
+\hline
+HKEmodel\citep{ref-37} & 87.36 & 81.84 & 86.48 & 84.09 & 76.50 & 73.48 & 71.07 & 72.25 \\
+\hline
+Multi-view CLIP\citep{ref-19} & 88.33 & 82.66 & 88.65 & 85.55 & 85.64 & 80.33 & 88.24 & 84.10 \\
+\hline
+DIP\citep{ref-22} & 89.59 & \underline{87.76} & 86.58 & 87.17 & - & - & - & - \\
+\hline
+MILNet\citep{ref-21} & 89.50 & 85.16 & \textbf{89.16} & 87.11 & - & - & - & - \\
+
+\hline
+DMSD-CL\citep{ref-26} & 88.95 & 84.89 & 87.90 & 86.37 & - & - & - & - \\
+\hline
+G²SAM\citep{ref-27} & \textbf{90.48} & \textbf{87.95} & \underline{89.02} & \textbf{88.48} & - & - & - & - \\
+% \hline
+% DMMD\citep{ref-28} & \textbf{90.60} & 86.95 & \textbf{91.04} & \textbf{88.93} & - & - & - & - \\
+\hline
+GAAN\citep{ref-39} & 87.42 & 82.91 & 86.62 & 84.72 & - & - & - & - \\
+% \hline
+% KEIPN\citep{ref-40} & 89.00 & 83.05 & \underline{90.97} & 86.83 & \underline{86.02} & 80.60 & 88.92 & 84.56 \\
+
+\hline
+CofiPara\citep{ref-29} & - & - & - & - & \underline{85.70} & \textbf{85.96} & 85.55 & \underline{85.89} \\
+\hline
+MoBA\citep{ref-38} & 88.40 & 82.04 & 88.31 & 84.85 & 85.22 & 79.82 & \underline{88.29} & 84.11\\
+\hline
+FIRM& \underline{89.97} & 86.04 & 88.65 & \underline{87.33} & \textbf{88.25} & \underline{84.71} & \textbf{88.71} & \textbf{86.67} \\
+\hline
+\end{tabular}
+
+\end{table}
+Table  ~\ref{tab2} presents the comparison results between our method and existing multimodal sarcasm detection models on the MMSD and MMSD 2.0 datasets.
+
+On the MMSD dataset, our model achieves 89.97\% accuracy and 87.33\% F1-score, demonstrating overall performance at the forefront of current mainstream approaches. Compared to traditional cross-modal attention models (e.g., Att-BERT, CMGCN), our method shows significant improvements in F1 metrics, indicating that the proposed fine-grained alignment and conflict modeling mechanism more effectively captures cross-modal semantic inconsistencies.
+
+On the MMSD 2.0 dataset, our model achieved 88.25\% accuracy and 86.67\% F1-score, significantly outperforming most comparison methods and surpassing recent models like CofiiPara. Given that MMSD 2.0 contains more implicit sarcasm samples, this result further validates the model's robustness in complex cross-modal reasoning scenarios.
+
+Compared to earlier fusion-based and attention-based models, our approach achieves significant improvements on both datasets, demonstrating the necessity of explicitly modeling cross-modal inconsistencies rather than relying solely on global attention mechanisms. Compared to graph-based reasoning models like CMGCN and G²SAM, our model demonstrates competitive or superior performance, indicating that introducing conflict-aware sparse mining prior to relational inference yields more informative and less noisy interaction structures. Even against recent state-of-the-art models like Tang et al. and CofiiPara, our approach achieves superior or comparable performance, particularly on the MMSD2.0 dataset, highlighting its effectiveness in handling subtle implicit sarcasm cases.
+
+Notably, the improvement is more pronounced on the MMSD2.0 dataset compared to MMSD, likely due to the higher proportion of implicit sarcasm cases in MMSD2.0. The proposed conflict mining and relation inference mechanism excels at modeling subtle cross-modal inconsistencies. Furthermore, balanced performance in both precision and recall further demonstrates that the model does not exhibit over-bias toward any particular category.
+
+\subsection{Ablation study}
+To validate the effectiveness of each key module, we conducted ablation experiments by removing the \textbf{FGCA}, \textbf{ICM}, and \textbf{RCR} branches respectively on the MMSD and MMSD 2.0 datasets, with results shown in Table~\ref{tab3} . Overall, removing any single module leads to a significant performance drop, indicating that all three branches play crucial roles in the model.
+
+To assess the contribution of the \textbf{FGCA} branch, we removed the fine-grained cross-modal alignment module and directly fed the global text and image representations extracted by the shared encoder into subsequent modules. Specifically, we discarded the word-level cross-modal attention mechanism and local semantic correspondence modeling, while \textbf{ICM} and \textbf{RCR} operated based on coarse-grained global features. Removing the \textbf{FGCA} branch caused significant performance drops on both datasets, particularly pronounced on the MMSD2.0 dataset. This indicates that without fine-grained alignment, downstream modules lack precise cross-modal semantic correspondences, weakening their discord modeling capabilities. Without the \textbf{ICM} module, the model's F1 score drops significantly, indicating that explicitly mining conflict signals is crucial for sarcasm detection. While recall remains high, precision decreases, suggesting that without conflict-aware filtering, the model is more prone to misclassifying non-sarcastic samples. Removing the \textbf{RCR} branch causes precision to decrease while recall increases, indicating that relational reasoning helps suppress noisy cross-modal interactions and reduce false positives.
+
+Overall, \textbf{FGCA }facilitates fine-grained semantic alignment, \textbf{ICM} explicitly models cross-modal inconsistencies, and \textbf{RCR} enhances structural reasoning and noise suppression capabilities. The consistent degradation observed across all ablation experiments validates the necessity of the proposed multi-branch architecture.
+\begin{table}[h]
+\centering
+\caption{\centering Melting Experiment}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Model}& \multicolumn{4}{c|}{MMSD} & \multicolumn{4}{c|}{MMSD2.0} \\
+\cline{2-9}
+ & Acc(\%) & P(\%) & R(\%) & F1(\%) & Acc(\%) & P(\%) & R(\%) & F1(\%) \\
+\hline
+W/O  FGCA& 84.73 & 81.71 & 83.12 & 82.41 & 82.07 & 77.63 & 81.97 & 79.74 \\
+\hline
+W/O  ICM& 85.54 & 80.41 & 87.85 & 83.96 & 85.39 & 86.10 & 78.79 & 82.29 \\
+\hline
+W/O  RCR& 85.47 & 79.43 & 89.39 & 84.12 & 84.97 & 78.53 & 89.59 & 83.70 \\
+\hline
+FIRM& 89.97 & 86.04 & 88.65 & 87.33 & 88.25 & 84.71 & 88.71 & 86.67 \\
+\hline
+\end{tabular}
+
+\label{tab3}
+\end{table}
+
+\section{Case study}
+
+\subsection{Successful Cases}
+
+
+
+
+To better illustrate the advantages of FIRM, we select four representative samples from the MMSD2.0 test set (Figure~\ref{fig:3}), all of which are correctly identified as sarcastic by our model but misclassified by both baselines, HKEmodel and Multi-view CLIP. 
+
+Figure~\ref{fig:3-a} depicts a typical case of polarity reversal, in which a package that obviously cannot fit through the door is wedged into the gap, while the text describes the delivery as "nice and secure". Relying mainly on global image-text similarity, HKEmodel (0.22) and MV-CLIP (0.41) are misled by the literal positive sentiment. In contrast, FIRM aligns the word "secure" with local patches of the door gap and the deformed package at the token-patch level through FGCA, and ICM further amplifies this inconsistency, eventually leading to a confident prediction of 0.93. While Figure~\ref{fig:3-a} emphasizes a local visual anomaly, Figure~\ref{fig:3-b} reflects a more global spatial conflict: although the text claims that the venue has "huge performance areas", the band is squeezed into only a tiny corner of the image. The baselines, dominated by salient regions such as stage lighting and the crowd (HKE 0.28; MV-CLIP 0.39), fail to capture this contradiction, whereas FIRM uses the top-k selection of ICM to concentrate on the key conflict between the band's actual size and the textual claim, yielding a probability of 0.91.
+
+The advantage of fine-grained cross-modal alignment becomes even more crucial when the visual signal lacks salient objects and the overall appearance is highly uniform. Figure~\ref{fig:3-c} illustrates such a situation, where a platform is buried under thick snow and the image is dominated by a large white region, while the text reads "love this weather". Under this setting, HKEmodel (0.31) and MV-CLIP (0.44) can hardly extract the conflict from coarse global features, whereas FIRM, by aligning the sentiment word "love" with fine-grained patches of the snow-covered tracks via FGCA, correctly identifies the contrast between the text and the scene (0.89). Figure~\ref{fig:3-d} further introduces an implicit reasoning demand: products on the shelves have been damaged and scattered around, yet the text sarcastically states "I love respectful customers", whose ironic meaning relies on the behavioral relation between customers and products. The baselines (HKE 0.25; MV-CLIP 0.43) tend to perceive only the objects themselves and cannot establish such an implicit association, while FIRM explicitly models the spatial and behavioral relations among objects on a bipartite graph through RCR, making the contradiction between "damage" and "respectful" visible and producing a probability of 0.92.
+
+Taken together, these four cases reveal the strengths of FIRM over the baselines from four complementary perspectives—local visual anomaly, spatial-relation conflict, fine-grained sentiment alignment, and implicit behavior–object reasoning—and confirm that FGCA, ICM, and RCR play mutually supportive roles under different sarcasm mechanisms.
+
+\begin{figure}[!htbp]
+    \centering
+    \subfigure[]{
+        \includegraphics[height=4.5cm]{成功案例1.png}
+        \label{fig:3-a}
+    }
+    \quad
+    \subfigure[]{
+        \includegraphics[height=4.5cm]{成功案例2.png}
+        \label{fig:3-b}
+    }
+
+    \subfigure[]{
+        \includegraphics[height=5cm]{成功案例3.png}
+        \label{fig:3-c}
+    }
+    \quad
+    \subfigure[]{
+        \includegraphics[height=5cm]{成功案例4.png}
+        \label{fig:3-d}
+    }
+    \caption{\centering Successful Cases}
+    \label{fig:3}
+\end{figure}
+
+\subsection{Failure Cases}
+\begin{figure}[!htbp]
+    \centering
+    % ===== 第一行：2张 =====
+    \subfigure[]{
+        \includegraphics[height=4.5cm]{失败案例1.png}
+        \label{fig:4-a}
+    }
+    \quad
+    \subfigure[]{
+        \includegraphics[height=4.5cm]{失败案例2.png}
+        \label{fig:4-b}
+    }
+
+    % ===== 第二行：3张 =====
+    \subfigure[]{
+        \includegraphics[height=4cm]{失败案例3.png}
+        \label{fig:4-c}
+    }
+    \quad
+    \subfigure[]{
+        \includegraphics[height=4cm]{失败案例4.png}
+        \label{fig:4-d}
+    }
+    \quad
+    \subfigure[]{
+        \includegraphics[height=4cm]{失败案例5.png}
+        \label{fig:4-e}
+    }
+    \caption{\centering Failure Cases}
+    \label{fig:4}
+\end{figure}
+Although our model performs well on samples with explicit cross-modal incongruity, it still shows clear limitations when sarcasm relies on implicit context or external knowledge. We select five representative failure cases (Figure~\ref{fig:4}) from the MMSD2.0 test set and group them into three typical failure patterns: implicit context and external-knowledge dependence, weak text-image correlation, and image-embedded-text dominance.
+
+The first type of failure arises when the sarcastic meaning is primarily driven by information beyond the image and the text, leaving the model unable to establish reliable cross-modal anchors. As shown in Figure~\ref{fig:4-a}, the text "oh, good. now no one will know we're here." carries an obvious ironic tone, yet the image merely depicts three people talking or confronting each other indoors, without any salient local anomaly or sentiment reversal, so its meaning depends heavily on character relations and scene setting. Figure~\ref{fig:4-b} pushes this difficulty further to the event-background level, where the text "wow! what a twist never saw that coming" does not specify the event behind the "twist", and the image only shows a man in a wrestling ring, providing little visual evidence for the alleged reversal—its interpretation thus relies on character identity and dynamic plot development. The same pattern also appears in Figure~\ref{fig:4-c}, where the text "shotgun-axe, hell yeah! mack's got one sweet weapon..." is highly consistent with the image of a "shotgun-axe" hybrid weapon at the surface level and exhibits no obvious conflict, while the irony of "sweet weapon" actually builds on a cultural reference to related TV or movie content. Since FIRM relies solely on the image-text input for fine-grained alignment and relational reasoning and does not incorporate any external knowledge, it tends to fail on all three samples that depend on implicit context or background.
+
+The second type of failure occurs when the text and the image describe essentially different objects or events. As illustrated in Figure~\ref{fig:4-d}, the text "wait, a raid started up outside of a gym and didn't require a pass. so confused; please advise." mainly discusses the "raid" and "gym" mechanism in Pokemon Go, whereas the corresponding image is only a normal Pokemon-catching interface containing no visual element related to either a raid or a gym. Under such a structural mismatch, the model cannot build reliable visual anchors for the key textual concepts, and neither fine-grained alignment nor relational reasoning can effectively take effect.
+
+The third type of failure is somewhat orthogonal and stems from sarcastic cues being concentrated in the text embedded within the image. In Figure~\ref{fig:4-e}, the caption is simply "be different.", which itself carries little sarcastic trigger, while the image contains a long embedded quote, "THEY LAUGH AT ME BECAUSE I'M DIFFERENT. I LAUGH AT THEM BECAUSE THEY'RE ALL THE SAME.", from which the actual sarcastic meaning truly originates. Since FIRM mainly performs token-patch alignment in the visual feature space and does not explicitly model image-embedded text, this critical cue cannot be fully exploited. Forced to rely on the very short caption together with global visual features, the model is naturally prone to incorrect predictions.
+
+Taken together, these cases reveal three main limitations of our method: for sarcasm that depends on implicit context or external knowledge, the model lacks both stable visual anchors and external knowledge sources; for samples with a structural mismatch between text and image, cross-modal alignment is difficult to establish; and for samples dominated by image-embedded text, the absence of explicit OCR-based modeling becomes a critical bottleneck. Future work may further improve the model along the directions of integrating external knowledge bases, enhancing image-text reading ability, and strengthening contextual modeling, in order to better handle deeper pragmatic sarcasm.
+
+
+\section{Conclusions}
+This paper addresses the inadequacy of modeling cross-modal semantic inconsistencies in multimodal sarcasm detection tasks by proposing a multi-branch collaborative framework that integrates fine-grained alignment, conflict mining, and relational reasoning. To overcome the limitations of existing methods—which primarily rely on global feature fusion and struggle to capture implicit sarcasm signals—the model structure is constructed across three layers: “alignment-conflict-reasoning,” enabling hierarchical modeling of cross-modal semantic relationships.
+
+Specifically, it first enhances local semantic correspondences between text and images through a fine-grained cross-modal alignment mechanism. Next, it explicitly models latent semantic inconsistencies via a conflict-aware mining module. Finally, a relationship inference module structurally propagates and integrates key interaction information, thereby enhancing the model's ability to discern complex ironic expressions.
+
+Experimental results on the MMSD 1.0 and MMSD 2.0 datasets demonstrate that the proposed method achieves competitive performance on metrics such as Accuracy and F1-score. Ablation studies further validate the necessity of each module within the overall framework, while parameter sensitivity analysis proves the stability and robustness of the model architecture.
+
+In summary, our method effectively models fine-grained semantic inconsistencies and structural relationships in multimodal sarcasm, offering a viable approach for cross-modal semantic conflict modeling.
+
+\begin{adjustwidth}{-\extralength}{0cm}
+
+\reftitle{References}
+
+\isAPAandChicago{}{%
+\begin{thebibliography}{999}
+
+% Reference 1
+\bibitem[Riloff at el(2013)]{ref-1}
+Riloff, E.; Qadir, A.; Surve, P.; De Silva, L.; Gilbert, N.; Huang, R.Sarcasm as contrast between a positive sentiment and negative situation.In \textit{Proceedings of the 2013 Conference on Empirical Methods in Natural Language Processing (EMNLP 2013)}, Seattle, WA, USA, 18–21 October 2013; pp. 704–714.
+
+% Reference 2
+\bibitem[Amir at el(2016)]{ref-2}
+Amir, S.; Wallace, B.C.; Lyu, H.; Carvalho, P.; Silva, M.J.
+ Modelling context with user embeddings for sarcasm detection in social media.
+ In \textit{Proceedings of the 20th SIGNLL Conference on Computational Natural Language Learning (CoNLL 2016)}, Berlin, Germany, 11–12 August 2016; pp. 167–177.
+ 
+ % Reference 3
+\bibitem[Baziotis at el(2018)]{ref-3}
+Baziotis, C.; Athanasiou, N.; Papalampidi, P.; Kolovou, A.; Paraskevopoulos, G.; Ellinas, N.; Potamianos, A.
+ NTUA-SLP at SemEval-2018 Task 3: Tracking ironic tweets using ensembles of word and character level attentive RNNs.
+ In \textit{Proceedings of the 12th International Workshop on Semantic Evaluation (SemEval 2018)}, New Orleans, LA, USA, 5–6 June 2018; pp. 613–621.
+
+% Reference 4
+\bibitem[Cai at el(2019)]{ref-4}
+ Cai, Y.; Cai, H.; Wan, X.
+ Multi-modal sarcasm detection in Twitter with hierarchical fusion model.
+ In \textit{Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics (ACL 2019)}, Florence, Italy, 28 July–2 August 2019; pp. 2506–2515.
+
+% Reference 5
+\bibitem[Hazarika at el(2020)]{ref-5}
+ Hazarika, D.; Zimmermann, R.; Poria, S.
+ MISA: Modality-invariant and modality-specific representations for multimodal sentiment analysis.
+ In \textit{Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020)}, Online, 5–10 July 2020; pp. 1122–1131.
+
+% Reference 6
+\bibitem[Rahman at el(2020)]{ref-6}
+ Rahman, W.; Hasan, M.; Lee, S.; Zadeh, A.; Mao, C.; Morency, L.-P.
+ Integrating multimodal information in large pretrained transformers.
+ In \textit{Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020)}, Online, 5–10 July 2020; pp. 2359–2369.
+
+% Reference 7
+\bibitem[Liang at el(2022)]{ref-7}
+ Liang, B.; Lou, J.; Li, X.; Yang, M.; Gui, L.; He, R.
+ Multimodal sarcasm detection via cross-modal graph convolutional networks.
+ In \textit{Findings of the Association for Computational Linguistics: ACL 2022}, Dublin, Ireland, 22–27 May 2022; pp. 1767–1777.
+
+% Reference 8
+\bibitem[Qin at el(2023)]{ref-8}
+ Qin, L.; Zhang, W.; Zhang, Y.; Wang, Y.
+ Multi-view CLIP for multimodal sarcasm detection.
+ In \textit{Proceedings of the 31st ACM International Conference on Multimedia (ACM MM 2023)}, Ottawa, Canada, 29 October–3 November 2023.
+
+% Reference 9
+\bibitem[Wang at el(2025)]{ref-9}
+ Wang, T.; Li, J.; Su, G.; et al.
+ RCLMuFN: Relational context learning and multiplex fusion network for multimodal sarcasm detection.
+ \textit{Knowledge-Based Systems} 2025, \textit{319}, 113614.
+
+% Reference 10
+\bibitem[Babanejad at el(2020)]{ref-10}
+ Babanejad, N.; Davoudi, H.; An, A.; et al. 
+ Affective and contextual embedding for sarcasm detection. In Proceedings of the 28th International Conference on Computational Linguistics, Barcelona, Spain, 8–13 December 2020; pp. 225–243.
+
+% Reference 11
+\bibitem[Yu at el(2024)]{ref-11}
+ Yu, B.; Wang, H.; Xi, Z. 
+ Multifaceted and deep semantic alignment network for multimodal sarcasm detection. Knowledge-Based Systems 2024, 301, 112298.
+
+% Reference 12
+\bibitem[Yacoub at el(2024)]{ref-12}
+ Yacoub, A.D.; Slim, S.; Aboutabl, A. 
+ A survey of sentiment analysis and sarcasm detection: Challenges, techniques, and trends. International Journal of Electrical and Computer Engineering Systems 2024, 15, 69–78.
+
+% Reference 13
+\bibitem[Song (2025)]{ref-13}
+Song, H. 
+Sarcasm detection in social media: Techniques, models, and future directions.\textit{ In Proceedings of the 3rd International Conference on Image, Algorithms, and Artificial Intelligence} (ICIAAI 2025), 2025; pp. 945–957.
+
+
+% Reference 14
+\bibitem[Grover and Banati(2026)]{ref-14}
+Grover, V.; Banati, H. An emoji centric approach to sarcasm detection in online discourse. Scientific Reports 2026, 16, 3891.
+
+% Reference 15
+\bibitem[Li(2022)]{ref-15}
+Li, J.; Li, D.; Xiong, C.; et al. BLIP: Bootstrapping language-image pre-training for unified vision-language understanding and generation.\textit{ In Proceedings of the International Conference on Machine Learning} (ICML 2022), Baltimore, MD, USA, 17–23 July 2022; pp. 12888–12900.
+
+% Reference 16
+\bibitem[Lu(2019)]{ref-16}
+Lu, J.; Batra, D.; Parikh, D.; et al. ViLBERT: Pretraining task-agnostic visiolinguistic representations for vision-and-language tasks. In Proceedings of the Advances in Neural Information Processing Systems (NeurIPS 2019), Vancouver, BC, Canada, 8–14 December 2019.
+
+% Reference 17
+\bibitem[Tan(2019)]{ref-17}
+Tan, H.; Bansal, M. LXMERT: Learning cross-modality encoder representations from transformers. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), Hong Kong, China, 3–7 November 2019; pp. 5100–5111.
+
+% Reference 18
+\bibitem[Xu et\~al.(2020)]{ref-18}
+Xu, N.; Zeng, Z.; Mao, W. Reasoning with multimodal sarcastic tweets via modeling cross-modality contrast and semantic association. In \{\em Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL 2020)\}.
+
+\bibitem[Qin et\~al.(2023)]{ref-19}
+Qin, L.; Huang, S.; Chen, Q.; et al. MMSD2.0: Towards a reliable multi-modal sarcasm detection system. In \textit{Proceedings of the Annual Meeting of the Association for Computational Linguistics Findings} (ACL Findings 2023).
+
+\bibitem[Pan et\~al.(2020)]{ref-20}
+Pan, H.; Lin, Z.; Fu, P.; Qi, Y.; Wang, W. Modeling intra and inter-modality incongruity for multi-modal sarcasm detection.\textit{ In Proceedings of the Conference on Empirical Methods in Natural Language Processing Findings} (EMNLP Findings 2020).
+
+\bibitem[Qiao et\~al.(2023)]{ref-21}
+Qiao, Y.; Jing, L.; Song, X.; et al. Mutual-enhanced incongruity learning network for multi-modal sarcasm detection (MILNet). In \textit{Proceedings of the AAAI Conference on Artificial Intelligence} (AAAI 2023).
+
+\bibitem[Wen et\~al.(2023)]{ref-22}
+Wen, C.; Jia, G.; Yang, J. DIP: Dual incongruity perceiving network for sarcasm detection. In \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition} (CVPR 2023).
+
+\bibitem[He et\~al.(2026)]{ref-23}
+He, L.; Lin, Y.; Qin, G.; et al. Dual dynamic multi-granularity fusion method for multimodal sarcasm detection. \textit{ Neurocomputing} {\bf 2026}, \textit{663}, 131985.
+
+\bibitem[Gao et\~al.(2025)]{ref-24}
+Gao, L.; Sheng, N.; Liu, Y.; Xu, H. TCIP: Network with topology capture and incongruity perception for sarcasm detection.\textit{ Information Fusion} {\bf 2025}, \textit{117}, 102918.
+
+\bibitem[Liang et\~al.(2022)]{ref-25}
+Liang, B.; Lou, C.; Li, X.; et al. Multi-modal sarcasm detection via cross-modal graph convolutional network (CMGCN). \textit{In Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL 2022)}.
+
+\bibitem[Jia et\~al.(2024)]{ref-26}
+Jia, M.; Xie, C.; Jing, L. 
+Debiasing multimodal sarcasm detection with contrastive learning. In  \textit{Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2024)}.
+
+\bibitem[Wei et\~al.(2024)]{ref-27}
+Wei, Y.; Yuan, S.; Zhou, H.; et al. G2SAM: Graph-based global semantic awareness for multimodal sarcasm detection. In \textit{Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2024)}.
+
+\bibitem[Zhu et\~al.(2024)]{ref-28}
+Zhu, Z.; Cheng, X.; Hu, G.; et al. Disentangled multi-grained multimodal distilling for multimodal sarcasm detection (DMMD). In\textit{ Proceedings of the International Conference on Language Resources and Evaluation (LREC-COLING 2024)}.
+
+\bibitem[Chen et\~al.(2024)]{ref-29}
+Chen, Z.; Lin, H.; Luo, Z.; et al. Cofipara: A coarse-to-fine paradigm for multimodal sarcasm target identification with large multimodal models. In \textit{Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL 2024)}.
+
+\bibitem[Hao et\~al.(2024)]{ref-30}
+Hao, J.; Zhao, J.; Wang, Z. Multi-modal sarcasm detection via graph convolutional network and dynamic network (DN-GCN). In \textit{Proceedings of the ACM International Conference on Information and Knowledge Management (CIKM 2024)}.
+
+\bibitem[Zhuang et\~al.(2025)]{ref-31}
+Zhuang, X.; Zhou, F.; Li, Z. Knowledge-aware focused graph convolutional networks for multimodal sarcasm detection (KFGC-Net). \textit{ACM Transactions on Multimedia Computing, Communications, and Applications} \textbf{2025}.
+
+\bibitem[Dong et\~al.(2026)]{ref-32}
+Dong, J.; Sui, Y.; Zhang, Q.; et al. An adaptive multimodal semantic knowledge enhanced framework for sarcasm detection.  \textit{Expert Systems with Applications} \textbf{ 2026}, \textit{298}, 129773.
+
+\bibitem[Dai et\~al.(2025)]{ref-33}
+Dai, M.; Li, J.; Zhuang, J.; et al. Coarse-to-fine consistency constraints for visual grounding (C3VG). \textit{In em Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2025)}.
+
+\bibitem[Guan et\~al.(2025)]{ref-34}
+Guan, X.; Cao, J.; Zhang, H.; et al. MIAN: Multi-head incongruity aware attention network with transfer learning for sarcasm detection. \textit{ Expert Systems with Applications} \textbf{2025}, \textit{263}, 125702.
+
+\bibitem[Tang et~al.(2024)]{ref-35}
+Tang, B.; Lin, B.; Yan, H.; Li, S. Leveraging Generative Large Language Models with Visual Instruction and Demonstration Retrieval for Multimodal Sarcasm Detection. In \textit{Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL 2024)}, \textbf{2024}, pp.~1732--1742.
+
+\bibitem[Liang at el(2021)]{ref-36}
+ Liang, B.; Lou, C.; Li, X.; Gui, L.; Yang, M.; Xu, R.
+ Multi-modal sarcasm detection with interactive in-modal and cross-modal graphs.
+ In \textit{Proceedings of the 29th ACM International Conference on Multimedia}, 2021; pp. 4707–4715.
+
+ % Reference X
+\bibitem[Liu at el(2022)]{ref-37}
+ Liu, H.; Wang, W.; Li, H.
+ Towards multi-modal sarcasm detection via hierarchical congruity modeling with knowledge enhancement.
+ In \textit{Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing}, 2022; pp. 4995–5006.
+ 
+% Reference X
+\bibitem[Xie at el(2024)]{ref-38}
+ Xie, Y.; Zhu, Z.; Chen, X.; Chen, Z.; Huang, Z.
+ MoBA: Multimodal sarcasm detection via mixture of bidirectional adapter.
+ In \textit{Proceedings of the 32nd ACM International Conference on Multimedia}, 2024; pp. XXXX–XXXX.
+
+% Reference X
+\bibitem[Song at el(2023)]{ref-39}
+ Song, L.; Zhao, Z.; Ma, Y.; Liu, Y.; Li, J.
+ Multi-modal sarcasm detection based on global-aware attention network.
+ In \textit{Proceedings of the 2023 IEEE International Conference on Systems, Man, and Cybernetics}, IEEE, 2023; pp. 2409–2414.
+
+% Reference X
+\bibitem[Liu at el(2025)]{ref-40}
+ Liu, M.; Li, Z.
+ Knowledge enhanced and incongruity perceiving network for multimodal sarcasm detection.
+ \textit{Cogn. Comput.} \textbf{2025}, \textit{17}, 140.
+
+\bibitem[Placeholder A(2026)]{ref-41}
+Placeholder, A.
+ Placeholder reference for applications of sarcasm detection in sentiment analysis.
+ Replace this entry with a real survey or task paper closely related to sentiment analysis and sarcasm detection.
+
+\bibitem[Placeholder B(2026)]{ref-42}
+Placeholder, B.
+ Placeholder reference for applications of sarcasm detection in public opinion monitoring or social media content understanding.
+ Replace this entry with a real paper on social media monitoring, opinion mining, or content moderation involving sarcasm.
+
+\bibitem[Placeholder C(2026)]{ref-43}
+Placeholder, C.
+ Placeholder reference for early text-only sarcasm detection methods.
+ Replace this entry with a representative pre-multimodal sarcasm detection paper based on text, context, or user modeling.
+
+\bibitem[Placeholder D(2026)]{ref-44}
+Placeholder, D.
+ Placeholder reference for recent multimodal sarcasm detection based on fine-grained interaction modeling.
+ Replace this entry with a recent method paper emphasizing fine-grained cross-modal interaction, token-region alignment, or incongruity cues.
+
+\bibitem[Placeholder E(2026)]{ref-45}
+Placeholder, E.
+ Placeholder reference supporting the importance of fine-grained word-region alignment.
+ Replace this entry with a vision-language pretraining or multimodal understanding paper that explicitly models word-region alignment.
+
+\bibitem[Placeholder F(2026)]{ref-46}
+Placeholder, F.
+ Placeholder reference supporting sparse or selective cross-modal interaction modeling.
+ Replace this entry with a paper on sparse attention, top-k interaction selection, routing, or efficient cross-modal reasoning.
+
+\bibitem[Placeholder G(2026)]{ref-47}
+Placeholder, G.
+ Placeholder reference for the significance and recent growth of multimodal sarcasm detection.
+ Replace this entry with a recent survey, benchmark, or overview paper on multimodal sarcasm detection.
+
+\bibitem[Placeholder H(2026)]{ref-48}
+Placeholder, H.
+ Placeholder reference for the significance and recent growth of multimodal sarcasm detection.
+ Replace this entry with another recent overview, benchmark, or representative paper that justifies MSD as an active research topic.
+
+\bibitem[Placeholder I(2026)]{ref-49}
+Placeholder, I.
+ Placeholder reference for cross-modal alignment strategies at the word-region level.
+ Replace this entry with a paper on cross-modal alignment, visual grounding, or multimodal semantic calibration.
+
+\bibitem[Placeholder J(2026)]{ref-50}
+Placeholder, J.
+ Placeholder reference for graph-based multimodal reasoning and higher-order interaction modeling.
+ Replace this entry with a paper on graph neural networks, structured multimodal reasoning, or higher-order relation modeling.
+ 
+\end{thebibliography}
+}
+\PublishersNote{}
+%\isPreprints{}{% This command is only used for ``preprints''.
+\end{adjustwidth}
+
+
+
+\end{document}
