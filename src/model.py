@@ -251,7 +251,7 @@ class MV_CLIP(nn.Module):
             if self.gnn_top_k < 1:
                 self.gnn_top_k = int(self.fim_top_k)
             self.gnn_edge_dropout = float(getattr(args, "gnn_edge_dropout", 0.1))
-            self.gnn_use_global = int(getattr(args, "gnn_use_global", 1)) == 1
+            self.gnn_use_global = True
             self.gnn_alpha = float(getattr(args, "gnn_alpha", 1.0))
             self.gnn_contrastive_weight = float(getattr(args, "gnn_contrastive_weight", 0.0))
             self.gnn_contrastive_temp = float(getattr(args, "gnn_contrastive_temp", 0.07))
